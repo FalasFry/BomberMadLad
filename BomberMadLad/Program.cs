@@ -12,17 +12,21 @@ namespace GridGame
 {
     class Program
     {
+        public static Game mygame = new Game(Console.LargestWindowWidth - 13, Console.LargestWindowHeight-12);
         static void Main(string[] args)
         {
             Console.SetWindowSize(Console.LargestWindowWidth- 10, Console.LargestWindowHeight- 10);
-            Game myGame = new Game(Console.LargestWindowWidth - 13, Console.LargestWindowHeight - 12);
+            mygame.DrawBoard();
             while (true)
             {
-                myGame.DrawBoard();
-                myGame.UpdateBoard();
                 
+                mygame.UpdateBoard();
                 Console.CursorVisible = false;
             }
+        }
+        public Game findGame()
+        {
+            return mygame;
         }
     }
 
@@ -30,7 +34,7 @@ namespace GridGame
     class Game
     {
         public List<GameObject> GameObjects = new List<GameObject>();
-        
+        public Random rnd = new Random();
         public Game(int xSize, int ySize)
         {
             for (int i = 0; i < ySize + 2; i++)
@@ -41,10 +45,13 @@ namespace GridGame
                     {
                         GameObjects.Add(new Wall(j, i));
                     }
+                    if (i <= ySize/2 && j <= xSize/4)
+                    {
+                        GameObjects.Add(new Wall(j * 4, i * 2));
+                    }
                 }
             }
             GameObjects.Add(new Player());
-            Debug.Write(GameObjects.Count);
 
         }
 
@@ -109,7 +116,7 @@ namespace GridGame
 
         public Player()
         {
-            game = new Game(0,0);
+
         }
 
         public override void Draw(int xBoxSize, int yBoxSize)
@@ -122,6 +129,7 @@ namespace GridGame
 
         public override void Update()
         {
+            Draw(0, 0);
             int oldX = xPos;
             int oldY = yPos;
 
@@ -137,18 +145,19 @@ namespace GridGame
             }
             if (input == ConsoleKey.D)
             {
-                    xPos += 1;
+                    xPos += 2;
             }
             if (input == ConsoleKey.A)
             {
-                    xPos -= 1;
+                    xPos -= 2;
             }
             if (!CollisionCheck())
             {
                 xPos = oldX;
                 yPos = oldY;
             }
-            Delete(oldX, oldY);
+            else Delete(oldX, oldY);
+
         }
         public void Delete(int oldX, int oldY)
         {
@@ -158,11 +167,14 @@ namespace GridGame
 
         public bool CollisionCheck()
         {
-            for (int i = 0; i < game.GameObjects.Count; i++)
+            for (int i = 0; i < Program.mygame.GameObjects.Count; i++)
             {
-                if (game.GameObjects[i].XPosition == xPos && game.GameObjects[i].YPosition == yPos)
+                if (Program.mygame.GameObjects[i].YPosition == yPos)
                 {
-                    return false;
+                    if (Program.mygame.GameObjects[i].XPosition == xPos - 1 || Program.mygame.GameObjects[i].XPosition == xPos || Program.mygame.GameObjects[i].XPosition == xPos + 1)
+                    {
+                        return false;
+                    }
                 }
             }
             return true;
