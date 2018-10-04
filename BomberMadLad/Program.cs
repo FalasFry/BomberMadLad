@@ -10,12 +10,21 @@ using System.Diagnostics;
 //Uppgift2: Skriv en ny klass Player, som ärver Gameobject och som kan styras med tangenterna WASD. Skapa en new Player och lägg till i GameObjects-listan.
 namespace GridGame
 {
-    public class Program
+    class Program
     {
+        public static bool haveAI;
         static void Main(string[] args)
         {
+
+            Console.WriteLine(" Do you want AI? (Y/N)"); 
+            ConsoleKey input = Console.ReadKey(true).Key;
+            if(input == ConsoleKey.Y)           
+            {
+                haveAI = true;
+            }
+
             Console.SetWindowSize(Console.LargestWindowWidth- 10, Console.LargestWindowHeight- 10);
-            Game myGame = new Game(Console.LargestWindowWidth - 13, Console.LargestWindowHeight - 12);
+            Game myGame = new Game(Console.LargestWindowWidth - 17, Console.LargestWindowHeight - 15);
             while (true)
             {
                 myGame.DrawBoard();
@@ -25,7 +34,6 @@ namespace GridGame
         }
     }
 
-    // SteffeFanWas Here
     class Game
     {
         public List<GameObject> GameObjects = new List<GameObject>();
@@ -43,6 +51,10 @@ namespace GridGame
                 }
             }
             GameObjects.Add(new Player());
+            if(Program.haveAI == true)
+            {
+                GameObjects.Add(new AI());
+            }
         }
 
         public void DrawBoard()
@@ -121,19 +133,19 @@ namespace GridGame
             ConsoleKey input = Console.ReadKey(true).Key;
             if (input == ConsoleKey.W)
             {
-                    yPos -= 1;
+                    yPos--;
             }
             if (input == ConsoleKey.S)
             {
-                    yPos += 1;
+                    yPos++;
             }
             if (input == ConsoleKey.D)
             {
-                    xPos += 1;
+                    xPos++;
             }
             if (input == ConsoleKey.A)
             {
-                    xPos -= 1;
+                    xPos--;
             }
             if (!CollisionCheck())
             {
@@ -163,11 +175,23 @@ namespace GridGame
 
     class AI : GameObject
     {
+        public Random rng = new Random();
         int xPos;
         int yPos;
+        
         public AI()
         {
+            xPos = rng.Next(5, 241);
+            yPos = rng.Next(5, 60);
 
+            if(xPos == 5)
+            {
+                xPos = 6;
+            }
+            if(yPos == 5)
+            {
+                yPos = 6;
+            }
         }
 
         public override void Draw(int xBoxSize, int yBoxSize)
@@ -180,7 +204,23 @@ namespace GridGame
 
         public override void Update()
         {
-
+            int dir = rng.Next(1, 5);
+            if (dir == 1)
+            {
+                yPos--;
+            }
+            if (dir == 2)
+            {
+                yPos++;
+            }
+            if (dir == 3)
+            {
+                xPos++;
+            }
+            if (dir == 4)
+            {
+                xPos--;
+            }
         }
     }
 }
