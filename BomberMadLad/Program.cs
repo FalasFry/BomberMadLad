@@ -27,7 +27,7 @@ namespace GridGame
     // SteffeFanWas Here
     class Game
     {
-        List<GameObject> GameObjects = new List<GameObject>();
+        public List<GameObject> GameObjects = new List<GameObject>();
 
         public Game(int xSize, int ySize)
         {
@@ -44,6 +44,7 @@ namespace GridGame
 
         }
 
+        
         public void DrawBoard()
         {
             foreach (GameObject gameObject in GameObjects)
@@ -131,6 +132,7 @@ namespace GridGame
     {
         public AI()
         {
+
         }
 
         public override void Draw(int xBoxSize, int yBoxSize)
