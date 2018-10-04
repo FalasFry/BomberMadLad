@@ -18,7 +18,7 @@ namespace GridGame
             {
                 myGame.UpdateBoard();
                 myGame.DrawBoard();
-                Console.ReadKey();
+                Console.CursorVisible = false;
             }
         }
     }
@@ -92,4 +92,54 @@ namespace GridGame
         }
     }
 
+    class Player : GameObject
+    {
+        public Player()
+        {
+        }
+
+        public override void Draw(int xBoxSize, int yBoxSize)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void Update()
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    class Enemy : GameObject
+    {
+        public Enemy()
+        {
+        }
+
+        public override void Draw(int xBoxSize, int yBoxSize)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void Update()
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    class AI : GameObject
+    {
+        public AI()
+        {
+        }
+
+        public override void Draw(int xBoxSize, int yBoxSize)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void Update()
+        {
+            throw new NotImplementedException();
+        }
+    }
 }
