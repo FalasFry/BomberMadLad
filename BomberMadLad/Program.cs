@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Diagnostics;
 
 
 //Uppgift1: Skriv en ny klass Enemy, som ärver Gameobject och som vandrar runt slumpmässigt på spelplanen. Skapa en new Enemy och lägg till i GameObjects-listan.
@@ -28,9 +29,10 @@ namespace GridGame
     class Game
     {
         public List<GameObject> GameObjects = new List<GameObject>();
-
+        
         public Game(int xSize, int ySize)
         {
+            
             for (int i = 0; i < ySize + 2; i++)
             {
                 for (int j = 0; j < xSize + 2; j++)
@@ -41,17 +43,15 @@ namespace GridGame
                     }
                 }
             }
-
         }
 
-        
         public void DrawBoard()
         {
             foreach (GameObject gameObject in GameObjects)
             {
                 gameObject.Draw(1, 1);
             }
-
+            
         }
 
         public void UpdateBoard()
@@ -70,6 +70,7 @@ namespace GridGame
         public int YPosition;
         public abstract void Draw(int xBoxSize, int yBoxSize);
         public abstract void Update();
+        
     }
 
     class Wall : GameObject
@@ -84,6 +85,7 @@ namespace GridGame
         {
             int startX = XPosition * xBoxSize;
             int startY = YPosition * yBoxSize;
+            Console.ForegroundColor = ConsoleColor.White;
             Console.SetCursorPosition(startX, startY);
             Console.Write("██");
         }
@@ -96,35 +98,68 @@ namespace GridGame
 
     class Player : GameObject
     {
+        Game game;
+
+        int xPos = 10;
+        int yPos = 10;
+
         public Player()
         {
         }
 
         public override void Draw(int xBoxSize, int yBoxSize)
         {
-            throw new NotImplementedException();
+            Debug.Write("drew");
+            Console.ForegroundColor = ConsoleColor.DarkCyan;
+            Console.SetCursorPosition(xPos, yPos);
+            Console.Write("██");
         }
 
         public override void Update()
         {
-            throw new NotImplementedException();
+            Draw(0,0);
+            int oldX = xPos;
+            int oldY = yPos;
+            ConsoleKey input = Console.ReadKey(true).Key;
+            if (input == ConsoleKey.W)
+            {
+                    yPos -= 1;
+            }
+            if (input == ConsoleKey.S)
+            {
+                    yPos += 1;
+            }
+            if (input == ConsoleKey.D)
+            {
+                    xPos += 1;
+            }
+            if (input == ConsoleKey.A)
+            {
+                    xPos -= 1;
+            }
+            if (!CollisionCheck())
+            {
+                xPos = oldX;
+                yPos = oldY;
+            }
+            Delete(oldX, oldY);
         }
-    }
-
-    class Enemy : GameObject
-    {
-        public Enemy()
+        public void Delete(int oldX, int oldY)
         {
+            Console.SetCursorPosition(oldX, oldY);
+            Console.Write("  ");
         }
 
-        public override void Draw(int xBoxSize, int yBoxSize)
+        public bool CollisionCheck()
         {
-            throw new NotImplementedException();
-        }
-
-        public override void Update()
-        {
-            throw new NotImplementedException();
+            for (int i = 0; i < 1; i++)
+            {
+                if (game.GameObjects[i].XPosition == xPos && game.GameObjects[i].YPosition == yPos)
+                {
+                    return false;
+                }
+            }
+            return true;
         }
     }
 
@@ -132,7 +167,6 @@ namespace GridGame
     {
         public AI()
         {
-
         }
 
         public override void Draw(int xBoxSize, int yBoxSize)
