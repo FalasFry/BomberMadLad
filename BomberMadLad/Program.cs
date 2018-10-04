@@ -9,7 +9,6 @@ using System.Threading.Tasks;
 //Uppgift2: Skriv en ny klass Player, som ärver Gameobject och som kan styras med tangenterna WASD. Skapa en new Player och lägg till i GameObjects-listan.
 namespace GridGame
 {
-
     class Program
     {
         static void Main(string[] args)
@@ -21,14 +20,11 @@ namespace GridGame
                 myGame.DrawBoard();
                 Console.ReadKey();
             }
-
-
         }
     }
 
     class Game
     {
-
         List<GameObject> GameObjects = new List<GameObject>();
 
         public Game(int xSize, int ySize)
