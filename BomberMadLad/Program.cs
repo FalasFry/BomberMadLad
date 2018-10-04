@@ -16,7 +16,7 @@ namespace GridGame
         public static bool haveAI;
         static void Main(string[] args)
         {
-
+            Console.CursorVisible = false;
             Console.WriteLine(" Do you want AI? (Y/N)"); 
             ConsoleKey input = Console.ReadKey(true).Key;
             if(input == ConsoleKey.Y)           
