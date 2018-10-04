@@ -18,8 +18,9 @@ namespace GridGame
             Game myGame = new Game(Console.LargestWindowWidth - 13, Console.LargestWindowHeight - 12);
             while (true)
             {
-                myGame.UpdateBoard();
                 myGame.DrawBoard();
+                myGame.UpdateBoard();
+                
                 Console.CursorVisible = false;
             }
         }
@@ -108,6 +109,7 @@ namespace GridGame
 
         public Player()
         {
+            game = new Game(0,0);
         }
 
         public override void Draw(int xBoxSize, int yBoxSize)
@@ -122,7 +124,9 @@ namespace GridGame
         {
             int oldX = xPos;
             int oldY = yPos;
+
             ConsoleKey input = Console.ReadKey(true).Key;
+
             if (input == ConsoleKey.W)
             {
                     yPos -= 1;
@@ -154,7 +158,7 @@ namespace GridGame
 
         public bool CollisionCheck()
         {
-            for (int i = 0; i < 1; i++)
+            for (int i = 0; i < game.GameObjects.Count; i++)
             {
                 if (game.GameObjects[i].XPosition == xPos && game.GameObjects[i].YPosition == yPos)
                 {
