@@ -71,9 +71,9 @@ namespace GridGame
 
         public void UpdateBoard()
         {
-            foreach (GameObject gameObject in GameObjects)
+            for (int i = 0; i < GameObjects.Count; i++)
             {
-                gameObject.Update();
+                GameObjects[i].Update();
             }
 
         }
@@ -152,6 +152,7 @@ namespace GridGame
 
         public override void Update()
         {
+            Draw(0, 0);
             int oldX = xPos;
             int oldY = yPos;
 
@@ -279,26 +280,6 @@ namespace GridGame
 
         public override void Update()
         {
-            if(sw.ElapsedMilliseconds == 5000)
-            {
-                Console.ForegroundColor = ConsoleColor.Magenta;
-            }
-            if (sw.ElapsedMilliseconds == 1000)
-            {
-                Console.ForegroundColor = ConsoleColor.Red;
-            }
-            if (sw.ElapsedMilliseconds == 2000)
-            {
-                Console.ForegroundColor = ConsoleColor.Magenta;
-            }
-            if (sw.ElapsedMilliseconds == 3000)
-            {
-                Console.ForegroundColor = ConsoleColor.DarkRed;
-            }
-            if (sw.ElapsedMilliseconds == 4000)
-            {
-                Console.ForegroundColor = ConsoleColor.Red;
-            }
             Draw(0, 0);
         }
     }
