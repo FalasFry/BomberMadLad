@@ -13,7 +13,8 @@ namespace GridGame
     {
         static void Main(string[] args)
         {
-            Game myGame = new Game(50, 20);
+            Console.SetWindowSize(Console.LargestWindowWidth- 10, Console.LargestWindowHeight- 10);
+            Game myGame = new Game(Console.LargestWindowWidth - 13, Console.LargestWindowHeight - 12);
             while (true)
             {
                 myGame.UpdateBoard();
