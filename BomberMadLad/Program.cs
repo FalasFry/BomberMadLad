@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Diagnostics;
 
 
 //Uppgift1: Skriv en ny klass Enemy, som ärver Gameobject och som vandrar runt slumpmässigt på spelplanen. Skapa en new Enemy och lägg till i GameObjects-listan.
@@ -13,8 +14,8 @@ namespace GridGame
     {
         static void Main(string[] args)
         {
-            Game myGame = new Game(50, 20);
-            
+            Console.SetWindowSize(Console.LargestWindowWidth- 10, Console.LargestWindowHeight- 10);
+            Game myGame = new Game(Console.LargestWindowWidth - 13, Console.LargestWindowHeight - 12);
             while (true)
             {
                 myGame.UpdateBoard();
@@ -42,7 +43,6 @@ namespace GridGame
                     }
                 }
             }
-            new Player();
         }
 
         public void DrawBoard()
@@ -100,8 +100,8 @@ namespace GridGame
     {
         Game game;
 
-        int xPos = 5;
-        int yPos = 5;
+        int xPos = 10;
+        int yPos = 10;
 
         public Player()
         {
@@ -109,6 +109,7 @@ namespace GridGame
 
         public override void Draw(int xBoxSize, int yBoxSize)
         {
+            Debug.Write("drew");
             Console.ForegroundColor = ConsoleColor.DarkCyan;
             Console.SetCursorPosition(xPos, yPos);
             Console.Write("██");
@@ -116,7 +117,7 @@ namespace GridGame
 
         public override void Update()
         {
-            Draw(5, 5);
+            Draw(0,0);
             int oldX = xPos;
             int oldY = yPos;
             ConsoleKey input = Console.ReadKey(true).Key;
