@@ -19,10 +19,11 @@ namespace GridGame
             Console.CursorVisible = false;
             Console.WriteLine(" Do you want AI? (Y/N)"); 
             ConsoleKey input = Console.ReadKey(true).Key;
-            if(input == ConsoleKey.Y)           
+            if (input == ConsoleKey.Y)
             {
                 haveAI = true;
             }
+            else haveAI = false;
 
             Console.SetWindowSize(Console.LargestWindowWidth- 10, Console.LargestWindowHeight- 10);
             mygame.DrawBoard();
@@ -57,19 +58,21 @@ namespace GridGame
                 }
             }
             GameObjects.Add(new Player());
-            if(Program.haveAI == true)
-            {
-                GameObjects.Add(new AI());
-            }
+
         }
 
         public void DrawBoard()
         {
+
+            if (Program.haveAI == true)
+            {
+                GameObjects.Add(new AI());
+            }
+
             foreach (GameObject gameObject in GameObjects)
             {
                 gameObject.Draw(1, 1);
             }
-            
         }
 
         public void UpdateBoard()
@@ -88,7 +91,27 @@ namespace GridGame
         public int YPosition;
         public abstract void Draw(int xBoxSize, int yBoxSize);
         public abstract void Update();
-        
+
+        public void Delete(int oldX, int oldY)
+        {
+            Console.SetCursorPosition(oldX, oldY);
+            Console.Write("  ");
+        }
+
+        public bool CollisionCheck(int xPos, int yPos)
+        {
+            for (int i = 0; i < Program.mygame.GameObjects.Count; i++)
+            {
+                if (Program.mygame.GameObjects[i].YPosition == yPos)
+                {
+                    if (Program.mygame.GameObjects[i].XPosition == xPos - 1 || Program.mygame.GameObjects[i].XPosition == xPos || Program.mygame.GameObjects[i].XPosition == xPos + 1)
+                    {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
     }
 
     class Wall : GameObject
@@ -156,7 +179,7 @@ namespace GridGame
             {
                     xPos -= 2;
             }
-            if (!CollisionCheck())
+            if (!CollisionCheck(xPos, yPos))
             {
                 xPos = oldX;
                 yPos = oldY;
@@ -164,26 +187,7 @@ namespace GridGame
             else Delete(oldX, oldY);
         }
 
-        public void Delete(int oldX, int oldY)
-        {
-            Console.SetCursorPosition(oldX, oldY);
-            Console.Write("  ");
-        }
 
-        public bool CollisionCheck()
-        {
-            for (int i = 0; i < Program.mygame.GameObjects.Count; i++)
-            {
-                if (Program.mygame.GameObjects[i].YPosition == yPos)
-                {
-                    if (Program.mygame.GameObjects[i].XPosition == xPos - 1 || Program.mygame.GameObjects[i].XPosition == xPos || Program.mygame.GameObjects[i].XPosition == xPos + 1)
-                    {
-                        return false;
-                    }
-                }
-            }
-            return true;
-        }
     }
 
     class AI : GameObject
@@ -194,8 +198,8 @@ namespace GridGame
         
         public AI()
         {
-            xPos = rng.Next(5, 241);
-            yPos = rng.Next(5, 60);
+            xPos = Console.LargestWindowWidth - 22;
+            yPos = 10;
 
             if(xPos == 5)
             {
@@ -217,6 +221,8 @@ namespace GridGame
 
         public override void Update()
         {
+            int oldX = xPos;
+            int oldY = yPos;
             int dir = rng.Next(1, 5);
             if (dir == 1)
             {
@@ -234,6 +240,13 @@ namespace GridGame
             {
                 xPos--;
             }
+            if (!CollisionCheck(xPos,yPos))
+            {
+                xPos = oldX;
+                yPos = oldY;
+            }
+            else Delete(oldX, oldY);
+
         }
     }
 }
