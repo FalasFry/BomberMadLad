@@ -14,6 +14,7 @@ namespace GridGame
         static void Main(string[] args)
         {
             Game myGame = new Game(50, 20);
+            
             while (true)
             {
                 myGame.UpdateBoard();
@@ -26,10 +27,11 @@ namespace GridGame
     // SteffeFanWas Here
     class Game
     {
-        List<GameObject> GameObjects = new List<GameObject>();
-
+        public List<GameObject> GameObjects = new List<GameObject>();
+        
         public Game(int xSize, int ySize)
         {
+            
             for (int i = 0; i < ySize + 2; i++)
             {
                 for (int j = 0; j < xSize + 2; j++)
@@ -40,7 +42,7 @@ namespace GridGame
                     }
                 }
             }
-
+            new Player();
         }
 
         public void DrawBoard()
@@ -49,7 +51,7 @@ namespace GridGame
             {
                 gameObject.Draw(1, 1);
             }
-
+            
         }
 
         public void UpdateBoard()
@@ -68,6 +70,7 @@ namespace GridGame
         public int YPosition;
         public abstract void Draw(int xBoxSize, int yBoxSize);
         public abstract void Update();
+        
     }
 
     class Wall : GameObject
@@ -82,6 +85,7 @@ namespace GridGame
         {
             int startX = XPosition * xBoxSize;
             int startY = YPosition * yBoxSize;
+            Console.ForegroundColor = ConsoleColor.White;
             Console.SetCursorPosition(startX, startY);
             Console.Write("██");
         }
@@ -94,35 +98,67 @@ namespace GridGame
 
     class Player : GameObject
     {
+        Game game;
+
+        int xPos = 5;
+        int yPos = 5;
+
         public Player()
         {
         }
 
         public override void Draw(int xBoxSize, int yBoxSize)
         {
-            throw new NotImplementedException();
+            Console.ForegroundColor = ConsoleColor.DarkCyan;
+            Console.SetCursorPosition(xPos, yPos);
+            Console.Write("██");
         }
 
         public override void Update()
         {
-            throw new NotImplementedException();
+            Draw(5, 5);
+            int oldX = xPos;
+            int oldY = yPos;
+            ConsoleKey input = Console.ReadKey(true).Key;
+            if (input == ConsoleKey.W)
+            {
+                    yPos -= 1;
+            }
+            if (input == ConsoleKey.S)
+            {
+                    yPos += 1;
+            }
+            if (input == ConsoleKey.D)
+            {
+                    xPos += 1;
+            }
+            if (input == ConsoleKey.A)
+            {
+                    xPos -= 1;
+            }
+            if (!CollisionCheck())
+            {
+                xPos = oldX;
+                yPos = oldY;
+            }
+            Delete(oldX, oldY);
         }
-    }
-
-    class Enemy : GameObject
-    {
-        public Enemy()
+        public void Delete(int oldX, int oldY)
         {
+            Console.SetCursorPosition(oldX, oldY);
+            Console.Write("  ");
         }
 
-        public override void Draw(int xBoxSize, int yBoxSize)
+        public bool CollisionCheck()
         {
-            throw new NotImplementedException();
-        }
-
-        public override void Update()
-        {
-            throw new NotImplementedException();
+            for (int i = 0; i < 1; i++)
+            {
+                if (game.GameObjects[i].XPosition == xPos && game.GameObjects[i].YPosition == yPos)
+                {
+                    return false;
+                }
+            }
+            return true;
         }
     }
 
