@@ -6,8 +6,6 @@ using System.Threading.Tasks;
 using System.Diagnostics;
 
 
-//Uppgift1: Skriv en ny klass Enemy, som ärver Gameobject och som vandrar runt slumpmässigt på spelplanen. Skapa en new Enemy och lägg till i GameObjects-listan.
-//Uppgift2: Skriv en ny klass Player, som ärver Gameobject och som kan styras med tangenterna WASD. Skapa en new Player och lägg till i GameObjects-listan.
 namespace GridGame
 {
     class Program
@@ -31,10 +29,6 @@ namespace GridGame
             {
                 mygame.UpdateBoard();
             }
-        }
-        public Game FindGame()
-        {
-            return mygame;
         }
     }
 
@@ -126,7 +120,7 @@ namespace GridGame
         {
             int startX = XPosition * xBoxSize;
             int startY = YPosition * yBoxSize;
-            Console.ForegroundColor = ConsoleColor.White;
+            Console.ForegroundColor = ConsoleColor.Gray;
             Console.SetCursorPosition(startX, startY);
             Console.Write("██");
         }
@@ -139,6 +133,7 @@ namespace GridGame
 
     class Player : GameObject
     {
+        Game game;
 
         int xPos = 10;
         int yPos = 10;
@@ -157,7 +152,6 @@ namespace GridGame
 
         public override void Update()
         {
-            Draw(0, 0);
             int oldX = xPos;
             int oldY = yPos;
 
@@ -185,9 +179,13 @@ namespace GridGame
                 yPos = oldY;
             }
             else Delete(oldX, oldY);
+            Draw(0, 0);
+            if (input == ConsoleKey.Spacebar)
+            {
+                // Big Boom
+                Program.mygame.GameObjects.Add(new BOOM(xPos, yPos));
+            }
         }
-
-
     }
 
     class AI : GameObject
@@ -216,7 +214,7 @@ namespace GridGame
             Console.SetCursorPosition(xPos, yPos);
             Console.ForegroundColor = ConsoleColor.Red;
             Console.Write("██");
-            Console.ForegroundColor = ConsoleColor.White;
+            Console.ForegroundColor = ConsoleColor.Gray;
         }
 
         public override void Update()
@@ -256,7 +254,52 @@ namespace GridGame
             }
             Delete(oldX, oldY);
             Draw(0, 0);
+        }
+    }
 
+    class BOOM : GameObject
+    {
+        Stopwatch sw = new Stopwatch();
+
+        int xPos;
+        int yPos;
+
+        public BOOM(int playerPosX, int playerPosY)
+        {
+            xPos = playerPosX;
+            yPos = playerPosY;
+        }
+
+        public override void Draw(int xBoxSize, int yBoxSize)
+        {
+            Console.SetCursorPosition(xPos, yPos);
+            Console.ForegroundColor = ConsoleColor.DarkYellow;
+            Console.Write("██");
+        }
+
+        public override void Update()
+        {
+            if(sw.ElapsedMilliseconds == 5000)
+            {
+                Console.ForegroundColor = ConsoleColor.Magenta;
+            }
+            if (sw.ElapsedMilliseconds == 1000)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+            }
+            if (sw.ElapsedMilliseconds == 2000)
+            {
+                Console.ForegroundColor = ConsoleColor.Magenta;
+            }
+            if (sw.ElapsedMilliseconds == 3000)
+            {
+                Console.ForegroundColor = ConsoleColor.DarkRed;
+            }
+            if (sw.ElapsedMilliseconds == 4000)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+            }
+            Draw(0, 0);
         }
     }
 }
