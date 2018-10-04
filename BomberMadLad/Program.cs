@@ -13,15 +13,23 @@ namespace GridGame
     class Program
     {
         public static Game mygame = new Game(Console.LargestWindowWidth - 13, Console.LargestWindowHeight-12);
+        public static bool haveAI;
         static void Main(string[] args)
         {
+
+            Console.WriteLine(" Do you want AI? (Y/N)"); 
+            ConsoleKey input = Console.ReadKey(true).Key;
+            if(input == ConsoleKey.Y)           
+            {
+                haveAI = true;
+            }
+
             Console.SetWindowSize(Console.LargestWindowWidth- 10, Console.LargestWindowHeight- 10);
             mygame.DrawBoard();
             while (true)
             {
-                
+
                 mygame.UpdateBoard();
-                Console.CursorVisible = false;
             }
         }
         public Game findGame()
@@ -30,7 +38,6 @@ namespace GridGame
         }
     }
 
-    // SteffeFanWas Here
     class Game
     {
         public List<GameObject> GameObjects = new List<GameObject>();
@@ -52,12 +59,14 @@ namespace GridGame
                 }
             }
             GameObjects.Add(new Player());
-
+            if(Program.haveAI == true)
+            {
+                GameObjects.Add(new AI());
+            }
         }
 
         public void DrawBoard()
         {
-            Debug.Write("gg");
             foreach (GameObject gameObject in GameObjects)
             {
                 gameObject.Draw(1, 1);
@@ -121,7 +130,6 @@ namespace GridGame
 
         public override void Draw(int xBoxSize, int yBoxSize)
         {
-            Debug.Write("drew");
             Console.ForegroundColor = ConsoleColor.DarkCyan;
             Console.SetCursorPosition(xPos, yPos);
             Console.Write("██");
@@ -137,11 +145,11 @@ namespace GridGame
 
             if (input == ConsoleKey.W)
             {
-                    yPos -= 1;
+                    yPos--;
             }
             if (input == ConsoleKey.S)
             {
-                    yPos += 1;
+                    yPos++;
             }
             if (input == ConsoleKey.D)
             {
@@ -157,8 +165,8 @@ namespace GridGame
                 yPos = oldY;
             }
             else Delete(oldX, oldY);
-
         }
+
         public void Delete(int oldX, int oldY)
         {
             Console.SetCursorPosition(oldX, oldY);
@@ -183,18 +191,52 @@ namespace GridGame
 
     class AI : GameObject
     {
+        public Random rng = new Random();
+        int xPos;
+        int yPos;
+        
         public AI()
         {
+            xPos = rng.Next(5, 241);
+            yPos = rng.Next(5, 60);
+
+            if(xPos == 5)
+            {
+                xPos = 6;
+            }
+            if(yPos == 5)
+            {
+                yPos = 6;
+            }
         }
 
         public override void Draw(int xBoxSize, int yBoxSize)
         {
-            throw new NotImplementedException();
+            Console.SetCursorPosition(xPos, yPos);
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.Write("██");
+            Console.ForegroundColor = ConsoleColor.White;
         }
 
         public override void Update()
         {
-            throw new NotImplementedException();
+            int dir = rng.Next(1, 5);
+            if (dir == 1)
+            {
+                yPos--;
+            }
+            if (dir == 2)
+            {
+                yPos++;
+            }
+            if (dir == 3)
+            {
+                xPos++;
+            }
+            if (dir == 4)
+            {
+                xPos--;
+            }
         }
     }
 }
