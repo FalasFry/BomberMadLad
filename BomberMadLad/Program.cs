@@ -32,7 +32,6 @@ namespace GridGame
         
         public Game(int xSize, int ySize)
         {
-            
             for (int i = 0; i < ySize + 2; i++)
             {
                 for (int j = 0; j < xSize + 2; j++)
@@ -43,10 +42,14 @@ namespace GridGame
                     }
                 }
             }
+            GameObjects.Add(new Player());
+            Debug.Write(GameObjects.Count);
+
         }
 
         public void DrawBoard()
         {
+            Debug.Write("gg");
             foreach (GameObject gameObject in GameObjects)
             {
                 gameObject.Draw(1, 1);
@@ -117,7 +120,6 @@ namespace GridGame
 
         public override void Update()
         {
-            Draw(0,0);
             int oldX = xPos;
             int oldY = yPos;
             ConsoleKey input = Console.ReadKey(true).Key;
