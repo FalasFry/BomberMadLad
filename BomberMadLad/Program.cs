@@ -10,7 +10,7 @@ using System.Diagnostics;
 //Uppgift2: Skriv en ny klass Player, som ärver Gameobject och som kan styras med tangenterna WASD. Skapa en new Player och lägg till i GameObjects-listan.
 namespace GridGame
 {
-    class Program
+    public class Program
     {
         static void Main(string[] args)
         {
@@ -18,8 +18,8 @@ namespace GridGame
             Game myGame = new Game(Console.LargestWindowWidth - 13, Console.LargestWindowHeight - 12);
             while (true)
             {
-                myGame.UpdateBoard();
                 myGame.DrawBoard();
+                myGame.UpdateBoard();
                 Console.CursorVisible = false;
             }
         }
@@ -43,13 +43,10 @@ namespace GridGame
                 }
             }
             GameObjects.Add(new Player());
-            Debug.Write(GameObjects.Count);
-
         }
 
         public void DrawBoard()
         {
-            Debug.Write("gg");
             foreach (GameObject gameObject in GameObjects)
             {
                 gameObject.Draw(1, 1);
@@ -112,7 +109,6 @@ namespace GridGame
 
         public override void Draw(int xBoxSize, int yBoxSize)
         {
-            Debug.Write("drew");
             Console.ForegroundColor = ConsoleColor.DarkCyan;
             Console.SetCursorPosition(xPos, yPos);
             Console.Write("██");
@@ -156,10 +152,10 @@ namespace GridGame
         {
             for (int i = 0; i < 1; i++)
             {
-                if (game.GameObjects[i].XPosition == xPos && game.GameObjects[i].YPosition == yPos)
+                /*if (game.GameObjects[i].XPosition == xPos && game.GameObjects[i].YPosition == yPos)
                 {
                     return false;
-                }
+                }*/
             }
             return true;
         }
@@ -167,18 +163,24 @@ namespace GridGame
 
     class AI : GameObject
     {
+        int xPos;
+        int yPos;
         public AI()
         {
+
         }
 
         public override void Draw(int xBoxSize, int yBoxSize)
         {
-            throw new NotImplementedException();
+            Console.SetCursorPosition(xPos, yPos);
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.Write("██");
+            Console.ForegroundColor = ConsoleColor.White;
         }
 
         public override void Update()
         {
-            throw new NotImplementedException();
+
         }
     }
 }
