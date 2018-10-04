@@ -83,11 +83,7 @@ namespace GridGame
             int startX = XPosition * xBoxSize;
             int startY = YPosition * yBoxSize;
             Console.SetCursorPosition(startX, startY);
-            Console.Write("█████");
-            Console.SetCursorPosition(startX, startY + 1);
-            Console.Write("█████");
-            Console.SetCursorPosition(startX, startY + 2);
-            Console.Write("█████");
+            Console.Write("██");
         }
 
         public override void Update()
