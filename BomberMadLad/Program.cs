@@ -28,11 +28,10 @@ namespace GridGame
             mygame.DrawBoard();
             while (true)
             {
-
                 mygame.UpdateBoard();
             }
         }
-        public Game findGame()
+        public Game FindGame()
         {
             return mygame;
         }
@@ -41,7 +40,6 @@ namespace GridGame
     class Game
     {
         public List<GameObject> GameObjects = new List<GameObject>();
-        public Random rnd = new Random();
         public Game(int xSize, int ySize)
         {
             for (int i = 0; i < ySize + 2; i++)
@@ -118,7 +116,6 @@ namespace GridGame
 
     class Player : GameObject
     {
-        Game game;
 
         int xPos = 10;
         int yPos = 10;
