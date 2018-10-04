@@ -13,7 +13,7 @@ namespace GridGame
     {
         static void Main(string[] args)
         {
-            Game myGame = new Game(15, 6);
+            Game myGame = new Game(50, 20);
             while (true)
             {
                 myGame.UpdateBoard();
@@ -47,7 +47,7 @@ namespace GridGame
         {
             foreach (GameObject gameObject in GameObjects)
             {
-                gameObject.Draw(5, 3);
+                gameObject.Draw(1, 1);
             }
 
         }
