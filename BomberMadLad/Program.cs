@@ -152,8 +152,10 @@ namespace GridGame
                 xPos = oldX;
                 yPos = oldY;
             }
+
             Delete(oldX, oldY);
         }
+
         public void Delete(int oldX, int oldY)
         {
             Console.SetCursorPosition(oldX, oldY);
