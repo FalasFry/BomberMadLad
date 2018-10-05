@@ -201,6 +201,7 @@ namespace GridGame
                 Program.mygame.GameObjects.Add(latestBoom);
                 timer.BoomCooldown();
                 layBomb = false;
+                timer.StartBoom(latestBoom);
             }
         }
 
@@ -290,7 +291,7 @@ namespace GridGame
             index = Program.mygame.GameObjects.Count;
             xPos = playerPosX;
             yPos = playerPosY;
-            timer.StartBoom();
+
         }
 
         public override void Draw(int xBoxSize, int yBoxSize)
@@ -330,7 +331,7 @@ namespace GridGame
             player = Program.mygame.player;
         }
 
-        public void StartBoom()
+        public void StartBoom(BOOM boom)
         {
             
             Timer time = new Timer(boom.RemoveBoom, null, 5000, Timeout.Infinite);
