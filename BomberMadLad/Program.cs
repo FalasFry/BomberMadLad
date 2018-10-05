@@ -359,8 +359,8 @@ namespace GridGame
         //sätter ut en explosion (röd 3x3 fyrkant)
         public void RemoveBoom(object o)
         {
-
-            Program.mygame.GameObjects.RemoveAt(index);
+            // Kors Sidan
+            /*Program.mygame.GameObjects.RemoveAt(index);
             Console.SetCursorPosition(xPos-2, yPos);
             Console.ForegroundColor = ConsoleColor.Red;
             Console.Write("████████████");
@@ -368,20 +368,76 @@ namespace GridGame
             Console.Write("██");
             Console.ForegroundColor = ConsoleColor.Red;
             Console.SetCursorPosition(xPos , yPos - 1);
+            Console.Write("██");*/
+
+            // Kors Upp
+            Program.mygame.GameObjects.RemoveAt(index);
+            Console.SetCursorPosition(xPos - 2, yPos);
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.Write("██████");
+            Console.SetCursorPosition(xPos, yPos + 1);
             Console.Write("██");
-            
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.SetCursorPosition(xPos, yPos - 1);
+            Console.Write("██");
+            Console.SetCursorPosition(xPos, yPos + 2);
+            Console.Write("██");
+            Console.SetCursorPosition(xPos, yPos + 3);
+            Console.Write("██");
+            Console.SetCursorPosition(xPos, yPos + 4);
+            Console.Write("██");
+
+            // Default 3x3
+            /*Program.mygame.GameObjects.RemoveAt(index);
+            Console.SetCursorPosition(xPos - 2, yPos);
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.Write("██████");
+            Console.SetCursorPosition(xPos - 2, yPos + 1);
+            Console.Write("██████");
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.SetCursorPosition(xPos - 2, yPos - 1);
+            Console.Write("██████");*/
+
         }
         //tar bort explosionen och ersätter den med spaces. (FÅR IGENTLIGEN INTE TA SÖNDER VÄGGAR)
         public void BOOOOM(object o)
         {
-            Console.SetCursorPosition(xPos, yPos + 1);
+            // Kors Sida
+            /*Console.SetCursorPosition(xPos, yPos + 1);
             Console.Write("  ");
             Console.ForegroundColor = ConsoleColor.Red;
             Console.SetCursorPosition(xPos, yPos - 1);
             Console.Write("  ");
             Console.SetCursorPosition(xPos-2, yPos);
             Console.Write("            ");
-            Debug.Write("boom");
+            Debug.Write("boom");*/
+
+            // Kors Upp
+            Console.SetCursorPosition(xPos - 2, yPos);
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.Write("      ");
+            Console.SetCursorPosition(xPos, yPos + 1);
+            Console.Write("  ");
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.SetCursorPosition(xPos, yPos - 1);
+            Console.Write("  ");
+            Console.SetCursorPosition(xPos, yPos + 2);
+            Console.Write("  ");
+            Console.SetCursorPosition(xPos, yPos + 3);
+            Console.Write("  ");
+            Console.SetCursorPosition(xPos, yPos + 4);
+            Console.Write("  ");
+
+            // Default 3x3
+            /*
+            Console.SetCursorPosition(xPos - 2, yPos);
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.Write("      ");
+            Console.SetCursorPosition(xPos - 2, yPos + 1);
+            Console.Write("      ");
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.SetCursorPosition(xPos - 2, yPos - 1);
+            Console.Write("      ");*/
         }
 
     }
