@@ -11,12 +11,12 @@ namespace GridGame
 {
     class Program
     {
-        public static Game mygame = new Game(Console.LargestWindowWidth - 13, Console.LargestWindowHeight-12);
+        public static Game mygame = new Game(Console.LargestWindowWidth - 13, Console.LargestWindowHeight - 12);
         public static bool haveAI;
         static void Main(string[] args)
         {
             Console.CursorVisible = false;
-            Console.WriteLine(" Do you want AI? (Y/N)"); 
+            Console.WriteLine(" Do you want AI? (Y/N)");
             ConsoleKey input = Console.ReadKey(true).Key;
             if (input == ConsoleKey.Y)
             {
@@ -24,7 +24,7 @@ namespace GridGame
             }
             else haveAI = false;
 
-            Console.SetWindowSize(Console.LargestWindowWidth- 10, Console.LargestWindowHeight- 10);
+            Console.SetWindowSize(Console.LargestWindowWidth - 10, Console.LargestWindowHeight - 10);
             mygame.DrawBoard();
             while (true)
             {
@@ -46,7 +46,7 @@ namespace GridGame
                     {
                         GameObjects.Add(new Wall(j, i));
                     }
-                    if (i <= ySize/2 && j <= xSize/4)
+                    if (i <= ySize / 2 && j <= xSize / 4)
                     {
                         GameObjects.Add(new Wall(j * 4, i * 2));
                     }
@@ -160,19 +160,19 @@ namespace GridGame
 
             if (input == ConsoleKey.W)
             {
-                    yPos--;
+                yPos--;
             }
             if (input == ConsoleKey.S)
             {
-                    yPos++;
+                yPos++;
             }
             if (input == ConsoleKey.D)
             {
-                    xPos += 2;
+                xPos += 2;
             }
             if (input == ConsoleKey.A)
             {
-                    xPos -= 2;
+                xPos -= 2;
             }
             if (!CollisionCheck(xPos, yPos))
             {
@@ -194,17 +194,17 @@ namespace GridGame
         public Random rng = new Random();
         int xPos;
         int yPos;
-        
+
         public AI()
         {
             xPos = Console.LargestWindowWidth - 22;
             yPos = 10;
 
-            if(xPos == 5)
+            if (xPos == 5)
             {
                 xPos = 6;
             }
-            if(yPos == 5)
+            if (yPos == 5)
             {
                 yPos = 6;
             }
@@ -251,7 +251,7 @@ namespace GridGame
                 }
                 if (!CollisionCheck(xPos, yPos)) moved = false;
                 else moved = true;
-                
+
             }
             Delete(oldX, oldY);
             Draw(0, 0);
@@ -265,13 +265,10 @@ namespace GridGame
 
         int xPos;
         int yPos;
-        int index;
         public BOOM(int playerPosX, int playerPosY)
         {
-            index = Program.mygame.GameObjects.Count - 1;
             xPos = playerPosX;
             yPos = playerPosY;
-            Timer t = new Timer(TimerCallback, null, 5000, 0);
         }
 
         public override void Draw(int xBoxSize, int yBoxSize)
@@ -286,10 +283,28 @@ namespace GridGame
             Draw(0, 0);
         }
 
-        public void TimerCallback(object o)
+        public void RemoveBoom(object o)
         {
-            Program.mygame.GameObjects.RemoveAt(index);
-            Debug.Write("boom");
+            // Remove Boom.
+        }
+    }
+
+    class TimerClass
+    {
+        BOOM boom;
+        Player player;
+        public TimerClass()
+        {
+
+        }
+
+        public void StartBoom()
+        {
+            Timer time = new Timer(boom.RemoveBoom, null, 5000, 0);
+        }
+        public void BoomCooldown()
+        {
+
         }
     }
 }
