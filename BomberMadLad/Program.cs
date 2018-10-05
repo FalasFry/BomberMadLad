@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Threading;
 using System.Diagnostics;
 
 
@@ -120,7 +121,7 @@ namespace GridGame
         {
             int startX = XPosition * xBoxSize;
             int startY = YPosition * yBoxSize;
-            Console.ForegroundColor = ConsoleColor.Gray;
+            Console.ForegroundColor = ConsoleColor.DarkGray;
             Console.SetCursorPosition(startX, startY);
             Console.Write("██");
         }
@@ -133,7 +134,6 @@ namespace GridGame
 
     class Player : GameObject
     {
-        Game game;
 
         int xPos = 10;
         int yPos = 10;
@@ -262,13 +262,16 @@ namespace GridGame
     {
         Stopwatch sw = new Stopwatch();
 
+
         int xPos;
         int yPos;
-
+        int index;
         public BOOM(int playerPosX, int playerPosY)
         {
+            index = Program.mygame.GameObjects.Count - 1;
             xPos = playerPosX;
             yPos = playerPosY;
+            Timer t = new Timer(TimerCallback, null, 5000, 0);
         }
 
         public override void Draw(int xBoxSize, int yBoxSize)
@@ -281,6 +284,12 @@ namespace GridGame
         public override void Update()
         {
             Draw(0, 0);
+        }
+
+        public void TimerCallback(object o)
+        {
+            Program.mygame.GameObjects.RemoveAt(index);
+            Debug.Write("boom");
         }
     }
 }
