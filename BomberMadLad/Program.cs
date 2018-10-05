@@ -314,11 +314,23 @@ namespace GridGame
             Console.Write("██████");
             Console.SetCursorPosition(xPos, yPos + 1);
             Console.Write("██████");
+            Console.ForegroundColor = ConsoleColor.Red;
             Console.SetCursorPosition(xPos, yPos - 1);
             Console.Write("██████");
-            Console.Write("  ");
+            
+        }
+        public void BOOOOM(object o)
+        {
+            Console.SetCursorPosition(xPos, yPos + 1);
+            Console.Write("      ");
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.SetCursorPosition(xPos, yPos - 1);
+            Console.Write("      ");
+            Console.SetCursorPosition(xPos, yPos);
+            Console.Write("      ");
             Debug.Write("boom");
         }
+
     }
 
     class TimerClass
@@ -335,11 +347,13 @@ namespace GridGame
         {
             
             Timer time = new Timer(boom.RemoveBoom, null, 5000, Timeout.Infinite);
+            Timer time2 = new Timer(boom.BOOOOM, null, 5500, Timeout.Infinite);
         }
         public void BoomCooldown()
         {
             
             Timer time = new Timer(player.PlayerBoomCooldown, null, 5000, Timeout.Infinite);
         }
+        
     }
 }
