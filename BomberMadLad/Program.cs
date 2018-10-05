@@ -297,7 +297,7 @@ namespace GridGame
         public override void Draw(int xBoxSize, int yBoxSize)
         {
             Console.SetCursorPosition(xPos, yPos);
-            Console.ForegroundColor = ConsoleColor.DarkYellow;
+            Console.ForegroundColor = ConsoleColor.Green;
             Console.Write("██");
         }
 
@@ -320,21 +320,23 @@ namespace GridGame
     {
         BOOM boom;
         Player player;
+        int fiveSeconds;
         public TimerClass()
         {
             boom = Program.mygame.player.latestBoom;
             player = Program.mygame.player;
+            fiveSeconds = 2000;
         }
 
         public void StartBoom(BOOM boom)
         {
             
-            Timer time = new Timer(boom.RemoveBoom, null, 5000, Timeout.Infinite);
+            Timer time = new Timer(boom.RemoveBoom, null, fiveSeconds, Timeout.Infinite);
         }
         public void BoomCooldown()
         {
             
-            Timer time = new Timer(player.PlayerBoomCooldown, null, 5000, Timeout.Infinite);
+            Timer time = new Timer(player.PlayerBoomCooldown, null, fiveSeconds, Timeout.Infinite);
         }
     }
 }
