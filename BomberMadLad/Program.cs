@@ -38,6 +38,7 @@ namespace GridGame
     {
         public List<GameObject> GameObjects = new List<GameObject>();
         public List<GameObject> Walls = new List<GameObject>();
+        public Player player = new Player();
         public Game(int xSize, int ySize)
         {
             for (int i = 0; i < ySize + 2; i++)
@@ -54,7 +55,7 @@ namespace GridGame
                     }
                 }
             }
-            GameObjects.Add(new Player());
+            GameObjects.Add(player);
 
         }
 
@@ -145,12 +146,14 @@ namespace GridGame
 
         int xPos = 10;
         int yPos = 10;
+        bool layBomb;
+        public BOOM latestBoom;
 
         public Player()
         {
-
+            layBomb = true;
         }
-
+        
         public override void Draw(int xBoxSize, int yBoxSize)
         {
             Console.ForegroundColor = ConsoleColor.DarkCyan;
@@ -189,10 +192,21 @@ namespace GridGame
             }
             else Delete(oldX, oldY);
             if (input == ConsoleKey.Spacebar)
+            Draw(0, 0);
+            if (input == ConsoleKey.Spacebar && layBomb)
             {
+                TimerClass timer = new TimerClass();
                 // Big Boom
-                Program.mygame.GameObjects.Add(new BOOM(xPos, yPos));
+                latestBoom = new BOOM(xPos, yPos);
+                Program.mygame.GameObjects.Add(latestBoom);
+                timer.BoomCooldown();
+                layBomb = false;
             }
+        }
+
+        public void PlayerBoomCooldown(object o)
+        {
+            layBomb = true;
         }
     }
 
@@ -307,17 +321,19 @@ namespace GridGame
         Player player;
         public TimerClass()
         {
-            boom = Program.mygame.GameObjects[Program.mygame.GameObjects.Count];
-
+            boom = Program.mygame.player.latestBoom;
+            player = Program.mygame.player;
         }
 
         public void StartBoom()
         {
-            Timer time = new Timer(boom.RemoveBoom, null, 5000, 0);
+            
+            Timer time = new Timer(boom.RemoveBoom, null, 5000, Timeout.Infinite);
         }
         public void BoomCooldown()
         {
             
+            Timer time = new Timer(player.PlayerBoomCooldown, null, 5000, Timeout.Infinite);
         }
     }
 }
