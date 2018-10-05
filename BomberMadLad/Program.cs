@@ -235,9 +235,8 @@ namespace GridGame
         public override void Draw(int xBoxSize, int yBoxSize)
         {
             Console.SetCursorPosition(xPos, yPos);
-            Console.ForegroundColor = ConsoleColor.Red;
+            Console.ForegroundColor = ConsoleColor.Green;
             Console.Write("██");
-            Console.ForegroundColor = ConsoleColor.Gray;
         }
 
         public override void Update()
@@ -297,7 +296,7 @@ namespace GridGame
         public override void Draw(int xBoxSize, int yBoxSize)
         {
             Console.SetCursorPosition(xPos, yPos);
-            Console.ForegroundColor = ConsoleColor.Green;
+            Console.ForegroundColor = ConsoleColor.Yellow;
             Console.Write("██");
         }
 
