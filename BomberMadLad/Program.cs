@@ -28,6 +28,7 @@ namespace GridGame
             mygame.DrawBoard();
             while (true)
             {
+                mygame.DrawStuff();
                 mygame.UpdateBoard();
             }
         }
@@ -36,6 +37,7 @@ namespace GridGame
     class Game
     {
         public List<GameObject> GameObjects = new List<GameObject>();
+        public List<GameObject> Walls = new List<GameObject>();
         public Game(int xSize, int ySize)
         {
             for (int i = 0; i < ySize + 2; i++)
@@ -44,11 +46,11 @@ namespace GridGame
                 {
                     if (j == 0 || i == 0 || i == ySize + 1 || j == xSize + 1)
                     {
-                        GameObjects.Add(new Wall(j, i));
+                        Walls.Add(new Wall(j, i));
                     }
                     if (i <= ySize/2 && j <= xSize/4)
                     {
-                        GameObjects.Add(new Wall(j * 4, i * 2));
+                        Walls.Add(new Wall(j * 4, i * 2));
                     }
                 }
             }
@@ -64,12 +66,18 @@ namespace GridGame
                 GameObjects.Add(new AI());
             }
 
-            foreach (GameObject gameObject in GameObjects)
+            foreach (GameObject gameObject in Walls)
             {
                 gameObject.Draw(1, 1);
             }
         }
-
+        public void DrawStuff()
+        {
+            for (int i = 0; i < GameObjects.Count; i++)
+            {
+                GameObjects[i].Draw(1,1);
+            }
+        }
         public void UpdateBoard()
         {
             for (int i = 0; i < GameObjects.Count; i++)
@@ -95,11 +103,11 @@ namespace GridGame
 
         public bool CollisionCheck(int xPos, int yPos)
         {
-            for (int i = 0; i < Program.mygame.GameObjects.Count; i++)
+            for (int i = 0; i < Program.mygame.Walls.Count; i++)
             {
-                if (Program.mygame.GameObjects[i].YPosition == yPos)
+                if (Program.mygame.Walls[i].YPosition == yPos)
                 {
-                    if (Program.mygame.GameObjects[i].XPosition == xPos - 1 || Program.mygame.GameObjects[i].XPosition == xPos || Program.mygame.GameObjects[i].XPosition == xPos + 1)
+                    if (Program.mygame.Walls[i].XPosition == xPos - 1 || Program.mygame.Walls[i].XPosition == xPos || Program.mygame.Walls[i].XPosition == xPos + 1)
                     {
                         return false;
                     }
@@ -180,7 +188,6 @@ namespace GridGame
                 yPos = oldY;
             }
             else Delete(oldX, oldY);
-            Draw(0, 0);
             if (input == ConsoleKey.Spacebar)
             {
                 // Big Boom
@@ -254,7 +261,6 @@ namespace GridGame
                 
             }
             Delete(oldX, oldY);
-            Draw(0, 0);
         }
     }
 
@@ -268,7 +274,7 @@ namespace GridGame
         int index;
         public BOOM(int playerPosX, int playerPosY)
         {
-            index = Program.mygame.GameObjects.Count - 1;
+            index = Program.mygame.GameObjects.Count;
             xPos = playerPosX;
             yPos = playerPosY;
             Timer t = new Timer(TimerCallback, null, 5000, 0);
@@ -283,12 +289,15 @@ namespace GridGame
 
         public override void Update()
         {
-            Draw(0, 0);
+
         }
 
         public void TimerCallback(object o)
         {
             Program.mygame.GameObjects.RemoveAt(index);
+            Console.SetCursorPosition(xPos, yPos);
+            Console.ForegroundColor = ConsoleColor.DarkYellow;
+            Console.Write("  ");
             Debug.Write("boom");
         }
     }
