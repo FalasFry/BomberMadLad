@@ -309,7 +309,12 @@ namespace GridGame
         {
             Program.mygame.GameObjects.RemoveAt(index);
             Console.SetCursorPosition(xPos, yPos);
-            Console.ForegroundColor = ConsoleColor.DarkYellow;
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.Write("██████");
+            Console.SetCursorPosition(xPos, yPos + 1);
+            Console.Write("██████");
+            Console.SetCursorPosition(xPos, yPos - 1);
+            Console.Write("██████");
             Console.Write("  ");
             Debug.Write("boom");
         }
