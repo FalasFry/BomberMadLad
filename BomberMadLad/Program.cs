@@ -311,15 +311,16 @@ namespace GridGame
             Console.SetCursorPosition(xPos, yPos);
             Console.ForegroundColor = ConsoleColor.Red;
             Console.Write("██████");
-            Console.SetCursorPosition(xPos, yPos + 1);
+            Console.SetCursorPosition(xPos, yPos++);
             Console.Write("██████");
-            Console.SetCursorPosition(xPos, yPos - 1);
+            Console.SetCursorPosition(xPos, yPos --);
             Console.Write("██████");
             Console.Write("  ");
             Debug.Write("boom");
         }
     }
 
+    // Klass för timer
     class TimerClass
     {
         BOOM boom;
@@ -332,9 +333,9 @@ namespace GridGame
             fiveSeconds = 2000;
         }
 
+        // Metoder för att timers ska användas i olika tillfällen. 
         public void StartBoom(BOOM boom)
         {
-            
             Timer time = new Timer(boom.RemoveBoom, null, fiveSeconds, Timeout.Infinite);
         }
         public void BoomCooldown()
