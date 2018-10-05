@@ -36,7 +36,6 @@ namespace GridGame
     class Game
     {
         public List<GameObject> GameObjects = new List<GameObject>();
-        public Player player = new Player();
         public Game(int xSize, int ySize)
         {
             for (int i = 0; i < ySize + 2; i++)
@@ -53,7 +52,7 @@ namespace GridGame
                     }
                 }
             }
-            GameObjects.Add(player);
+            GameObjects.Add(new Player());
 
         }
 
@@ -138,14 +137,12 @@ namespace GridGame
 
         int xPos = 10;
         int yPos = 10;
-        bool layBomb;
-
 
         public Player()
         {
-            layBomb = true;
+
         }
-        
+
         public override void Draw(int xBoxSize, int yBoxSize)
         {
             Console.ForegroundColor = ConsoleColor.DarkCyan;
@@ -184,19 +181,11 @@ namespace GridGame
             }
             else Delete(oldX, oldY);
             Draw(0, 0);
-            if (input == ConsoleKey.Spacebar && layBomb)
+            if (input == ConsoleKey.Spacebar)
             {
-                TimerClass timer = new TimerClass();
                 // Big Boom
                 Program.mygame.GameObjects.Add(new BOOM(xPos, yPos));
-                timer.BoomCooldown();
-                layBomb = false;
             }
-        }
-
-        public void PlayerBoomCooldown(object o)
-        {
-            layBomb = true;
         }
     }
 
@@ -306,16 +295,16 @@ namespace GridGame
         Player player;
         public TimerClass()
         {
-            player = Program.mygame.player;
+
         }
 
         public void StartBoom()
         {
-            Timer time = new Timer(boom.RemoveBoom, null, 5000, Timeout.Infinite);
+            Timer time = new Timer(boom.RemoveBoom, null, 5000, 0);
         }
         public void BoomCooldown()
         {
-            Timer time = new Timer(player.PlayerBoomCooldown, null, 5000, Timeout.Infinite);
+
         }
     }
 }
