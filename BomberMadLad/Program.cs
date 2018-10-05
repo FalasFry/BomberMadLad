@@ -87,10 +87,7 @@ namespace GridGame
 
             GameObjects.Add(player);
             //lägg till AI
-            if (Program.haveAI == true)
-            {
-                GameObjects.Add(new AI());
-            }
+
         }
 
         public void DrawBoard()
@@ -99,6 +96,10 @@ namespace GridGame
             foreach (GameObject gameObject in Walls)
             {
                 gameObject.Draw(1, 1);
+            }
+            if (Program.haveAI == true)
+            {
+                GameObjects.Add(new AI());
             }
         }
         //rita ut gameobjects
@@ -154,7 +155,7 @@ namespace GridGame
             return true;
         }
     }
-    //vägg
+    
     class Wall : GameObject
     {
         public Wall(int xPosition, int yPosition)
@@ -275,16 +276,6 @@ namespace GridGame
         {
             xPos = Console.LargestWindowWidth - 22;
             yPos = 10;
-
-            //??
-            if (xPos == 5)
-            {
-                xPos = 6;
-            }
-            if (yPos == 5)
-            {
-                yPos = 6;
-            }
         }
 
         public override void Draw(int xBoxSize, int yBoxSize)
@@ -372,24 +363,24 @@ namespace GridGame
             Program.mygame.GameObjects.RemoveAt(index);
             Console.SetCursorPosition(xPos-2, yPos);
             Console.ForegroundColor = ConsoleColor.Red;
-            Console.Write("██████");
-            Console.SetCursorPosition(xPos-2, yPos + 1 );
-            Console.Write("██████");
+            Console.Write("████████████");
+            Console.SetCursorPosition(xPos, yPos + 1 );
+            Console.Write("██");
             Console.ForegroundColor = ConsoleColor.Red;
-            Console.SetCursorPosition(xPos-2 , yPos - 1);
-            Console.Write("██████");
+            Console.SetCursorPosition(xPos , yPos - 1);
+            Console.Write("██");
             
         }
         //tar bort explosionen och ersätter den med spaces. (FÅR IGENTLIGEN INTE TA SÖNDER VÄGGAR)
         public void BOOOOM(object o)
         {
-            Console.SetCursorPosition(xPos-2, yPos + 1);
-            Console.Write("      ");
+            Console.SetCursorPosition(xPos, yPos + 1);
+            Console.Write("  ");
             Console.ForegroundColor = ConsoleColor.Red;
-            Console.SetCursorPosition(xPos-2, yPos - 1);
-            Console.Write("      ");
+            Console.SetCursorPosition(xPos, yPos - 1);
+            Console.Write("  ");
             Console.SetCursorPosition(xPos-2, yPos);
-            Console.Write("      ");
+            Console.Write("            ");
             Debug.Write("boom");
         }
 
@@ -402,13 +393,13 @@ namespace GridGame
         Player player;
 
         //???
-        int fiveSeconds;
+        int bombCoolDown;
 
         public TimerClass()
         {
             boom = Program.mygame.player.latestBoom;
             player = Program.mygame.player;
-            fiveSeconds = 2000;
+            bombCoolDown = 2000;
         }
 
         // Metoder för att timers ska användas i olika tillfällen. 
@@ -416,15 +407,15 @@ namespace GridGame
         //sätter ut explosion
         public void StartBoom(BOOM boom)
         {
-            Timer time = new Timer(boom.RemoveBoom, null, 5000, Timeout.Infinite);
-            Timer time2 = new Timer(boom.BOOOOM, null, 5500, Timeout.Infinite);
+            Timer time = new Timer(boom.RemoveBoom, null, bombCoolDown, Timeout.Infinite);
+            Timer time2 = new Timer(boom.BOOOOM, null, bombCoolDown + 500, Timeout.Infinite);
             
         }
         //cooldown
         public void BoomCooldown()
         {
             
-            Timer time = new Timer(player.PlayerBoomCooldown, null, fiveSeconds, Timeout.Infinite);
+            Timer time = new Timer(player.PlayerBoomCooldown, null, bombCoolDown, Timeout.Infinite);
         }
         
     }
