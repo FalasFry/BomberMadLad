@@ -91,19 +91,7 @@ namespace GridGame
 
         public void DrawBoard()
         {
-            //lägg till AI
-<<<<<<< HEAD
-            if (Program.haveAI == true)
-            {
-                GameObjects.Add(new AI());
-            }
-=======
 
-        }
-
-        public void DrawBoard()
-        {
->>>>>>> 4ab5e1cf516d8511cb5bbc73fe5bef17a4c74e83
             //rita ut väggar
             foreach (GameObject gameObject in Walls)
             {
@@ -486,5 +474,17 @@ namespace GridGame
             Timer time = new Timer(player.PlayerBoomCooldown, null, bombCoolDown, Timeout.Infinite);
         }
         
+    }
+
+    class PowerUps
+    {
+        Player player;
+        Game game;
+
+        public PowerUps()
+        {
+            game = Program.mygame;
+            player = game.player;
+        }
     }
 }
