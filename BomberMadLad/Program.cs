@@ -114,10 +114,6 @@ namespace GridGame
         //uppdatera alla objekt
         public void UpdateBoard()
         {
-            foreach(GameObject gameObject in Map)
-            {
-                gameObject.Update();
-            }
             for (int i = 0; i < GameObjects.Count; i++)
             {
                 GameObjects[i].Update();
