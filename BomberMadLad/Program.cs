@@ -632,15 +632,32 @@ namespace GridGame
         
     }
 
-    class PowerUps
+    class PowerUps : GameObject
     {
         Player player;
         Game game;
+        Random rng = new Random();
+
+        int Xpos;
+        int Ypos;
+        
 
         public PowerUps()
         {
             game = Program.mygame;
             player = game.player;
+            Xpos = rng.Next(0, 113 / 2) * 2;
+            Ypos = rng.Next(0, 51);
+        }
+
+        public override void Draw(int xBoxSize, int yBoxSize)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void Update()
+        {
+            throw new NotImplementedException();
         }
     }
 
