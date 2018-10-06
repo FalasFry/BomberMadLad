@@ -91,19 +91,6 @@ namespace GridGame
 
         public void DrawBoard()
         {
-            //lägg till AI
-<<<<<<< HEAD
-            if (Program.haveAI == true)
-            {
-                GameObjects.Add(new AI());
-            }
-=======
-
-        }
-
-        public void DrawBoard()
-        {
->>>>>>> 4ab5e1cf516d8511cb5bbc73fe5bef17a4c74e83
             //rita ut väggar
             foreach (GameObject gameObject in Walls)
             {
@@ -382,22 +369,26 @@ namespace GridGame
             Console.SetCursorPosition(xPos , yPos - 1);
             Console.Write("██");*/
 
+
+            CrossBomb(xPos, yPos, "██");
+
+
             // Kors Upp
-            Program.mygame.GameObjects.RemoveAt(index);
-            Console.SetCursorPosition(xPos - 2, yPos);
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.Write("██████");
-            Console.SetCursorPosition(xPos, yPos + 1);
-            Console.Write("██");
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.SetCursorPosition(xPos, yPos - 1);
-            Console.Write("██");
-            Console.SetCursorPosition(xPos, yPos + 2);
-            Console.Write("██");
-            Console.SetCursorPosition(xPos, yPos + 3);
-            Console.Write("██");
-            Console.SetCursorPosition(xPos, yPos + 4);
-            Console.Write("██");
+            //Program.mygame.GameObjects.RemoveAt(index);
+            //Console.SetCursorPosition(xPos - 2, yPos);
+            //Console.ForegroundColor = ConsoleColor.Red;
+            //Console.Write("██████");
+            //Console.SetCursorPosition(xPos, yPos + 1);
+            //Console.Write("██");
+            //Console.ForegroundColor = ConsoleColor.Red;
+            //Console.SetCursorPosition(xPos, yPos - 1);
+            //Console.Write("██");
+            //Console.SetCursorPosition(xPos, yPos + 2);
+            //Console.Write("██");
+            //Console.SetCursorPosition(xPos, yPos + 3);
+            //Console.Write("██");
+            //Console.SetCursorPosition(xPos, yPos + 4);
+            //Console.Write("██");
 
             // Default 3x3
             /*Program.mygame.GameObjects.RemoveAt(index);
@@ -414,6 +405,7 @@ namespace GridGame
         //tar bort explosionen och ersätter den med spaces. (FÅR IGENTLIGEN INTE TA SÖNDER VÄGGAR)
         public void BOOOOM(object o)
         {
+            CrossBomb(xPos, yPos, "  ");
             // Kors Sida
             /*Console.SetCursorPosition(xPos, yPos + 1);
             Console.Write("  ");
@@ -425,20 +417,20 @@ namespace GridGame
             Debug.Write("boom");*/
 
             // Kors Upp
-            Console.SetCursorPosition(xPos - 2, yPos);
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.Write("      ");
-            Console.SetCursorPosition(xPos, yPos + 1);
-            Console.Write("  ");
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.SetCursorPosition(xPos, yPos - 1);
-            Console.Write("  ");
-            Console.SetCursorPosition(xPos, yPos + 2);
-            Console.Write("  ");
-            Console.SetCursorPosition(xPos, yPos + 3);
-            Console.Write("  ");
-            Console.SetCursorPosition(xPos, yPos + 4);
-            Console.Write("  ");
+            //Console.SetCursorPosition(xPos - 2, yPos);
+            //Console.ForegroundColor = ConsoleColor.Red;
+            //Console.Write("      ");
+            //Console.SetCursorPosition(xPos, yPos + 1);
+            //Console.Write("  ");
+            //Console.ForegroundColor = ConsoleColor.Red;
+            //Console.SetCursorPosition(xPos, yPos - 1);
+            //Console.Write("  ");
+            //Console.SetCursorPosition(xPos, yPos + 2);
+            //Console.Write("  ");
+            //Console.SetCursorPosition(xPos, yPos + 3);
+            //Console.Write("  ");
+            //Console.SetCursorPosition(xPos, yPos + 4);
+            //Console.Write("  ");
 
             // Default 3x3
             /*
@@ -450,6 +442,78 @@ namespace GridGame
             Console.ForegroundColor = ConsoleColor.Red;
             Console.SetCursorPosition(xPos - 2, yPos - 1);
             Console.Write("      ");*/
+
+            //uppdatera väggar
+            //Program.mygame.DrawBoard();
+        }
+        public void CrossBomb(int xposition, int yposition, string toWrite)
+        {
+            int i = 1;
+            int j = 1;
+            bool oneside = false;
+
+            while (CollisionCheck(xposition - i, yposition))
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.SetCursorPosition(xposition - i, yposition);
+                Console.Write(toWrite);
+
+                if (!oneside)
+                {
+                    i *= -1;
+                    if (i > 0)
+                    {
+                        i++;
+                    }
+                }
+                if (!CollisionCheck(xposition - i, yposition) && !oneside)
+                {
+                    i *= -1;
+                    if (i > 0)
+                    {
+                        i--;
+                    }
+                    oneside = true;
+                }
+                if (oneside)
+                {
+                    if (i < 0) i--;
+                    if (i > 0) i++;
+                }
+            }
+            oneside = false;
+            while (CollisionCheck(xposition, yposition - j))
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.SetCursorPosition(xposition, yposition - j);
+                Console.Write(toWrite);
+
+                if (!oneside)
+                {
+                    Debug.WriteLine("normal" + j);
+                    j *= -1;
+                    if (j > 0)
+                    {
+                        j++;
+                    }
+                }
+                if (!CollisionCheck(xposition, yposition - j) && !oneside)
+                {
+                    Debug.WriteLine("changing");
+                    j *= -1;
+                    if (i > 0)
+                    {
+                        j--;
+                    }
+                    oneside = true;
+                }
+                if (oneside)
+                {
+                    Debug.WriteLine("oneside");
+                    if (j < 0) j--;
+                    if (j > 0) j++;
+                }
+            }
         }
 
     }
