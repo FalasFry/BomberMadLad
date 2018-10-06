@@ -87,6 +87,7 @@ namespace GridGame
             }
 
             Map.Add(new Map());
+            
             GameObjects.Add(player);
             
         }
@@ -94,6 +95,10 @@ namespace GridGame
         public void DrawBoard()
         {
             //rita ut väggar
+            foreach (GameObject gameObject in Map)
+            {
+                gameObject.Update();
+            }
             foreach (GameObject gameObject in Walls)
             {
                 gameObject.Draw(1, 1);
