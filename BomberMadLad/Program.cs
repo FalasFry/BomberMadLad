@@ -21,7 +21,6 @@ namespace GridGame
         static void Main(string[] args)
         {
             //sätter musen till osynlig
-
             //frågar om AI
             Console.CursorVisible = false;
             Console.WriteLine(" Do you want AI? (Y/N)");
@@ -33,7 +32,7 @@ namespace GridGame
             else haveAI = false;
 
             //ändra storlek på konsolfönstret till största möjliga
-            Console.SetWindowSize(Console.LargestWindowWidth - 10, Console.LargestWindowHeight - 10);
+            Console.SetWindowSize(Console.LargestWindowWidth - 10, Console.LargestWindowHeight - 9);
 
             //kalla på drawboard metoden för att rita ut alla saker i walls listan. den körs bara en gång eftersom väggarna inte behöver uppdateras
             mygame.DrawBoard();
@@ -169,6 +168,29 @@ namespace GridGame
             int startX = XPosition * xBoxSize;
             int startY = YPosition * yBoxSize;
             Console.ForegroundColor = ConsoleColor.DarkGray;
+            Console.SetCursorPosition(startX, startY);
+            Console.Write("██");
+        }
+
+        public override void Update()
+        {
+
+        }
+    }
+
+    class Map : GameObject
+    {
+        public Map(int xPos, int yPos)
+        {
+            XPosition = xPos;
+            YPosition = yPos;
+        }
+
+        public override void Draw(int xBoxSize, int yBoxSize)
+        {
+            int startX = XPosition * xBoxSize;
+            int startY = YPosition * yBoxSize;
+            Console.ForegroundColor = ConsoleColor.White;
             Console.SetCursorPosition(startX, startY);
             Console.Write("██");
         }
@@ -485,6 +507,27 @@ namespace GridGame
         {
             game = Program.mygame;
             player = game.player;
+        }
+    }
+
+    // Sätter de tre punkter man kan spawna på istället för hårdkodat.
+    class Spawn
+    {
+        AI aI;
+        int number;
+        int spawnOne;
+
+        public Spawn()
+        {
+            number = aI.rng.Next(1, 4);
+
+        }
+
+        public void Point()
+        {
+            if(number == 1)
+            {
+            }
         }
     }
 }
