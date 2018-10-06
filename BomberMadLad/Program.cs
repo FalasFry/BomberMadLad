@@ -160,6 +160,25 @@ namespace GridGame
             }
             return true;
         }
+
+        public bool CollisionCheckGameObj(int xPos, int yPos)
+        {
+            //för varje vägg som finns
+            for (int i = 0; i < Program.mygame.GameObjects.Count; i++)
+            {
+                //om y positionen är samma
+                if (Program.mygame.GameObjects[i].YPosition == yPos)
+                {
+                    //och x positionen och dens grannar är samma (vet ej varför men det funkar)
+                    if (Program.mygame.GameObjects[i].XPosition == xPos - 1 || Program.mygame.GameObjects[i].XPosition == xPos || Program.mygame.GameObjects[i].XPosition == xPos + 1)
+                    {
+                        //WE GOT COLLISION
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
     }
     
     class Wall : GameObject
@@ -633,7 +652,7 @@ namespace GridGame
 
         public void PowerupCooldown()
         {
-            Timer time = new Timer(power.SpawnPowerup, null, 0, 2000);
+            Timer time = new Timer(power.SpawnPowerup, null, 0, 10000);
         }
         
     }
@@ -648,6 +667,7 @@ namespace GridGame
         int Xpos;
         int Ypos;
         bool wait = false;
+        public int PowerNumber { get; set; }
 
         public PoweupsSpawn()
         {
@@ -656,12 +676,14 @@ namespace GridGame
             timer = new TimerClass();
             Xpos = rng.Next(0, 113 / 2) * 2;
             Ypos = rng.Next(0, 51);
-
+            PowerNumber = rng.Next(1, 4);
         }
 
         public override void Draw(int xBoxSize, int yBoxSize)
         {
-            throw new NotImplementedException();
+            Console.SetCursorPosition(Xpos, Ypos);
+            Console.ForegroundColor = ConsoleColor.Black;
+            Console.Write("██");
         }
 
         public override void Update()
@@ -671,6 +693,22 @@ namespace GridGame
                 timer.PowerupCooldown();
                 wait = false;
             }
+
+            if(PowerNumber == 1)
+            {
+                Draw(0, 0);
+                Console.ForegroundColor = ConsoleColor.Magenta;
+            }
+            if (PowerNumber == 2)
+            {
+                Draw(0, 0);
+                Console.ForegroundColor = ConsoleColor.Yellow;
+            }
+            if (rng.Next(1, 4) == 3)
+            {
+                Draw(0, 0);
+                Console.ForegroundColor = ConsoleColor.Cyan;
+            }
         }
 
         public void SpawnPowerup(object o)
@@ -679,11 +717,22 @@ namespace GridGame
         }
     }
 
-    class PowerUps
+    class PowerUps : GameObject
     {
+        int number;
         public PowerUps()
         {
+        }
 
+        public override void Draw(int xBoxSize, int yBoxSize)
+        {
+            
+        }
+
+        public override void Update()
+        {
+            //Om du nuddar en Poerup och det är powerup 1
+            
         }
     }
 
