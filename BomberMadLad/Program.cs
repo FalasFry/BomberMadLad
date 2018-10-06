@@ -90,10 +90,6 @@ namespace GridGame
 
         public void DrawBoard()
         {
-<<<<<<< HEAD
-=======
-
->>>>>>> aa31aa44fa967d3d010e63383b7deb62d25e89b3
             //rita ut väggar
             foreach (GameObject gameObject in Walls)
             {
