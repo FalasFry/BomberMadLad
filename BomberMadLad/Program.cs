@@ -86,15 +86,16 @@ namespace GridGame
             }
 
             GameObjects.Add(player);
+            
+        }
+
+        public void DrawBoard()
+        {
             //lägg till AI
             if (Program.haveAI == true)
             {
                 GameObjects.Add(new AI());
             }
-        }
-
-        public void DrawBoard()
-        {
             //rita ut väggar
             foreach (GameObject gameObject in Walls)
             {
