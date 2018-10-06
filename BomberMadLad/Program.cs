@@ -604,6 +604,7 @@ namespace GridGame
     {
         BOOM boom;
         Player player;
+        PoweupsSpawn power;
 
         int bombCoolDown;
 
@@ -629,25 +630,33 @@ namespace GridGame
             
             Timer time = new Timer(player.PlayerBoomCooldown, null, bombCoolDown, Timeout.Infinite);
         }
+
+        public void PowerupCooldown()
+        {
+            Timer time = new Timer(power.SpawnPowerup, null, 0, 2000);
+        }
         
     }
 
-    class PowerUps : GameObject
+    class PoweupsSpawn : GameObject
     {
         Player player;
         Game game;
         Random rng = new Random();
+        TimerClass timer;
 
         int Xpos;
         int Ypos;
-        
+        bool wait = false;
 
-        public PowerUps()
+        public PoweupsSpawn()
         {
             game = Program.mygame;
             player = game.player;
+            timer = new TimerClass();
             Xpos = rng.Next(0, 113 / 2) * 2;
             Ypos = rng.Next(0, 51);
+
         }
 
         public override void Draw(int xBoxSize, int yBoxSize)
@@ -657,7 +666,24 @@ namespace GridGame
 
         public override void Update()
         {
-            throw new NotImplementedException();
+            while(wait)
+            {
+                timer.PowerupCooldown();
+                wait = false;
+            }
+        }
+
+        public void SpawnPowerup(object o)
+        {
+            wait = true;
+        }
+    }
+
+    class PowerUps
+    {
+        public PowerUps()
+        {
+
         }
     }
 
