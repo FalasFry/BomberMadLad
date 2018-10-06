@@ -319,9 +319,6 @@ namespace GridGame
                 yPos = oldY;
             }
             else Delete(oldX, oldY);
-
-            //????
-            if (input == ConsoleKey.Spacebar)
             Draw(0, 0);
 
             //lägg bomb
