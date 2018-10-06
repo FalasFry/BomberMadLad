@@ -129,10 +129,12 @@ namespace GridGame
 
     abstract class GameObject
     {
+        public bool CanBlow;
         public int XPosition;
         public int YPosition;
         public abstract void Draw(int xBoxSize, int yBoxSize);
         public abstract void Update();
+        public abstract void Destroy(int index);
 
         //ta bort en ruta på positionen som skickas in
         public void Delete(int oldX, int oldY)
@@ -166,6 +168,7 @@ namespace GridGame
     {
         public Wall(int xPosition, int yPosition, bool Destroyable)
         {
+            CanBlow = Destroyable;
             XPosition = xPosition;
             YPosition = yPosition;
         }
@@ -174,7 +177,8 @@ namespace GridGame
         {
             int startX = XPosition * xBoxSize;
             int startY = YPosition * yBoxSize;
-            Console.ForegroundColor = ConsoleColor.DarkGray;
+            if (!CanBlow) Console.ForegroundColor = ConsoleColor.DarkGray;
+            else Console.ForegroundColor = ConsoleColor.White;
             Console.SetCursorPosition(startX, startY);
             Console.Write("██");
         }
@@ -182,6 +186,13 @@ namespace GridGame
         public override void Update()
         {
 
+        }
+        public override void Destroy(int index)
+        {
+            Debug.WriteLine(index);
+            Program.mygame.Walls.RemoveAt(index);
+            Console.SetCursorPosition(XPosition, YPosition);
+            Console.Write("  ");
         }
     }
 
@@ -199,6 +210,9 @@ namespace GridGame
             yPos = Console.LargestWindowHeight / 2;
         }
 
+        public override void Destroy(int index)
+        {
+        }
         public override void Draw(int xBoxSize, int yBoxSize)
         {
             Console.ForegroundColor = ConsoleColor.White;
@@ -217,7 +231,6 @@ namespace GridGame
             //en loop som ser till att han inte går in i väggar, principen är att om han går in i vägg får han gå igen tills han lyckats gå åt rätt håll
             for (int i = 0; i <= maxMove; i++)
             {
-                Debug.WriteLine(oldX + " " + oldY);
                 moved = false;
                     while (!moved)
                     {
@@ -227,28 +240,25 @@ namespace GridGame
 
                         if (dir == 1)
                         {
-                        Debug.WriteLine("y-");
                             yPos--;
                         }
                         if (dir == 2)
                         {
-                        Debug.WriteLine("y+");
                         yPos++;
                         }
                         if (dir == 3)
                         {
-                        Debug.WriteLine("x-");
                         xPos += 2;
                         }
                         if (dir == 4)
                         {
-                        Debug.WriteLine("x+");
                         xPos -= 2;
                         }
                         if (!CollisionCheck(xPos, yPos)) moved = false;
                         else moved = true;
 
                     }
+
                 posList.Add(new int[2] { xPos, yPos });
                 oldX = xPos;
                 oldY = yPos;
@@ -277,7 +287,12 @@ namespace GridGame
         {
             layBomb = true;
         }
-        
+
+        public override void Destroy(int index)
+        {
+            throw new NotImplementedException();
+        }
+
         //rita ut cyan spelare
         public override void Draw(int xBoxSize, int yBoxSize)
         {
@@ -361,6 +376,10 @@ namespace GridGame
             yPos = 10;
         }
 
+        public override void Destroy(int index)
+        {
+        }
+
         public override void Draw(int xBoxSize, int yBoxSize)
         {
             Console.SetCursorPosition(xPos, yPos);
@@ -425,6 +444,10 @@ namespace GridGame
             xPos = playerPosX;
             yPos = playerPosY;
 
+        }
+
+        public override void Destroy(int index)
+        {
         }
 
         public override void Draw(int xBoxSize, int yBoxSize)
@@ -535,7 +558,7 @@ namespace GridGame
             int i = 1;
             int j = 1;
             bool oneside = false;
-
+            int index = 0;
             while (CollisionCheck(xposition - i, yposition))
             {
                 Console.ForegroundColor = ConsoleColor.Red;
@@ -552,6 +575,21 @@ namespace GridGame
                 }
                 if (!CollisionCheck(xposition - i, yposition) && !oneside)
                 {
+                    if (toWrite != "  ")
+                    {
+                        index = 0;
+                        for (int x = 0; x < Program.mygame.Walls.Count; x++)
+                        {
+                            int mult = 1;
+                            if (i < 0) mult = -1;
+
+                            if (Program.mygame.Walls[x].XPosition == xposition - i - mult && Program.mygame.Walls[x].YPosition == yposition && Program.mygame.Walls[x].CanBlow)
+                            {
+                                index = x;
+                            }
+                        }
+                        if (index != 0) Program.mygame.Walls[index].Destroy(index);
+                    }
                     i *= -1;
                     if (i > 0)
                     {
@@ -565,6 +603,23 @@ namespace GridGame
                     if (i > 0) i++;
                 }
             }
+
+            if (toWrite != "  ")
+            {
+                index = 0;
+                for (int x = 0; x < Program.mygame.Walls.Count; x++)
+                {
+                    int mult = 1;
+                    if (i < 0) mult = -1;
+                    if (Program.mygame.Walls[x].XPosition == xposition - i - mult && Program.mygame.Walls[x].YPosition == yposition && Program.mygame.Walls[x].CanBlow)
+                    {
+                        index = x;
+                    }
+                }
+                if (index != 0) Program.mygame.Walls[index].Destroy(index);
+                Debug.WriteLine("destroyed" + index);
+               
+            }
             oneside = false;
             while (CollisionCheck(xposition, yposition - j))
             {
@@ -574,7 +629,6 @@ namespace GridGame
 
                 if (!oneside)
                 {
-                    Debug.WriteLine("normal" + j);
                     j *= -1;
                     if (j > 0)
                     {
@@ -583,7 +637,18 @@ namespace GridGame
                 }
                 if (!CollisionCheck(xposition, yposition - j) && !oneside)
                 {
-                    Debug.WriteLine("changing");
+                    if (toWrite != "  ")
+                    {
+                        for (int x = 0; x < Program.mygame.Walls.Count; x++)
+                        {
+                            if (Program.mygame.Walls[x].XPosition == xposition && Program.mygame.Walls[x].YPosition == yposition - j && Program.mygame.Walls[x].CanBlow)
+                            {
+                                index = x;
+                            }
+                        }
+                        if (index != 0) Program.mygame.Walls[index].Destroy(index);
+                    }
+
                     j *= -1;
                     if (i > 0)
                     {
@@ -593,10 +658,22 @@ namespace GridGame
                 }
                 if (oneside)
                 {
-                    Debug.WriteLine("oneside");
                     if (j < 0) j--;
                     if (j > 0) j++;
                 }
+            }
+            if (toWrite != "  ")
+            {
+                index = 0;
+                for (int x = 0; x < Program.mygame.Walls.Count; x++)
+                {
+
+                    if (Program.mygame.Walls[x].XPosition == xposition && Program.mygame.Walls[x].YPosition == yposition - j && Program.mygame.Walls[x].CanBlow)
+                    {
+                        index = x;
+                    }
+                }
+                if (index != 0) Program.mygame.Walls[index].Destroy(index);
             }
         }
 
