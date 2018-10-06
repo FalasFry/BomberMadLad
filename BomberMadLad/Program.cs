@@ -76,12 +76,12 @@ namespace GridGame
                     if (j == 0 || i == 0 || i == ySize + 1 || j == xSize + 1)
                     {
                         //lägg till vägg i den positionen
-                        Walls.Add(new Wall(j, i));
+                        Walls.Add(new Wall(j, i, false));
                     }
                     //räkna ut koordinaterna för mönster. (OBS RÖR INGET DET FUNKAR)
                     if (i <= ySize / 2 && j <= xSize / 4)
                     {
-                        Walls.Add(new Wall(j * 4, i * 2));
+                        Walls.Add(new Wall(j * 4, i * 2, false));
                     }
                 }
             }
@@ -164,7 +164,7 @@ namespace GridGame
     
     class Wall : GameObject
     {
-        public Wall(int xPosition, int yPosition)
+        public Wall(int xPosition, int yPosition, bool Destroyable)
         {
             XPosition = xPosition;
             YPosition = yPosition;
@@ -212,6 +212,7 @@ namespace GridGame
             int oldY = yPos;
             int dir = rng.Next(1, 5);
             bool moved = false;
+            List<int[]> posList = new List<int[]>();
             int maxMove = 5000;
             //en loop som ser till att han inte går in i väggar, principen är att om han går in i vägg får han gå igen tills han lyckats gå åt rätt håll
             for (int i = 0; i <= maxMove; i++)
@@ -248,10 +249,16 @@ namespace GridGame
                         else moved = true;
 
                     }
+                posList.Add(new int[2] { xPos, yPos });
                 oldX = xPos;
                 oldY = yPos;
                 Draw(0, 0);
             }
+            for (int i = 0; i < posList.Count; i++)
+            {
+                Program.mygame.Walls.Add(new Wall(posList[i][0], posList[i][1], true));
+            }
+            
         }
     }
 
