@@ -98,10 +98,6 @@ namespace GridGame
             {
                 gameObject.Draw(1, 1);
             }
-            foreach(GameObject gameObject in Map)
-            {
-                gameObject.Draw(1, 1);
-            }
             if (Program.haveAI == true)
             {
                 GameObjects.Add(new AI());
@@ -190,6 +186,8 @@ namespace GridGame
 
     class Map : GameObject
     {
+
+        Random rng = new Random();
         int xPos;
         int yPos;
         AI ai;
@@ -209,46 +207,49 @@ namespace GridGame
 
         public override void Update()
         {
-            Random rng = new Random();
             int oldX = xPos;
             int oldY = yPos;
             int dir = rng.Next(1, 5);
             bool moved = false;
-            int maxMove = 0;
+            int maxMove = 10000;
             //en loop som ser till att han inte går in i väggar, principen är att om han går in i vägg får han gå igen tills han lyckats gå åt rätt håll
-            while (maxMove < 100)
+            for (int i = 0; i <= maxMove; i++)
             {
-                while (!moved)
-                {
-                    xPos = oldX;
-                    yPos = oldY;
-                    Debug.Write(maxMove);
-                    dir = rng.Next(1, 5);
+                Debug.WriteLine(oldX + " " + oldY);
+                moved = false;
+                    while (!moved)
+                    {
+                        xPos = oldX;
+                        yPos = oldY;
+                        dir = rng.Next(1, 5);
 
-                    if (dir == 1)
-                    {
-                        yPos--;
-                        maxMove++;
-                    }
-                    if (dir == 2)
-                    {
+                        if (dir == 1)
+                        {
+                        Debug.WriteLine("y-");
+                            yPos--;
+                        }
+                        if (dir == 2)
+                        {
+                        Debug.WriteLine("y+");
                         yPos++;
-                        maxMove++;
-                    }
-                    if (dir == 3)
-                    {
+                        }
+                        if (dir == 3)
+                        {
+                        Debug.WriteLine("x-");
                         xPos += 2;
-                        maxMove++;
-                    }
-                    if (dir == 4)
-                    {
+                        }
+                        if (dir == 4)
+                        {
+                        Debug.WriteLine("x+");
                         xPos -= 2;
-                        maxMove++;
-                    }
-                    if (!CollisionCheck(xPos, yPos)) moved = false;
-                    else moved = true;
+                        }
+                        if (!CollisionCheck(xPos, yPos)) moved = false;
+                        else moved = true;
 
-                }
+                    }
+                oldX = xPos;
+                oldY = yPos;
+                Draw(0, 0);
             }
         }
     }
