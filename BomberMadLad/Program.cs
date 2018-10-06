@@ -211,7 +211,7 @@ namespace GridGame
             int oldY = yPos;
             int dir = rng.Next(1, 5);
             bool moved = false;
-            int maxMove = 10000;
+            int maxMove = 5000;
             //en loop som ser till att han inte går in i väggar, principen är att om han går in i vägg får han gå igen tills han lyckats gå åt rätt håll
             for (int i = 0; i <= maxMove; i++)
             {
