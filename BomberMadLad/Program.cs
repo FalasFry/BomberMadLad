@@ -57,6 +57,8 @@ namespace GridGame
         //väggar
         public List<GameObject> Walls = new List<GameObject>();
 
+        public List<GameObject> Map = new List<GameObject>();
+
         //skapa ny spelare
         public Player player = new Player();
 
@@ -84,18 +86,19 @@ namespace GridGame
                 }
             }
 
+            Map.Add(new Map());
             GameObjects.Add(player);
             
         }
 
         public void DrawBoard()
         {
-<<<<<<< HEAD
-=======
-
->>>>>>> aa31aa44fa967d3d010e63383b7deb62d25e89b3
             //rita ut väggar
             foreach (GameObject gameObject in Walls)
+            {
+                gameObject.Draw(1, 1);
+            }
+            foreach(GameObject gameObject in Map)
             {
                 gameObject.Draw(1, 1);
             }
@@ -115,6 +118,10 @@ namespace GridGame
         //uppdatera alla objekt
         public void UpdateBoard()
         {
+            foreach(GameObject gameObject in Map)
+            {
+                gameObject.Update();
+            }
             for (int i = 0; i < GameObjects.Count; i++)
             {
                 GameObjects[i].Update();
@@ -183,24 +190,66 @@ namespace GridGame
 
     class Map : GameObject
     {
-        public Map(int xPos, int yPos)
+        int xPos;
+        int yPos;
+        AI ai;
+
+        public Map()
         {
-            XPosition = xPos;
-            YPosition = yPos;
+            xPos = Console.LargestWindowWidth / 2;
+            yPos = Console.LargestWindowHeight / 2;
         }
 
         public override void Draw(int xBoxSize, int yBoxSize)
         {
-            int startX = XPosition * xBoxSize;
-            int startY = YPosition * yBoxSize;
             Console.ForegroundColor = ConsoleColor.White;
-            Console.SetCursorPosition(startX, startY);
+            Console.SetCursorPosition(xPos, yPos);
             Console.Write("██");
         }
 
         public override void Update()
         {
+            Random rng = new Random();
+            int oldX = xPos;
+            int oldY = yPos;
+            int dir = rng.Next(1, 5);
+            bool moved = false;
+            int maxMove = 0;
+            //en loop som ser till att han inte går in i väggar, principen är att om han går in i vägg får han gå igen tills han lyckats gå åt rätt håll
+            while (maxMove < 100)
+            {
+                while (!moved)
+                {
+                    xPos = oldX;
+                    yPos = oldY;
+                    Debug.Write(maxMove);
+                    dir = rng.Next(1, 5);
 
+                    if (dir == 1)
+                    {
+                        yPos--;
+                        maxMove++;
+                    }
+                    if (dir == 2)
+                    {
+                        yPos++;
+                        maxMove++;
+                    }
+                    if (dir == 3)
+                    {
+                        xPos += 2;
+                        maxMove++;
+                    }
+                    if (dir == 4)
+                    {
+                        xPos -= 2;
+                        maxMove++;
+                    }
+                    if (!CollisionCheck(xPos, yPos)) moved = false;
+                    else moved = true;
+
+                }
+            }
         }
     }
 
@@ -550,7 +599,6 @@ namespace GridGame
         BOOM boom;
         Player player;
 
-        //???
         int bombCoolDown;
 
         public TimerClass()
