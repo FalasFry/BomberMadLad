@@ -666,7 +666,7 @@ namespace GridGame
 
         int Xpos;
         int Ypos;
-        bool wait = false;
+        bool wait = true;
         public int PowerNumber { get; set; }
 
         public PoweupsSpawn()
