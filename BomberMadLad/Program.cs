@@ -23,13 +23,8 @@ namespace GridGame
             //sätter musen till osynlig
             //frågar om AI
             Console.CursorVisible = false;
-            Console.WriteLine(" Do you want AI? (Y/N)");
-            ConsoleKey input = Console.ReadKey(true).Key;
-            if (input == ConsoleKey.Y)
-            {
-                haveAI = true;
-            }
-            else haveAI = false;
+
+            Menu();
 
             //ändra storlek på konsolfönstret till största möjliga
             Console.SetWindowSize(Console.LargestWindowWidth - 10, Console.LargestWindowHeight - 9);
@@ -46,6 +41,83 @@ namespace GridGame
                 //kallar på update i alla GameObjects
                 mygame.UpdateBoard();
             }
+        }
+
+        public static void Menu()
+        {
+            Console.WriteLine("Press Enter To Continue!");
+            ConsoleColor gray = ConsoleColor.Gray;
+            ConsoleColor black = ConsoleColor.Black;
+            bool start = false;
+            bool quit = false;
+
+            List<string> Buttons = new List<string>();
+            Buttons.Add("Start");
+            Buttons.Add("Quit");
+            Buttons.Add("Load");
+            Buttons.Add("Save");
+
+            while (true)
+            {
+                ConsoleKey input = Console.ReadKey(true).Key;
+
+                if (input == ConsoleKey.Enter || input == ConsoleKey.UpArrow)
+                {
+                    Console.Clear();
+                    BackColour(gray);
+                    ForColour(black);
+                    Console.WriteLine("Start");
+                    BackColour(black);
+                    ForColour(gray);
+                    Console.WriteLine("Quit");
+                    start = true;
+                    quit = false;
+
+
+                }
+
+                if(input == ConsoleKey.Spacebar && start)
+                {
+                    break;
+                }
+                if (input == ConsoleKey.Spacebar && quit)
+                {
+                    Environment.Exit(0);
+                }
+
+                if (input == ConsoleKey.DownArrow)
+                {
+                    Console.Clear();
+                    BackColour(black);
+                    ForColour(gray);
+                    Console.WriteLine("Start");
+                    BackColour(gray);
+                    ForColour(black);
+                    Console.WriteLine("Quit");
+                    BackColour(black);
+                    start = false;
+                    quit = true;
+                }
+
+            }
+            Console.BackgroundColor = ConsoleColor.Black;
+            Console.ForegroundColor = ConsoleColor.Gray;
+            Console.Clear();
+            Console.WriteLine(" Do you want AI? (Y/N)");
+            if (Console.ReadKey(true).Key == ConsoleKey.Y)
+            {
+                haveAI = true;
+            }
+            else haveAI = false;
+        }
+
+        public static void ForColour(ConsoleColor consoleColor)
+        {
+            Console.ForegroundColor = consoleColor;  
+        }
+        public static void BackColour(ConsoleColor consoleColor)
+        {
+            Console.BackgroundColor = consoleColor;
         }
     }
 
@@ -756,6 +828,11 @@ namespace GridGame
             PowerNumber = rng.Next(1, 4);
         }
 
+        public int Return()
+        {
+            return PowerNumber;
+        }
+
         public override void Draw(int xBoxSize, int yBoxSize)
         {
             Console.SetCursorPosition(Xpos, Ypos);
@@ -792,12 +869,21 @@ namespace GridGame
         {
             wait = true;
         }
+
+        public override void Destroy(int index)
+        {
+        }
     }
 
     class PowerUps : GameObject
     {
         int number;
         public PowerUps()
+        {
+            
+        }
+
+        public override void Destroy(int index)
         {
         }
 
