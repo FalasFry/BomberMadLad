@@ -93,13 +93,7 @@ namespace GridGame
             //frågar om AI
 
             Console.CursorVisible = false;
-            Console.WriteLine(" Do you want AI? (Y/N)");
-            ConsoleKey input = Console.ReadKey(true).Key;
-            if (input == ConsoleKey.Y)
-            {
-                haveAI = true;
-            }
-            else haveAI = false;
+            Menu();
 
             //ändra storlek på konsolfönstret till största möjliga
             Console.SetWindowSize(Console.LargestWindowWidth - 10, Console.LargestWindowHeight - 9);
@@ -205,11 +199,18 @@ namespace GridGame
             Console.WriteLine(" Do you want AI? (Y/N)");
             while (true)
             {
-                if (Console.ReadKey(true).Key == ConsoleKey.Y)
+                ConsoleKey input = Console.ReadKey(true).Key;
+
+                if (input == ConsoleKey.Y)
                 {
                     haveAI = true;
+                    break;
                 }
-                else haveAI = false;
+                if(input == ConsoleKey.N)
+                {
+                    haveAI = false;
+                    break;
+                }
             }
         }
 
@@ -222,7 +223,6 @@ namespace GridGame
         {
             Console.BackgroundColor = consoleColor;
         }
-
 
         public static void MenuList(int index)
         {
