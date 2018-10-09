@@ -26,7 +26,7 @@ namespace GridGame
                 }
             }
             return index;
-            
+
         }
         public static int GetWallIndex(int x, int y)
         {
@@ -86,8 +86,8 @@ namespace GridGame
         //metod som startas när spelet gör det
         static void Main(string[] args)
         {
-            
-            
+
+
 
             //sätter musen till osynlig
             //frågar om AI
@@ -118,8 +118,8 @@ namespace GridGame
                 mygame.DrawStuff();
 
                 //kallar på update i alla GameObjects
-               mygame.UpdateBoard();
-                
+                mygame.UpdateBoard();
+
 
                 for (int i = 0; i < TimeList.Count; i++)
                 {
@@ -129,8 +129,106 @@ namespace GridGame
                 stopwatch.Stop();
 
                 elapsedTime = (int)stopwatch.ElapsedMilliseconds;
+                mygame.UpdateBoard();
+            }
+        }
+
+        public static List<string> Buttons = new List<string>();
+        public static ConsoleColor gray = ConsoleColor.Gray;
+        public static ConsoleColor black = ConsoleColor.Black;
+
+        public static void Menu()
+        {
+            Console.WriteLine("Press Enter To Continue!");
+            Console.ReadKey(true);
+            Console.Clear();
+
+            int index = 0;
+            Buttons.Add("Start");
+            Buttons.Add("Quit");
+            Buttons.Add("Load");
+            Buttons.Add("Save");
+
+            MenuList(index);
+
+            while (true)
+            {
+                ConsoleKey input = Console.ReadKey(true).Key;
+
+                if (input == ConsoleKey.DownArrow)
+                {
+                    if (index < Buttons.Count - 1)
+                    {
+                        Console.Clear();
+                        MenuList(index + 1);
+                        index = index + 1;
+                    }
+                }
+                if (input == ConsoleKey.UpArrow)
+                {
+                    if (index > 0)
+                    {
+                        Console.Clear();
+                        MenuList(index - 1);
+                        index--;
+                    }
+                }
+
+                if (index == 0)
+                {
+                    if (input == ConsoleKey.Enter)
+                    {
+                        break;
+                    }
+                }
+                if (index == 1)
+                {
+                    if (input == ConsoleKey.Enter)
+                    {
+                        Environment.Exit(0);
+                    }
+                }
             }
 
+            BackColour(black);
+            ForColour(gray);
+            Console.Clear();
+            Console.WriteLine(" Do you want AI? (Y/N)");
+            if (Console.ReadKey(true).Key == ConsoleKey.Y)
+            {
+                haveAI = true;
+            }
+            else haveAI = false;
+        }
+
+        public static void ForColour(ConsoleColor consoleColor)
+        {
+            Console.ForegroundColor = consoleColor;
+        }
+
+        public static void BackColour(ConsoleColor consoleColor)
+        {
+            Console.BackgroundColor = consoleColor;
+        }
+
+
+        public static void MenuList(int index)
+        {
+            for (int i = 0; i < Buttons.Count; i++)
+            {
+                if (i == index)
+                {
+                    ForColour(black);
+                    BackColour(gray);
+                    Console.WriteLine(Buttons[index]);
+                }
+                else
+                {
+                    ForColour(gray);
+                    BackColour(black);
+                    Console.WriteLine(Buttons[i]);
+                }
+            }
         }
     }
 
@@ -172,10 +270,10 @@ namespace GridGame
             }
 
             Map.Add(new Map());
-            
+
             GameObjects.Add(player);
 
-            
+
         }
 
         public void DrawBoard()
@@ -199,7 +297,7 @@ namespace GridGame
         {
             for (int i = 0; i < GameObjects.Count; i++)
             {
-                GameObjects[i].Draw(1,1);
+                GameObjects[i].Draw(1, 1);
             }
         }
         //uppdatera alla objekt
@@ -237,14 +335,14 @@ namespace GridGame
                 {
                     Program.mygame.Walls.RemoveAt(index);
                 }
-                
+
             }
             else Program.mygame.GameObjects.RemoveAt(index);
 
-            Console.SetCursorPosition(XPosition,YPosition);
+            Console.SetCursorPosition(XPosition, YPosition);
             Console.Write("  ");
-            
-            
+
+
         }
 
         //kolla kollision på inskickade koordinater
@@ -286,7 +384,7 @@ namespace GridGame
             return true;
         }
     }
-    
+
     class Wall : GameObject
     {
         public Wall(int xPosition, int yPosition, bool Destroyable)
@@ -340,7 +438,7 @@ namespace GridGame
         {
             throw new NotImplementedException();
         }
-        
+
         public override void Draw(int xBoxSize, int yBoxSize)
         {
             Console.ForegroundColor = ConsoleColor.White;
@@ -365,32 +463,32 @@ namespace GridGame
             for (int i = 0; i <= maxMove; i++)
             {
                 moved = false;
-                    while (!moved)
+                while (!moved)
+                {
+                    xPos = oldX;
+                    yPos = oldY;
+                    dir = rng.Next(1, 5);
+
+                    if (dir == 1)
                     {
-                        xPos = oldX;
-                        yPos = oldY;
-                        dir = rng.Next(1, 5);
-
-                        if (dir == 1)
-                        {
-                            yPos--;
-                        }
-                        if (dir == 2)
-                        {
-                        yPos++;
-                        }
-                        if (dir == 3)
-                        {
-                        xPos += 2;
-                        }
-                        if (dir == 4)
-                        {
-                        xPos -= 2;
-                        }
-                        if (!CollisionCheck(xPos, yPos)) moved = false;
-                        else moved = true;
-
+                        yPos--;
                     }
+                    if (dir == 2)
+                    {
+                        yPos++;
+                    }
+                    if (dir == 3)
+                    {
+                        xPos += 2;
+                    }
+                    if (dir == 4)
+                    {
+                        xPos -= 2;
+                    }
+                    if (!CollisionCheck(xPos, yPos)) moved = false;
+                    else moved = true;
+
+                }
 
                 posList.Add(new int[2] { xPos, yPos });
                 oldX = xPos;
@@ -401,7 +499,7 @@ namespace GridGame
             {
                 Program.mygame.Walls.Add(new Wall(posList[i][0], posList[i][1], true));
             }
-            
+
         }
     }
 
@@ -420,7 +518,7 @@ namespace GridGame
 
         public Player()
         {
-            
+
             layBomb = true;
         }
 
@@ -541,7 +639,7 @@ namespace GridGame
         {
             throw new NotImplementedException();
         }
-        
+
         public override void Draw(int xBoxSize, int yBoxSize)
         {
             Console.SetCursorPosition(xPos, yPos);
@@ -615,7 +713,7 @@ namespace GridGame
             yPos = playerPosY;
 
         }
-        
+
         public override void Draw(int xBoxSize, int yBoxSize)
         {
             if (colorSwitch)
@@ -635,35 +733,74 @@ namespace GridGame
         {
 
         }
-        
+
         public void RemoveBoom()
         {
             Debug.WriteLine("removed");
-            int index = Program.GetIndex(xPos,yPos);
+            int index = Program.GetIndex(xPos, yPos);
             if (index != 0)
             {
                 Program.mygame.GameObjects[index].Destroy(index, false);
             }
-                CrossBomb(xPos, yPos, "██");
-            
+            CrossBomb(xPos, yPos, "██");
+
         }
         public void BOOOOM()
         {
             CrossBomb(xPos, yPos, "  ");
+            // Kors Sida
+            /*Console.SetCursorPosition(xPos, yPos + 1);
+            Console.Write("  ");
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.SetCursorPosition(xPos, yPos - 1);
+            Console.Write("  ");
+            Console.SetCursorPosition(xPos-2, yPos);
+            Console.Write("            ");
+            Debug.Write("boom");*/
+
+            // Kors Upp
+            //Console.SetCursorPosition(xPos - 2, yPos);
+            //Console.ForegroundColor = ConsoleColor.Red;
+            //Console.Write("      ");
+            //Console.SetCursorPosition(xPos, yPos + 1);
+            //Console.Write("  ");
+            //Console.ForegroundColor = ConsoleColor.Red;
+            //Console.SetCursorPosition(xPos, yPos - 1);
+            //Console.Write("  ");
+            //Console.SetCursorPosition(xPos, yPos + 2);
+            //Console.Write("  ");
+            //Console.SetCursorPosition(xPos, yPos + 3);
+            //Console.Write("  ");
+            //Console.SetCursorPosition(xPos, yPos + 4);
+            //Console.Write("  ");
+
+            // Default 3x3
+            /*
+            Console.SetCursorPosition(xPos - 2, yPos);
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.Write("      ");
+            Console.SetCursorPosition(xPos - 2, yPos + 1);
+            Console.Write("      ");
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.SetCursorPosition(xPos - 2, yPos - 1);
+            Console.Write("      ");*/
+
+            //uppdatera väggar
+            //Program.mygame.DrawBoard();
         }
         public void CrossBomb(int xposition, int yposition, string toWrite)
         {
 
 
-        //    int i = 1;
-        //    int j = 1;
-        //    bool oneside = false;
-        //    int index = 0;
-        //    while (CollisionCheck(xposition - i, yposition))
-        //    {
-        //        Console.ForegroundColor = ConsoleColor.Red;
-        //        Console.SetCursorPosition(xposition - i, yposition);
-        //        Console.Write(toWrite);
+            //    int i = 1;
+            //    int j = 1;
+            //    bool oneside = false;
+            //    int index = 0;
+            //    while (CollisionCheck(xposition - i, yposition))
+            //    {
+            //        Console.ForegroundColor = ConsoleColor.Red;
+            //        Console.SetCursorPosition(xposition - i, yposition);
+            //        Console.Write(toWrite);
 
             //        if (!oneside)
             //        {
@@ -780,7 +917,7 @@ namespace GridGame
             //        Debug.WriteLine("index4 = " + index + " xpos = " + Program.mygame.Walls[index].XPosition + " ypos =  " + Program.mygame.Walls[index].YPosition);
             //        if (index != 0) Program.mygame.Walls[index].Destroy(index, true);
             //    }
-            }
+        }
 
         public override void Blow()
         {
@@ -885,13 +1022,13 @@ namespace GridGame
 
         public override void Update()
         {
-            while(wait)
+            while (wait)
             {
                 //timer.PowerupCooldown();
                 wait = false;
             }
 
-            if(PowerNumber == 1)
+            if (PowerNumber == 1)
             {
                 Draw(0, 0);
                 Console.ForegroundColor = ConsoleColor.Magenta;
@@ -935,10 +1072,10 @@ namespace GridGame
         {
             throw new NotImplementedException();
         }
-        
+
         public override void Draw(int xBoxSize, int yBoxSize)
         {
-            
+
         }
 
         public override void RemoveBlow()
@@ -949,7 +1086,7 @@ namespace GridGame
         public override void Update()
         {
             //Om du nuddar en Poerup och det är powerup 1
-            
+
         }
     }
 
@@ -968,9 +1105,10 @@ namespace GridGame
 
         public void Point()
         {
-            if(number == 1)
+            if (number == 1)
             {
             }
         }
+
     }
 }
