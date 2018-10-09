@@ -132,6 +132,7 @@ namespace GridGame
                 mygame.UpdateBoard();
             }
         }
+        #region Main Menu
 
         public static List<string> Buttons = new List<string>();
         public static ConsoleColor gray = ConsoleColor.Gray;
@@ -140,9 +141,17 @@ namespace GridGame
         public static void Menu()
         {
             Console.WriteLine("Press Enter To Continue!");
-            Console.ReadKey(true);
+            while (true)
+            {
+                if(Console.ReadKey(true).Key == ConsoleKey.Enter)
+                {
+                    break;
+                }
+                else
+                {
+                }
+            }
             Console.Clear();
-
             int index = 0;
             Buttons.Add("Start");
             Buttons.Add("Quit");
@@ -194,11 +203,14 @@ namespace GridGame
             ForColour(gray);
             Console.Clear();
             Console.WriteLine(" Do you want AI? (Y/N)");
-            if (Console.ReadKey(true).Key == ConsoleKey.Y)
+            while (true)
             {
-                haveAI = true;
+                if (Console.ReadKey(true).Key == ConsoleKey.Y)
+                {
+                    haveAI = true;
+                }
+                else haveAI = false;
             }
-            else haveAI = false;
         }
 
         public static void ForColour(ConsoleColor consoleColor)
@@ -230,6 +242,8 @@ namespace GridGame
                 }
             }
         }
+
+        #endregion
     }
 
     class Game
