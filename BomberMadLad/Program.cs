@@ -5,12 +5,78 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Threading;
 using System.Diagnostics;
+using System.Timers;
 
 
 namespace GridGame
 {
     class Program
     {
+        public static List<Action> TimeList = new List<Action>();
+        public static List<int[]> intList = new List<int[]>();
+
+        public static int GetIndex(int x, int y)
+        {
+            int index = 0;
+            for (int i = 0; i < mygame.GameObjects.Count; i++)
+            {
+                if (mygame.GameObjects[i].XPosition == x && mygame.GameObjects[i].YPosition == y)
+                {
+                    index = i;
+                }
+            }
+            return index;
+            
+        }
+        public static int GetWallIndex(int x, int y)
+        {
+            int index = 0;
+            for (int i = 0; i < mygame.Walls.Count; i++)
+            {
+                if (mygame.Walls[i].XPosition == x && mygame.Walls[i].YPosition == y)
+                {
+                    index = i;
+                }
+            }
+            return index;
+        }
+
+        public static void TimeMethod(int timeToStart, int intervalTime, int timeAmount, int index, int f, int starttime, Action method)
+        {
+            if (starttime == 0)
+            {
+                starttime = elapsedTime;
+            }
+            bool continuee = true;
+            for (int i = 0; i < TimeList.Count; i++)
+            {
+                if (TimeList[i] == method && continuee)
+                {
+                    TimeList.RemoveAt(i);
+                    intList.RemoveAt(i);
+                    continuee = false;
+                    //break;
+                }
+            }
+
+            if (f < timeAmount)
+            {
+                if (elapsedTime - starttime >= timeToStart && f == 0 || elapsedTime - starttime > intervalTime && f != 0)
+                {
+                    f++;
+                    starttime = elapsedTime;
+                    method();
+
+                }
+                TimeList.Add(method);
+
+                int[] list = { timeToStart, intervalTime, timeAmount, index, f, starttime };
+
+                intList.Add(list);
+            }
+        }
+        public static int elapsedTime = 0;
+
         //skapa game utefter storleken på skärmen
         public static Game mygame = new Game(Console.LargestWindowWidth - 13, Console.LargestWindowHeight - 12);
 
@@ -20,8 +86,12 @@ namespace GridGame
         //metod som startas när spelet gör det
         static void Main(string[] args)
         {
+            
+            
+
             //sätter musen till osynlig
             //frågar om AI
+
             Console.CursorVisible = false;
             Console.WriteLine(" Do you want AI? (Y/N)");
             ConsoleKey input = Console.ReadKey(true).Key;
@@ -37,15 +107,30 @@ namespace GridGame
             //kalla på drawboard metoden för att rita ut alla saker i walls listan. den körs bara en gång eftersom väggarna inte behöver uppdateras
             mygame.DrawBoard();
 
+            Stopwatch stopwatch = new Stopwatch();
+
             //denna metoden körs hela tiden
             while (true)
             {
+                stopwatch.Start();
+
                 //ritar ut alla gameobjects i listan GameObjects
                 mygame.DrawStuff();
 
                 //kallar på update i alla GameObjects
-                mygame.UpdateBoard();
+               mygame.UpdateBoard();
+                
+
+                for (int i = 0; i < TimeList.Count; i++)
+                {
+                    TimeMethod(intList[i][0], intList[i][1], intList[i][2], intList[i][3], intList[i][4], intList[i][5], TimeList[i]);
+                }
+
+                stopwatch.Stop();
+
+                elapsedTime = (int)stopwatch.ElapsedMilliseconds;
             }
+
         }
     }
 
@@ -89,6 +174,7 @@ namespace GridGame
             Map.Add(new Map());
             
             GameObjects.Add(player);
+
             
         }
 
@@ -134,13 +220,31 @@ namespace GridGame
         public int YPosition;
         public abstract void Draw(int xBoxSize, int yBoxSize);
         public abstract void Update();
-        public abstract void Destroy(int index);
+        public abstract void Blow();
+        public abstract void RemoveBlow();
 
         //ta bort en ruta på positionen som skickas in
         public void Delete(int oldX, int oldY)
         {
             Console.SetCursorPosition(oldX, oldY);
             Console.Write("  ");
+        }
+        public void Destroy(int index, bool walls)
+        {
+            if (walls)
+            {
+                if (index > Program.mygame.GameObjects.Count)
+                {
+                    Program.mygame.Walls.RemoveAt(index);
+                }
+                
+            }
+            else Program.mygame.GameObjects.RemoveAt(index);
+
+            Console.SetCursorPosition(XPosition,YPosition);
+            Console.Write("  ");
+            
+            
         }
 
         //kolla kollision på inskickade koordinater
@@ -206,12 +310,15 @@ namespace GridGame
         {
 
         }
-        public override void Destroy(int index)
+
+        public override void Blow()
         {
-            Debug.WriteLine(index);
-            Program.mygame.Walls.RemoveAt(index);
-            Console.SetCursorPosition(XPosition, YPosition);
-            Console.Write("  ");
+            throw new NotImplementedException();
+        }
+
+        public override void RemoveBlow()
+        {
+            throw new NotImplementedException();
         }
     }
 
@@ -229,14 +336,21 @@ namespace GridGame
             yPos = Console.LargestWindowHeight / 2;
         }
 
-        public override void Destroy(int index)
+        public override void Blow()
         {
+            throw new NotImplementedException();
         }
+        
         public override void Draw(int xBoxSize, int yBoxSize)
         {
             Console.ForegroundColor = ConsoleColor.White;
             Console.SetCursorPosition(xPos, yPos);
             Console.Write("██");
+        }
+
+        public override void RemoveBlow()
+        {
+            throw new NotImplementedException();
         }
 
         public override void Update()
@@ -297,6 +411,8 @@ namespace GridGame
         int xPos = 10;
         int yPos = 10;
 
+        int u = 0;
+
         bool layBomb;
 
         //senaste bomben som spawnats
@@ -304,12 +420,8 @@ namespace GridGame
 
         public Player()
         {
+            
             layBomb = true;
-        }
-
-        public override void Destroy(int index)
-        {
-            throw new NotImplementedException();
         }
 
         //rita ut cyan spelare
@@ -318,6 +430,12 @@ namespace GridGame
             Console.ForegroundColor = ConsoleColor.DarkCyan;
             Console.SetCursorPosition(xPos, yPos);
             Console.Write("██");
+
+            if (u == 0)
+            {
+                Program.GetIndex(xPos, yPos);
+            }
+            u++;
         }
 
         public override void Update()
@@ -325,9 +443,15 @@ namespace GridGame
             //återställ oldX + old Y
             int oldX = xPos;
             int oldY = yPos;
+            ConsoleKey input = ConsoleKey.B;
 
             //kollar efter spelarens input. OBS måste bytas ut för att inte bli turnbased eftersom readkey väntar på knapptryck
-            ConsoleKey input = Console.ReadKey(true).Key;
+
+            if (Console.KeyAvailable)
+            {
+                input = Console.ReadKey(true).Key;
+            }
+
 
             //movement beroende på knapptryck, xpos är två steg i taget eftersom den är två pixlar bred
             if (input == ConsoleKey.W)
@@ -344,6 +468,7 @@ namespace GridGame
             }
             if (input == ConsoleKey.A)
             {
+                Debug.WriteLine("x " + xPos + " y " + yPos);
                 xPos -= 2;
             }
             //om collisionCheck träffar något så står vi stilla och deletar inte något
@@ -358,25 +483,45 @@ namespace GridGame
             //lägg bomb
             if (input == ConsoleKey.Spacebar && layBomb)
             {
-                TimerClass timer = new TimerClass();
-                // Big Boom
-                
                 latestBoom = new BOOM(xPos, yPos);
 
                 //lägg till i gameobjects
                 Program.mygame.GameObjects.Add(latestBoom);
 
-                timer.BoomCooldown();
+                int index = Program.GetIndex(xPos, yPos);
+
+                Program.TimeList.Add(Program.mygame.GameObjects[index].Blow);
+
+                int[] list1 = { 1000, 0, 1, index, 0, 0 };
+
+                Program.intList.Add(list1);
+
                 layBomb = false;
 
-                //starta timer till explosion
-                timer.StartBoom(latestBoom);
+                //lägg till timer
+
+                index = Program.GetIndex(latestBoom.XPosition, latestBoom.YPosition);
+
+                Program.TimeList.Add(Program.mygame.GameObjects[index].Blow);
+
+                int[] list = { 1000, 500, 10, index, 0, 0 };
+
+                Program.intList.Add(list);
             }
         }
 
         public void PlayerBoomCooldown(object o)
         {
             layBomb = true;
+        }
+
+        public override void Blow()
+        {
+            layBomb = true;
+        }
+
+        public override void RemoveBlow()
+        {
         }
     }
 
@@ -392,15 +537,21 @@ namespace GridGame
             yPos = 10;
         }
 
-        public override void Destroy(int index)
+        public override void Blow()
         {
+            throw new NotImplementedException();
         }
-
+        
         public override void Draw(int xBoxSize, int yBoxSize)
         {
             Console.SetCursorPosition(xPos, yPos);
             Console.ForegroundColor = ConsoleColor.Green;
             Console.Write("██");
+        }
+
+        public override void RemoveBlow()
+        {
+            throw new NotImplementedException();
         }
 
         public override void Update()
@@ -447,29 +598,36 @@ namespace GridGame
 
     class BOOM : GameObject
     {
-        TimerClass timer;
+        //TimerClass timer;
         int index;
         int xPos;
         int yPos;
+        int f = 0;
+        int blinkTimes = 10;
+        bool colorSwitch = true;
 
 
         public BOOM(int playerPosX, int playerPosY)
         {
-            timer = new TimerClass();
+            //timer = new TimerClass();
             index = Program.mygame.GameObjects.Count;
             xPos = playerPosX;
             yPos = playerPosY;
 
         }
-
-        public override void Destroy(int index)
-        {
-        }
-
+        
         public override void Draw(int xBoxSize, int yBoxSize)
         {
+            if (colorSwitch)
+            {
+                Console.ForegroundColor = ConsoleColor.DarkGray;
+            }
+            else
+            {
+                Console.ForegroundColor = ConsoleColor.Yellow;
+            }
+
             Console.SetCursorPosition(xPos, yPos);
-            Console.ForegroundColor = ConsoleColor.Yellow;
             Console.Write("██");
         }
 
@@ -477,97 +635,21 @@ namespace GridGame
         {
 
         }
-
-        //sätter ut en explosion (röd 3x3 fyrkant)
-        public void RemoveBoom(object o)
+        
+        public void RemoveBoom()
         {
-            // Kors Sidan
-            /*Program.mygame.GameObjects.RemoveAt(index);
-            Console.SetCursorPosition(xPos-2, yPos);
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.Write("████████████");
-            Console.SetCursorPosition(xPos, yPos + 1 );
-            Console.Write("██");
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.SetCursorPosition(xPos , yPos - 1);
-            Console.Write("██");*/
-
-
-            CrossBomb(xPos, yPos, "██");
-
-
-            // Kors Upp
-            //Program.mygame.GameObjects.RemoveAt(index);
-            //Console.SetCursorPosition(xPos - 2, yPos);
-            //Console.ForegroundColor = ConsoleColor.Red;
-            //Console.Write("██████");
-            //Console.SetCursorPosition(xPos, yPos + 1);
-            //Console.Write("██");
-            //Console.ForegroundColor = ConsoleColor.Red;
-            //Console.SetCursorPosition(xPos, yPos - 1);
-            //Console.Write("██");
-            //Console.SetCursorPosition(xPos, yPos + 2);
-            //Console.Write("██");
-            //Console.SetCursorPosition(xPos, yPos + 3);
-            //Console.Write("██");
-            //Console.SetCursorPosition(xPos, yPos + 4);
-            //Console.Write("██");
-
-            // Default 3x3
-            /*Program.mygame.GameObjects.RemoveAt(index);
-            Console.SetCursorPosition(xPos - 2, yPos);
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.Write("██████");
-            Console.SetCursorPosition(xPos - 2, yPos + 1);
-            Console.Write("██████");
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.SetCursorPosition(xPos - 2, yPos - 1);
-            Console.Write("██████");*/
-
+            Debug.WriteLine("removed");
+            int index = Program.GetIndex(xPos,yPos);
+            if (index != 0)
+            {
+                Program.mygame.GameObjects[index].Destroy(index, false);
+            }
+                CrossBomb(xPos, yPos, "██");
+            
         }
-        //tar bort explosionen och ersätter den med spaces. (FÅR IGENTLIGEN INTE TA SÖNDER VÄGGAR)
-        public void BOOOOM(object o)
+        public void BOOOOM()
         {
             CrossBomb(xPos, yPos, "  ");
-            // Kors Sida
-            /*Console.SetCursorPosition(xPos, yPos + 1);
-            Console.Write("  ");
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.SetCursorPosition(xPos, yPos - 1);
-            Console.Write("  ");
-            Console.SetCursorPosition(xPos-2, yPos);
-            Console.Write("            ");
-            Debug.Write("boom");*/
-
-            // Kors Upp
-            //Console.SetCursorPosition(xPos - 2, yPos);
-            //Console.ForegroundColor = ConsoleColor.Red;
-            //Console.Write("      ");
-            //Console.SetCursorPosition(xPos, yPos + 1);
-            //Console.Write("  ");
-            //Console.ForegroundColor = ConsoleColor.Red;
-            //Console.SetCursorPosition(xPos, yPos - 1);
-            //Console.Write("  ");
-            //Console.SetCursorPosition(xPos, yPos + 2);
-            //Console.Write("  ");
-            //Console.SetCursorPosition(xPos, yPos + 3);
-            //Console.Write("  ");
-            //Console.SetCursorPosition(xPos, yPos + 4);
-            //Console.Write("  ");
-
-            // Default 3x3
-            /*
-            Console.SetCursorPosition(xPos - 2, yPos);
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.Write("      ");
-            Console.SetCursorPosition(xPos - 2, yPos + 1);
-            Console.Write("      ");
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.SetCursorPosition(xPos - 2, yPos - 1);
-            Console.Write("      ");*/
-
-            //uppdatera väggar
-            //Program.mygame.DrawBoard();
         }
         public void CrossBomb(int xposition, int yposition, string toWrite)
         {
@@ -593,18 +675,21 @@ namespace GridGame
                 {
                     if (toWrite != "  ")
                     {
-                        index = 0;
+                        int mult = 1;
+                        if (i < 0) mult = -1;
+
+                        index = Program.GetWallIndex(xposition - i - mult, yposition);
                         for (int x = 0; x < Program.mygame.Walls.Count; x++)
                         {
-                            int mult = 1;
-                            if (i < 0) mult = -1;
+                            
 
                             if (Program.mygame.Walls[x].XPosition == xposition - i - mult && Program.mygame.Walls[x].YPosition == yposition && Program.mygame.Walls[x].CanBlow)
                             {
                                 index = x;
                             }
                         }
-                        if (index != 0) Program.mygame.Walls[index].Destroy(index);
+                        Debug.WriteLine("index1 = " + index + " xpos = " + Program.mygame.Walls[index].XPosition + " ypos =  " + Program.mygame.Walls[index].YPosition);
+                        if (index != 0) Program.mygame.Walls[index].Destroy(index, true);
                     }
                     i *= -1;
                     if (i > 0)
@@ -632,8 +717,8 @@ namespace GridGame
                         index = x;
                     }
                 }
-                if (index != 0) Program.mygame.Walls[index].Destroy(index);
-                Debug.WriteLine("destroyed" + index);
+                Debug.WriteLine("index2 = " + index + " xpos = " + Program.mygame.Walls[index].XPosition + " ypos =  " + Program.mygame.Walls[index].YPosition);
+                if (index != 0) Program.mygame.Walls[index].Destroy(index, true);
                
             }
             oneside = false;
@@ -662,7 +747,8 @@ namespace GridGame
                                 index = x;
                             }
                         }
-                        if (index != 0) Program.mygame.Walls[index].Destroy(index);
+                        Debug.WriteLine("index3 = " + index + " xpos = " + Program.mygame.Walls[index].XPosition + " ypos =  " + Program.mygame.Walls[index].YPosition);
+                        if (index != 0) Program.mygame.Walls[index].Destroy(index, true);
                     }
 
                     j *= -1;
@@ -689,73 +775,105 @@ namespace GridGame
                         index = x;
                     }
                 }
-                if (index != 0) Program.mygame.Walls[index].Destroy(index);
+                Debug.WriteLine("index4 = " + index + " xpos = " + Program.mygame.Walls[index].XPosition + " ypos =  " + Program.mygame.Walls[index].YPosition);
+                if (index != 0) Program.mygame.Walls[index].Destroy(index, true);
             }
         }
 
+        public override void Blow()
+        {
+            if (f < blinkTimes - 1)
+            {
+                colorSwitch = !colorSwitch;
+                f++;
+            }
+            else
+            {
+                RemoveBoom();
+                
+
+                int index = Program.GetIndex(XPosition, YPosition);
+
+                Program.TimeList.Add(Program.mygame.GameObjects[index].RemoveBlow);
+
+                int[] list = {1000, 1000, 1, index, 0, 0 };
+                
+                Program.intList.Add(list);
+            }
+        }
+
+        public override void RemoveBlow()
+        {
+            Program.mygame.GameObjects[Program.GetIndex(XPosition, YPosition)].Destroy(Program.GetIndex(XPosition, YPosition), false);
+            Debug.WriteLine("deathto guy");
+            BOOOOM();
+        }
     }
 
     // Klass för timer
-    class TimerClass
-    {
-        BOOM boom;
-        Player player;
-        PoweupsSpawn power;
+    //class TimerClass
+    //{
+    //    BOOM boom;
+    //    Player player;
+    //    PoweupsSpawn power;
 
-        int bombCoolDown;
+    //    int bombCoolDown;
 
-        public TimerClass()
-        {
-            boom = Program.mygame.player.latestBoom;
-            player = Program.mygame.player;
-            bombCoolDown = 2000;
-        }
+    //    public TimerClass()
+    //    {
+    //        boom = Program.mygame.player.latestBoom;
+    //        player = Program.mygame.player;
+    //        bombCoolDown = 2000;
+    //    }
 
-        // Metoder för att timers ska användas i olika tillfällen. 
+    //    // Metoder för att timers ska användas i olika tillfällen. 
 
-        //sätter ut explosion
-        public void StartBoom(BOOM boom)
-        {
-            Timer time = new Timer(boom.RemoveBoom, null, bombCoolDown, Timeout.Infinite);
-            Timer time2 = new Timer(boom.BOOOOM, null, bombCoolDown + 500, Timeout.Infinite);
+    //    //sätter ut explosion
+    //    public void StartBoom(BOOM boom)
+    //    {
+
+
+    //        Timer time = new Timer(boom.RemoveBoom, null, 200, 200);
+    //        Debug.WriteLine("pass");
+    //        Timer time2 = new Timer(boom.BOOOOM, null, bombCoolDown + 10000, Timeout.Infinite);
             
-        }
-        //cooldown
-        public void BoomCooldown()
-        {
+    //    }
+    //    //cooldown
+    //    public void BoomCooldown()
+    //    {
             
-            Timer time = new Timer(player.PlayerBoomCooldown, null, bombCoolDown, Timeout.Infinite);
-        }
+    //        Timer time = new Timer(player.PlayerBoomCooldown, null, bombCoolDown, Timeout.Infinite);
+    //    }
 
-        public void PowerupCooldown()
-        {
-            Timer time = new Timer(power.SpawnPowerup, null, 0, 10000);
-        }
+    //    public void PowerupCooldown()
+    //    {
+    //        Timer time = new Timer(power.SpawnPowerup, null, 0, 10000);
+    //    }
         
-    }
+    //}
 
     class PoweupsSpawn : GameObject
     {
         Player player;
         Game game;
         Random rng = new Random();
-        TimerClass timer;
+        //TimerClass timer;
 
         int Xpos;
         int Ypos;
         bool wait = true;
         public int PowerNumber { get; set; }
 
+
         public PoweupsSpawn()
         {
             game = Program.mygame;
             player = game.player;
-            timer = new TimerClass();
+            //timer = new TimerClass();
             Xpos = rng.Next(0, 113 / 2) * 2;
             Ypos = rng.Next(0, 51);
             PowerNumber = rng.Next(1, 4);
         }
-
         public override void Draw(int xBoxSize, int yBoxSize)
         {
             Console.SetCursorPosition(Xpos, Ypos);
@@ -767,7 +885,7 @@ namespace GridGame
         {
             while(wait)
             {
-                timer.PowerupCooldown();
+                //timer.PowerupCooldown();
                 wait = false;
             }
 
@@ -792,6 +910,16 @@ namespace GridGame
         {
             wait = true;
         }
+
+        public override void Blow()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void RemoveBlow()
+        {
+            throw new NotImplementedException();
+        }
     }
 
     class PowerUps : GameObject
@@ -801,9 +929,19 @@ namespace GridGame
         {
         }
 
+        public override void Blow()
+        {
+            throw new NotImplementedException();
+        }
+        
         public override void Draw(int xBoxSize, int yBoxSize)
         {
             
+        }
+
+        public override void RemoveBlow()
+        {
+            throw new NotImplementedException();
         }
 
         public override void Update()
