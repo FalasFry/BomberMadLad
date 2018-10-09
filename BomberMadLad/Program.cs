@@ -957,7 +957,6 @@ namespace GridGame
 
         public override void RemoveBlow()
         {
-            Program.mygame.GameObjects[Program.GetIndex(XPosition, YPosition)].Destroy(Program.GetIndex(XPosition, YPosition), false);
             Debug.WriteLine("deathto guy");
             BOOOOM();
         }
