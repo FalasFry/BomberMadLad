@@ -43,65 +43,65 @@ namespace GridGame
             }
         }
 
+        public static List<string> Buttons = new List<string>();
+        public static ConsoleColor gray = ConsoleColor.Gray;
+        public static ConsoleColor black = ConsoleColor.Black;
+
         public static void Menu()
         {
             Console.WriteLine("Press Enter To Continue!");
-            ConsoleColor gray = ConsoleColor.Gray;
-            ConsoleColor black = ConsoleColor.Black;
-            bool start = false;
-            bool quit = false;
+            Console.ReadKey(true);
+            Console.Clear();
 
-            List<string> Buttons = new List<string>();
+            int index = 0;
             Buttons.Add("Start");
             Buttons.Add("Quit");
             Buttons.Add("Load");
             Buttons.Add("Save");
 
-            while (true)
+            MenuList(index);
+
+            while(true)
             {
                 ConsoleKey input = Console.ReadKey(true).Key;
 
-                if (input == ConsoleKey.Enter || input == ConsoleKey.UpArrow)
+                if(input == ConsoleKey.DownArrow)
                 {
-                    Console.Clear();
-                    BackColour(gray);
-                    ForColour(black);
-                    Console.WriteLine("Start");
-                    BackColour(black);
-                    ForColour(gray);
-                    Console.WriteLine("Quit");
-                    start = true;
-                    quit = false;
-
-
+                    if(index < Buttons.Count - 1)
+                    {
+                        Console.Clear();
+                        MenuList(index + 1);
+                        index = index + 1;
+                    }
+                }
+                if(input == ConsoleKey.UpArrow)
+                {
+                    if (index > 0)
+                    {
+                        Console.Clear();
+                        MenuList(index - 1);
+                        index--;
+                    }
                 }
 
-                if(input == ConsoleKey.Spacebar && start)
+                if(index == 0)
                 {
-                    break;
+                    if(input == ConsoleKey.Enter)
+                    {
+                        break;
+                    }
                 }
-                if (input == ConsoleKey.Spacebar && quit)
+                if(index == 1)
                 {
-                    Environment.Exit(0);
+                    if(input == ConsoleKey.Enter)
+                    {
+                        Environment.Exit(0);
+                    }
                 }
-
-                if (input == ConsoleKey.DownArrow)
-                {
-                    Console.Clear();
-                    BackColour(black);
-                    ForColour(gray);
-                    Console.WriteLine("Start");
-                    BackColour(gray);
-                    ForColour(black);
-                    Console.WriteLine("Quit");
-                    BackColour(black);
-                    start = false;
-                    quit = true;
-                }
-
             }
-            Console.BackgroundColor = ConsoleColor.Black;
-            Console.ForegroundColor = ConsoleColor.Gray;
+
+            BackColour(black);
+            ForColour(gray);
             Console.Clear();
             Console.WriteLine(" Do you want AI? (Y/N)");
             if (Console.ReadKey(true).Key == ConsoleKey.Y)
@@ -118,6 +118,25 @@ namespace GridGame
         public static void BackColour(ConsoleColor consoleColor)
         {
             Console.BackgroundColor = consoleColor;
+        }
+
+        public static void MenuList(int index)
+        {
+            for (int i = 0; i < Buttons.Count; i++)
+            {
+                if (i == index)
+                {
+                    ForColour(black);
+                    BackColour(gray);
+                    Console.WriteLine(Buttons[index]);
+                }
+                else
+                {
+                    ForColour(gray);
+                    BackColour(black);
+                    Console.WriteLine(Buttons[i]);
+                }
+            }
         }
     }
 
@@ -601,6 +620,7 @@ namespace GridGame
         public void BOOOOM(object o)
         {
             CrossBomb(xPos, yPos, "  ");
+            Console.Beep();
             // Kors Sida
             /*Console.SetCursorPosition(xPos, yPos + 1);
             Console.Write("  ");
