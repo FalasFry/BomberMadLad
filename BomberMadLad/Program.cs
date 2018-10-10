@@ -87,8 +87,6 @@ namespace GridGame
         static void Main(string[] args)
         {
 
-
-
             //sätter musen till osynlig
             //frågar om AI
 
@@ -114,7 +112,6 @@ namespace GridGame
                 //kallar på update i alla GameObjects
                 mygame.UpdateBoard();
 
-
                 for (int i = 0; i < TimeList.Count; i++)
                 {
                     TimeMethod(intList[i][0], intList[i][1], intList[i][2], intList[i][3], intList[i][4], intList[i][5], TimeList[i]);
@@ -137,7 +134,7 @@ namespace GridGame
             Console.WriteLine("Press Enter To Continue!");
             while (true)
             {
-                if(Console.ReadKey(true).Key == ConsoleKey.Enter)
+                if (Console.ReadKey(true).Key == ConsoleKey.Enter)
                 {
                     break;
                 }
@@ -147,10 +144,11 @@ namespace GridGame
             }
             Console.Clear();
             int index = 0;
-            Buttons.Add("Start");
-            Buttons.Add("Quit");
-            Buttons.Add("Load");
-            Buttons.Add("Save");
+
+            Buttons.Add("                                                          Start                                                         ");
+            Buttons.Add("                                                          Quit                                                          ");
+            Buttons.Add("                                                          Load                                                          ");
+            Buttons.Add("                                                          Save                                                          ");
 
             MenuList(index);
 
@@ -162,7 +160,6 @@ namespace GridGame
                 {
                     if (index < Buttons.Count - 1)
                     {
-                        Console.Clear();
                         MenuList(index + 1);
                         index = index + 1;
                     }
@@ -171,9 +168,8 @@ namespace GridGame
                 {
                     if (index > 0)
                     {
-                        Console.Clear();
                         MenuList(index - 1);
-                        index--;
+                        index = index - 1;
                     }
                 }
 
@@ -204,11 +200,13 @@ namespace GridGame
                 if (input == ConsoleKey.Y)
                 {
                     haveAI = true;
+                    Console.Clear();
                     break;
                 }
-                if(input == ConsoleKey.N)
+                if (input == ConsoleKey.N)
                 {
                     haveAI = false;
+                    Console.Clear();
                     break;
                 }
             }
@@ -218,7 +216,6 @@ namespace GridGame
         {
             Console.ForegroundColor = consoleColor;
         }
-
         public static void BackColour(ConsoleColor consoleColor)
         {
             Console.BackgroundColor = consoleColor;
@@ -226,21 +223,25 @@ namespace GridGame
 
         public static void MenuList(int index)
         {
+            Console.Clear();
             for (int i = 0; i < Buttons.Count; i++)
             {
-                if (i == index)
-                {
-                    ForColour(black);
-                    BackColour(gray);
-                    Console.WriteLine(Buttons[index]);
-                }
-                else
+                if(i != index)
                 {
                     ForColour(gray);
                     BackColour(black);
                     Console.WriteLine(Buttons[i]);
                 }
+                //index == 2
+                else if (i == index)
+                {
+                    ForColour(black);
+                    BackColour(gray);
+                    Console.WriteLine(Buttons[index]);
+                }
+                Console.ResetColor();
             }
+
         }
 
         #endregion
@@ -1101,27 +1102,5 @@ namespace GridGame
             //Om du nuddar en Poerup och det är powerup 1
 
         }
-    }
-
-    // Sätter de tre punkter man kan spawna på istället för hårdkodat.
-    class Spawn
-    {
-        AI aI;
-        int number;
-        int spawnOne;
-
-        public Spawn()
-        {
-            number = aI.rng.Next(1, 4);
-
-        }
-
-        public void Point()
-        {
-            if (number == 1)
-            {
-            }
-        }
-
     }
 }
