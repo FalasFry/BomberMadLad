@@ -707,6 +707,24 @@ namespace GridGame
             Delete(oldX, oldY);
         }
     }
+    class Exposions : GameObject
+    {
+        public override void Blow()
+        {
+        }
+
+        public override void Draw(int xBoxSize, int yBoxSize)
+        {
+        }
+
+        public override void RemoveBlow()
+        {
+        }
+
+        public override void Update()
+        {
+        }
+    }
 
     class BOOM : GameObject
     {
@@ -804,136 +822,55 @@ namespace GridGame
         }
         public void CrossBomb(int xposition, int yposition, string toWrite)
         {
+            List<GameObject> ExList = new List<GameObject>();
+            List<int> ExIntList = new List<int>();
+
+            ExIntList.Add(xposition);
+            ExIntList.Add(yposition);
+
+            int Q = 1;
+            int remainingDirection = 4;
+
+            while (remainingDirection != 0)
+            {
+
+                if (Q == 1)
+                {
+                    if (xposition < 0) xposition *= -1;
+
+                    if (yposition < 0) yposition *= -1;
+                }
+                if (Q == 2)
+                {
+                    if (xposition > 0) xposition *= -1;
+
+                    if (yposition < 0) yposition *= -1;
+                }
+                if (Q == 3)
+                {
+                    if (xposition > 0) xposition *= -1;
+
+                    if (yposition > 0) yposition *= -1;
+                }
+                if (Q == 1)
+                {
+                    if (xposition < 0) xposition *= -1;
+
+                    if (yposition > 0) yposition *= -1;
+                }
 
 
-            //    int i = 1;
-            //    int j = 1;
-            //    bool oneside = false;
-            //    int index = 0;
-            //    while (CollisionCheck(xposition - i, yposition))
-            //    {
-            //        Console.ForegroundColor = ConsoleColor.Red;
-            //        Console.SetCursorPosition(xposition - i, yposition);
-            //        Console.Write(toWrite);
+            }
 
-            //        if (!oneside)
-            //        {
-            //            i *= -1;
-            //            if (i > 0)
-            //            {
-            //                i++;
-            //            }
-            //        }
-            //        if (!CollisionCheck(xposition - i, yposition) && !oneside)
-            //        {
-            //            if (toWrite != "  ")
-            //            {
-            //                int mult = 1;
-            //                if (i < 0) mult = -1;
-
-            //                index = Program.GetWallIndex(xposition - i - mult, yposition);
-            //                for (int x = 0; x < Program.mygame.Walls.Count; x++)
-            //                {
-
-
-            //                    if (Program.mygame.Walls[x].XPosition == xposition - i - mult && Program.mygame.Walls[x].YPosition == yposition && Program.mygame.Walls[x].CanBlow)
-            //                    {
-            //                        index = x;
-            //                    }
-            //                }
-            //                Debug.WriteLine("index1 = " + index + " xpos = " + Program.mygame.Walls[index].XPosition + " ypos =  " + Program.mygame.Walls[index].YPosition);
-            //                if (index != 0) Program.mygame.Walls[index].Destroy(index, true);
-            //            }
-            //            i *= -1;
-            //            if (i > 0)
-            //            {
-            //                i--;
-            //            }
-            //            oneside = true;
-            //        }
-            //        if (oneside)
-            //        {
-            //            if (i < 0) i--;
-            //            if (i > 0) i++;
-            //        }
-            //    }
-
-            //    if (toWrite != "  ")
-            //    {
-            //        index = 0;
-            //        for (int x = 0; x < Program.mygame.Walls.Count; x++)
-            //        {
-            //            int mult = 1;
-            //            if (i < 0) mult = -1;
-            //            if (Program.mygame.Walls[x].XPosition == xposition - i - mult && Program.mygame.Walls[x].YPosition == yposition && Program.mygame.Walls[x].CanBlow)
-            //            {
-            //                index = x;
-            //            }
-            //        }
-            //        Debug.WriteLine("index2 = " + index + " xpos = " + Program.mygame.Walls[index].XPosition + " ypos =  " + Program.mygame.Walls[index].YPosition);
-            //        if (index != 0) Program.mygame.Walls[index].Destroy(index, true);
-
-            //    }
-            //    oneside = false;
-            //    while (CollisionCheck(xposition, yposition - j))
-            //    {
-            //        Console.ForegroundColor = ConsoleColor.Red;
-            //        Console.SetCursorPosition(xposition, yposition - j);
-            //        Console.Write(toWrite);
-
-            //        if (!oneside)
-            //        {
-            //            j *= -1;
-            //            if (j > 0)
-            //            {
-            //                j++;
-            //            }
-            //        }
-            //        if (!CollisionCheck(xposition, yposition - j) && !oneside)
-            //        {
-            //            if (toWrite != "  ")
-            //            {
-            //                for (int x = 0; x < Program.mygame.Walls.Count; x++)
-            //                {
-            //                    if (Program.mygame.Walls[x].XPosition == xposition && Program.mygame.Walls[x].YPosition == yposition - j && Program.mygame.Walls[x].CanBlow)
-            //                    {
-            //                        index = x;
-            //                    }
-            //                }
-            //                Debug.WriteLine("index3 = " + index + " xpos = " + Program.mygame.Walls[index].XPosition + " ypos =  " + Program.mygame.Walls[index].YPosition);
-            //                if (index != 0) Program.mygame.Walls[index].Destroy(index, true);
-            //            }
-
-            //            j *= -1;
-            //            if (i > 0)
-            //            {
-            //                j--;
-            //            }
-            //            oneside = true;
-            //        }
-            //        if (oneside)
-            //        {
-            //            if (j < 0) j--;
-            //            if (j > 0) j++;
-            //        }
-            //    }
-            //    if (toWrite != "  ")
-            //    {
-            //        index = 0;
-            //        for (int x = 0; x < Program.mygame.Walls.Count; x++)
-            //        {
-
-            //            if (Program.mygame.Walls[x].XPosition == xposition && Program.mygame.Walls[x].YPosition == yposition - j && Program.mygame.Walls[x].CanBlow)
-            //            {
-            //                index = x;
-            //            }
-            //        }
-            //        Debug.WriteLine("index4 = " + index + " xpos = " + Program.mygame.Walls[index].XPosition + " ypos =  " + Program.mygame.Walls[index].YPosition);
-            //        if (index != 0) Program.mygame.Walls[index].Destroy(index, true);
-            //    }
+            for (int i = 0; i < ExIntList.Count; i += 2)
+            {
+                Exposions explo = new Exposions();
+                explo.XPosition = ExIntList[i];
+                explo.YPosition = ExIntList[i+1];
+                ExList.Add(new Exposions());
+            }
         }
-
-        public override void Blow()
+    public override void Blow()
         {
             if (f < blinkTimes - 1)
             {
