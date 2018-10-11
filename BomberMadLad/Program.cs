@@ -785,90 +785,108 @@ namespace GridGame
         public void BOOOOM()
         {
             CrossBomb(xPos, yPos, "  ");
-            // Kors Sida
-            /*Console.SetCursorPosition(xPos, yPos + 1);
-            Console.Write("  ");
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.SetCursorPosition(xPos, yPos - 1);
-            Console.Write("  ");
-            Console.SetCursorPosition(xPos-2, yPos);
-            Console.Write("            ");
-            Debug.Write("boom");*/
-
-            // Kors Upp
-            //Console.SetCursorPosition(xPos - 2, yPos);
-            //Console.ForegroundColor = ConsoleColor.Red;
-            //Console.Write("      ");
-            //Console.SetCursorPosition(xPos, yPos + 1);
-            //Console.Write("  ");
-            //Console.ForegroundColor = ConsoleColor.Red;
-            //Console.SetCursorPosition(xPos, yPos - 1);
-            //Console.Write("  ");
-            //Console.SetCursorPosition(xPos, yPos + 2);
-            //Console.Write("  ");
-            //Console.SetCursorPosition(xPos, yPos + 3);
-            //Console.Write("  ");
-            //Console.SetCursorPosition(xPos, yPos + 4);
-            //Console.Write("  ");
-
-            // Default 3x3
-            /*
-            Console.SetCursorPosition(xPos - 2, yPos);
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.Write("      ");
-            Console.SetCursorPosition(xPos - 2, yPos + 1);
-            Console.Write("      ");
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.SetCursorPosition(xPos - 2, yPos - 1);
-            Console.Write("      ");*/
-
-            //uppdatera väggar
-            //Program.mygame.DrawBoard();
         }
-        public void CrossBomb(int xposition, int yposition, string toWrite)
+        public void CrossBomb(int oldX, int oldY, string toWrite)
         {
             List<GameObject> ExList = new List<GameObject>();
             List<int> ExIntList = new List<int>();
+            List<int> remaining = new List<int> {1,2,3,4 };
 
-            ExIntList.Add(xposition);
-            ExIntList.Add(yposition);
+            int Mult = 0;
+
+            oldX = oldX / 2;
+
+            ExIntList.Add(oldX);
+            ExIntList.Add(oldX);
 
             int Q = 1;
-            int remainingDirection = 4;
-
-            while (remainingDirection != 0)
+            while (true)
             {
-
-                if (Q == 1)
+                int remaingnum = 4;
+                for (int i = 0; i < remaining.Count; i++)
                 {
-                    if (xposition < 0) xposition *= -1;
+                    switch (remaining[i])
+                    {
+                        case 0:
+                                break;
+                        case 1:
 
-                    if (yposition < 0) yposition *= -1;
+                            if (Mult < 0) Mult *= -1;
+
+                            if (CollisionCheck((oldX + Mult) * 2, oldY))
+                            {
+                                ExIntList.Add((oldX + Mult) * 2);
+                                ExIntList.Add(oldY);
+                            }
+                            else
+                            {
+                                remaining[i] = 0;
+                            }
+
+                            break;
+
+
+                        case 2:
+
+                            if (Mult < 0) Mult *= -1;
+
+                            if (CollisionCheck((oldX) * 2, oldY + Mult))
+                            {
+                                ExIntList.Add((oldX) * 2);
+                                ExIntList.Add(oldY + Mult);
+                            }
+                            else
+                            {
+                                remaining[i] = 0;
+                            }
+
+                            break;
+
+                        case 3:
+
+                            if (Mult > 0) Mult *= -1;
+
+                            if (CollisionCheck((oldX + Mult) * 2, oldY))
+                            {
+                                ExIntList.Add((oldX + Mult) * 2);
+                                ExIntList.Add(oldY);
+                            }
+                            else
+                            {
+                                remaining[i] = 0;
+                            }
+                            break;
+
+                        case 4:
+
+                            if (Mult > 0) Mult *= -1;
+
+                            if (CollisionCheck((oldX) * 2, oldY + Mult))
+                            {
+                                ExIntList.Add((oldX) * 2);
+                                ExIntList.Add(oldY + Mult);
+                            }
+                            else
+                            {
+                                remaining[i] = 0;
+                            }
+                            break;
+                    }
+                    if (remaining[i] == 0)
+                    {
+                        remaingnum--;
+                    }
                 }
-                if (Q == 2)
+
+                if (remaingnum == 0)
                 {
-                    if (xposition > 0) xposition *= -1;
-
-                    if (yposition < 0) yposition *= -1;
+                    break;
                 }
-                if (Q == 3)
-                {
-                    if (xposition > 0) xposition *= -1;
-
-                    if (yposition > 0) yposition *= -1;
-                }
-                if (Q == 1)
-                {
-                    if (xposition < 0) xposition *= -1;
-
-                    if (yposition > 0) yposition *= -1;
-                }
-
-
             }
 
             for (int i = 0; i < ExIntList.Count; i += 2)
             {
+                Debug.WriteLine("booming");
                 Exposions explo = new Exposions();
                 explo.XPosition = ExIntList[i];
                 explo.YPosition = ExIntList[i+1];
