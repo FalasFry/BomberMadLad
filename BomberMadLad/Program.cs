@@ -149,6 +149,7 @@ namespace GridGame
             Buttons.Add("                                                          Quit                                                          ");
             Buttons.Add("                                                          Load                                                          ");
             Buttons.Add("                                                          Save                                                          ");
+            Buttons.Add("                                                        HighScore                                                       ");
 
             MenuList(index);
 
@@ -657,9 +658,12 @@ namespace GridGame
 
         public override void Draw(int xBoxSize, int yBoxSize)
         {
+            int moves = 0;
             Console.SetCursorPosition(xPos, yPos);
             Console.ForegroundColor = ConsoleColor.Green;
             Console.Write("██");
+            moves++;
+            Debug.Write(moves);
         }
 
         public override void RemoveBlow()
