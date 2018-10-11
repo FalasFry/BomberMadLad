@@ -645,6 +645,28 @@ namespace GridGame
         }
     }
 
+    class Exposions : GameObject
+    {
+        public override void Blow()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void Draw(int xBoxSize, int yBoxSize)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void RemoveBlow()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void Update()
+        {
+            throw new NotImplementedException();
+        }
+    }
     class BOOM : GameObject
     {
         //TimerClass timer;
@@ -692,178 +714,120 @@ namespace GridGame
             {
                 Program.mygame.GameObjects[index].Destroy(index, false);
             }
-            CrossBomb(xPos, yPos, "██");
+            CrossBomb(xPos, yPos);
 
         }
         public void BOOOOM()
         {
-            CrossBomb(xPos, yPos, "  ");
-            // Kors Sida
-            /*Console.SetCursorPosition(xPos, yPos + 1);
-            Console.Write("  ");
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.SetCursorPosition(xPos, yPos - 1);
-            Console.Write("  ");
-            Console.SetCursorPosition(xPos-2, yPos);
-            Console.Write("            ");*/
-
-            // Kors Upp
-            //Console.SetCursorPosition(xPos - 2, yPos);
-            //Console.ForegroundColor = ConsoleColor.Red;
-            //Console.Write("      ");
-            //Console.SetCursorPosition(xPos, yPos + 1);
-            //Console.Write("  ");
-            //Console.ForegroundColor = ConsoleColor.Red;
-            //Console.SetCursorPosition(xPos, yPos - 1);
-            //Console.Write("  ");
-            //Console.SetCursorPosition(xPos, yPos + 2);
-            //Console.Write("  ");
-            //Console.SetCursorPosition(xPos, yPos + 3);
-            //Console.Write("  ");
-            //Console.SetCursorPosition(xPos, yPos + 4);
-            //Console.Write("  ");
-
-            // Default 3x3
-            /*
-            Console.SetCursorPosition(xPos - 2, yPos);
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.Write("      ");
-            Console.SetCursorPosition(xPos - 2, yPos + 1);
-            Console.Write("      ");
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.SetCursorPosition(xPos - 2, yPos - 1);
-            Console.Write("      ");*/
-
-            //uppdatera väggar
-            //Program.mygame.DrawBoard();
+            CrossBomb(xPos, yPos);
         }
-        public void CrossBomb(int xposition, int yposition, string toWrite)
+        public void CrossBomb(int oldX, int oldY)
         {
+            List<GameObject> ExList = new List<GameObject>();
+            List<int> ExIntList = new List<int>();
+            List<int> remaining = new List<int> { 1, 2, 3, 4 };
+
+            int Mult = 0;
+
+            oldX = oldX / 2;
+
+            ExIntList.Add(oldX);
+            ExIntList.Add(oldX);
+
+            int Q = 1;
+            while (true)
+            {
+                int remaingnum = 4;
+                for (int i = 0; i < remaining.Count; i++)
+                {
+                    switch (remaining[i])
+                    {
+                        case 0:
+                            break;
+                        case 1:
+
+                            if (Mult < 0) Mult *= -1;
+
+                            if (CollisionCheck((oldX + Mult) * 2, oldY))
+                            {
+                                ExIntList.Add((oldX + Mult) * 2);
+                                ExIntList.Add(oldY);
+                            }
+                            else
+                            {
+                                remaining[i] = 0;
+                            }
+
+                            break;
 
 
-            //    int i = 1;
-            //    int j = 1;
-            //    bool oneside = false;
-            //    int index = 0;
-            //    while (CollisionCheck(xposition - i, yposition))
-            //    {
-            //        Console.ForegroundColor = ConsoleColor.Red;
-            //        Console.SetCursorPosition(xposition - i, yposition);
-            //        Console.Write(toWrite);
+                        case 2:
 
-            //        if (!oneside)
-            //        {
-            //            i *= -1;
-            //            if (i > 0)
-            //            {
-            //                i++;
-            //            }
-            //        }
-            //        if (!CollisionCheck(xposition - i, yposition) && !oneside)
-            //        {
-            //            if (toWrite != "  ")
-            //            {
-            //                int mult = 1;
-            //                if (i < 0) mult = -1;
+                            if (Mult < 0) Mult *= -1;
 
-            //                index = Program.GetWallIndex(xposition - i - mult, yposition);
-            //                for (int x = 0; x < Program.mygame.Walls.Count; x++)
-            //                {
+                            if (CollisionCheck((oldX) * 2, oldY + Mult))
+                            {
+                                ExIntList.Add((oldX) * 2);
+                                ExIntList.Add(oldY + Mult);
+                            }
+                            else
+                            {
+                                remaining[i] = 0;
+                            }
 
+                            break;
 
-            //                    if (Program.mygame.Walls[x].XPosition == xposition - i - mult && Program.mygame.Walls[x].YPosition == yposition && Program.mygame.Walls[x].CanBlow)
-            //                    {
-            //                        index = x;
-            //                    }
-            //                }
-            //                if (index != 0) Program.mygame.Walls[index].Destroy(index, true);
-            //            }
-            //            i *= -1;
-            //            if (i > 0)
-            //            {
-            //                i--;
-            //            }
-            //            oneside = true;
-            //        }
-            //        if (oneside)
-            //        {
-            //            if (i < 0) i--;
-            //            if (i > 0) i++;
-            //        }
-            //    }
+                        case 3:
 
-            //    if (toWrite != "  ")
-            //    {
-            //        index = 0;
-            //        for (int x = 0; x < Program.mygame.Walls.Count; x++)
-            //        {
-            //            int mult = 1;
-            //            if (i < 0) mult = -1;
-            //            if (Program.mygame.Walls[x].XPosition == xposition - i - mult && Program.mygame.Walls[x].YPosition == yposition && Program.mygame.Walls[x].CanBlow)
-            //            {
-            //                index = x;
-            //            }
-            //        }
-            //        if (index != 0) Program.mygame.Walls[index].Destroy(index, true);
+                            if (Mult > 0) Mult *= -1;
 
-            //    }
-            //    oneside = false;
-            //    while (CollisionCheck(xposition, yposition - j))
-            //    {
-            //        Console.ForegroundColor = ConsoleColor.Red;
-            //        Console.SetCursorPosition(xposition, yposition - j);
-            //        Console.Write(toWrite);
+                            if (CollisionCheck((oldX + Mult) * 2, oldY))
+                            {
+                                ExIntList.Add((oldX + Mult) * 2);
+                                ExIntList.Add(oldY);
+                            }
+                            else
+                            {
+                                remaining[i] = 0;
+                            }
+                            break;
 
-            //        if (!oneside)
-            //        {
-            //            j *= -1;
-            //            if (j > 0)
-            //            {
-            //                j++;
-            //            }
-            //        }
-            //        if (!CollisionCheck(xposition, yposition - j) && !oneside)
-            //        {
-            //            if (toWrite != "  ")
-            //            {
-            //                for (int x = 0; x < Program.mygame.Walls.Count; x++)
-            //                {
-            //                    if (Program.mygame.Walls[x].XPosition == xposition && Program.mygame.Walls[x].YPosition == yposition - j && Program.mygame.Walls[x].CanBlow)
-            //                    {
-            //                        index = x;
-            //                    }
-            //                }
-            //                if (index != 0) Program.mygame.Walls[index].Destroy(index, true);
-            //            }
+                        case 4:
 
-            //            j *= -1;
-            //            if (i > 0)
-            //            {
-            //                j--;
-            //            }
-            //            oneside = true;
-            //        }
-            //        if (oneside)
-            //        {
-            //            if (j < 0) j--;
-            //            if (j > 0) j++;
-            //        }
-            //    }
-            //    if (toWrite != "  ")
-            //    {
-            //        index = 0;
-            //        for (int x = 0; x < Program.mygame.Walls.Count; x++)
-            //        {
+                            if (Mult > 0) Mult *= -1;
 
-            //            if (Program.mygame.Walls[x].XPosition == xposition && Program.mygame.Walls[x].YPosition == yposition - j && Program.mygame.Walls[x].CanBlow)
-            //            {
-            //                index = x;
-            //            }
-            //        }
-            //        if (index != 0) Program.mygame.Walls[index].Destroy(index, true);
-            //    }
+                            if (CollisionCheck((oldX) * 2, oldY + Mult))
+                            {
+                                ExIntList.Add((oldX) * 2);
+                                ExIntList.Add(oldY + Mult);
+                            }
+                            else
+                            {
+                                remaining[i] = 0;
+                            }
+                            break;
+                    }
+                    if (remaining[i] == 0)
+                    {
+                        remaingnum--;
+                    }
+                }
+
+                if (remaingnum == 0)
+                {
+                    break;
+                }
+            }
+
+            for (int i = 0; i < ExIntList.Count; i += 2)
+            {
+                Debug.WriteLine("booming");
+                Exposions explo = new Exposions();
+                explo.XPosition = ExIntList[i];
+                explo.YPosition = ExIntList[i + 1];
+                ExList.Add(new Exposions());
+            }
         }
-
         public override void Blow()
         {
             if (f < blinkTimes - 1)
@@ -888,50 +852,10 @@ namespace GridGame
 
         public override void RemoveBlow()
         {
+            Debug.WriteLine("deathto guy");
             BOOOOM();
         }
     }
-
-    // Klass för timer
-    //class TimerClass
-    //{
-    //    BOOM boom;
-    //    Player player;
-    //    PoweupsSpawn power;
-
-    //    int bombCoolDown;
-
-    //    public TimerClass()
-    //    {
-    //        boom = Program.mygame.player.latestBoom;
-    //        player = Program.mygame.player;
-    //        bombCoolDown = 2000;
-    //    }
-
-    //    // Metoder för att timers ska användas i olika tillfällen. 
-
-    //    //sätter ut explosion
-    //    public void StartBoom(BOOM boom)
-    //    {
-
-
-    //        Timer time = new Timer(boom.RemoveBoom, null, 200, 200);
-    //        Timer time2 = new Timer(boom.BOOOOM, null, bombCoolDown + 10000, Timeout.Infinite);
-
-    //    }
-    //    //cooldown
-    //    public void BoomCooldown()
-    //    {
-
-    //        Timer time = new Timer(player.PlayerBoomCooldown, null, bombCoolDown, Timeout.Infinite);
-    //    }
-
-    //    public void PowerupCooldown()
-    //    {
-    //        Timer time = new Timer(power.SpawnPowerup, null, 0, 10000);
-    //    }
-
-    //}
 
     class PoweupsSpawn : GameObject
     {
