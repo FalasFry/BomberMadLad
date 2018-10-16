@@ -177,15 +177,15 @@ namespace GridGame
         //väggar
         public List<GameObject> Walls = new List<GameObject>();
 
-        public List<GameObject> Map = new List<GameObject>();
-
         //skapa ny spelare
         public Player player = new Player();
-
-
+        public int x;
+        public int y;
         //skapar game med måtten vi skickade in i Program
         public Game(int xSize, int ySize)
         {
+            y = ySize;
+            x = xSize;
             //sålänge i <= så många rutor vi behöver i yLed (yZize + 1)
             for (int i = 0; i <= ySize + 1; i++)
             {
@@ -205,19 +205,11 @@ namespace GridGame
                     }
                 }
             }
-            Map.Add(new Map());
-
             GameObjects.Add(player);
-
         }
 
         public void DrawBoard()
         {
-            //rita ut väggar
-            foreach (GameObject gameObject in Map)
-            {
-                gameObject.Update();
-            }
             foreach (GameObject gameObject in Walls)
             {
                 gameObject.Draw(1, 1);
@@ -352,88 +344,6 @@ namespace GridGame
         }
     }
 
-    class Map : GameObject
-    {
-
-        Random rng = new Random();
-        int xPos;
-        int yPos;
-
-        public Map()
-        {
-            xPos = Console.LargestWindowWidth / 2;
-            yPos = Console.LargestWindowHeight / 2;
-        }
-
-        public override void Blow()
-        {
-            throw new NotImplementedException();
-        }
-
-        public override void Draw(int xBoxSize, int yBoxSize)
-        {
-            Console.ForegroundColor = ConsoleColor.White;
-            Console.SetCursorPosition(xPos, yPos);
-            Console.Write("██");
-        }
-
-        public override void RemoveBlow()
-        {
-            throw new NotImplementedException();
-        }
-
-        public override void Update()
-        {
-            int oldX = xPos;
-            int oldY = yPos;
-            int dir = rng.Next(1, 5);
-            bool moved = false;
-            List<int[]> posList = new List<int[]>();
-            int maxMove = 5000;
-            //en loop som ser till att han inte går in i väggar, principen är att om han går in i vägg får han gå igen tills han lyckats gå åt rätt håll
-            for (int i = 0; i <= maxMove; i++)
-            {
-                moved = false;
-                while (!moved)
-                {
-                    xPos = oldX;
-                    yPos = oldY;
-                    dir = rng.Next(1, 5);
-
-                    if (dir == 1)
-                    {
-                        yPos--;
-                    }
-                    if (dir == 2)
-                    {
-                        yPos++;
-                    }
-                    if (dir == 3)
-                    {
-                        xPos += 2;
-                    }
-                    if (dir == 4)
-                    {
-                        xPos -= 2;
-                    }
-                    if (!CollisionCheck(xPos, yPos)) moved = false;
-                    else moved = true;
-
-                }
-
-                posList.Add(new int[2] { xPos, yPos });
-                oldX = xPos;
-                oldY = yPos;
-                Draw(0, 0);
-            }
-            for (int i = 0; i < posList.Count; i++)
-            {
-                Program.mygame.Walls.Add(new Wall(posList[i][0], posList[i][1], true));
-            }
-
-        }
-    }
-
     class Player : GameObject
     {
 
@@ -449,7 +359,6 @@ namespace GridGame
 
         public Player()
         {
-
             layBomb = true;
         }
 
@@ -474,14 +383,9 @@ namespace GridGame
             int oldY = yPos;
             ConsoleKey input = ConsoleKey.B;
 
-            //kollar efter spelarens input. OBS måste bytas ut för att inte bli turnbased eftersom readkey väntar på knapptryck
-
-            if (Console.KeyAvailable)
-            {
-                input = Console.ReadKey(true).Key;
-            }
-
-
+            //kollar efter spelarens input. OBS måste bytas ut för att inte bli turnbased eftersom readkey väntar på knapptryck.
+            input = Console.ReadKey(true).Key;
+            
             //movement beroende på knapptryck, xpos är två steg i taget eftersom den är två pixlar bred
             if (input == ConsoleKey.W)
             {
@@ -497,7 +401,6 @@ namespace GridGame
             }
             if (input == ConsoleKey.A)
             {
-                Debug.WriteLine("x " + xPos + " y " + yPos);
                 xPos -= 2;
             }
             //om collisionCheck träffar något så står vi stilla och deletar inte något
@@ -886,11 +789,6 @@ namespace GridGame
             }
         }
 
-        public void SpawnPowerup(object o)
-        {
-            wait = true;
-        }
-
         public override void Blow()
         {
             throw new NotImplementedException();
@@ -899,34 +797,6 @@ namespace GridGame
         public override void RemoveBlow()
         {
             throw new NotImplementedException();
-        }
-    }
-
-    class PowerUps : GameObject
-    {
-        public PowerUps()
-        {
-        }
-
-        public override void Blow()
-        {
-            throw new NotImplementedException();
-        }
-
-        public override void Draw(int xBoxSize, int yBoxSize)
-        {
-
-        }
-
-        public override void RemoveBlow()
-        {
-            throw new NotImplementedException();
-        }
-
-        public override void Update()
-        {
-            //Om du nuddar en Poerup och det är powerup 1
-
         }
     }
 
@@ -946,8 +816,6 @@ namespace GridGame
             intList.Add(list);
         }
     
-            
-
         public static int GetIndex(int x, int y)
         {
             int index = 0;
