@@ -537,25 +537,20 @@ namespace GridGame
                 //lägg till i gameobjects
                 Program.mygame.GameObjects.Add(latestBoom);
 
-                int index = TimerClass.GetIndex(xPos, yPos);
-
-                TimerClass.TimeList.Add(Program.mygame.GameObjects[index].Blow);
-
-                int[] list1 = { 1000, 0, 1, index, 0, 0 };
-
-                TimerClass.intList.Add(list1);
-
+                
                 layBomb = false;
 
                 //lägg till timer
 
+                int index = TimerClass.GetIndex(xPos, yPos);
+
+                TimerClass.AddTimer(index, 1000, 0, 1, 0, Program.mygame.GameObjects[index].Blow);
+
+
+
                 index = TimerClass.GetIndex(latestBoom.XPosition, latestBoom.YPosition);
 
-                TimerClass.TimeList.Add(Program.mygame.GameObjects[index].Blow);
-
-                int[] list = { 1000, 500, 10, index, 0, 0 };
-
-                TimerClass.intList.Add(list);
+                TimerClass.AddTimer(index, 1000, 500, 10, 0, Program.mygame.GameObjects[index].Blow);
             }
         }
 
@@ -961,6 +956,18 @@ namespace GridGame
         public static List<Action> TimeList = new List<Action>();
 
         public static List<int[]> intList = new List<int[]>();
+
+        public static void AddTimer(int index, int timetostart, int intervalTime, int timeAmount, int starttime, Action method)
+        {
+
+            TimeList.Add(method);
+
+            int[] list = { timetostart, intervalTime, timeAmount, index, 0, starttime };
+
+            intList.Add(list);
+        }
+    
+            
 
         public static int GetIndex(int x, int y)
         {
