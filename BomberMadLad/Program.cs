@@ -65,18 +65,6 @@ namespace GridGame
 
         public static void Menu()
         {
-            Console.WriteLine("Press Enter To Continue!");
-            while (true)
-            {
-                if (Console.ReadKey(true).Key == ConsoleKey.Enter)
-                {
-                    break;
-                }
-                else
-                {
-                }
-            }
-            Console.Clear();
             int index = 0;
             Buttons.Add("                                                          Start                                                         ");
             Buttons.Add("                                                          Quit                                                          ");
@@ -181,8 +169,6 @@ namespace GridGame
         #endregion
     }
 
-    
-
     class Game
     {
         //allt som har update
@@ -219,7 +205,6 @@ namespace GridGame
                     }
                 }
             }
-
             Map.Add(new Map());
 
             GameObjects.Add(player);
@@ -291,8 +276,6 @@ namespace GridGame
 
             Console.SetCursorPosition(XPosition, YPosition);
             Console.Write("  ");
-
-
         }
 
         //kolla kollision på inskickade koordinater
@@ -356,7 +339,6 @@ namespace GridGame
 
         public override void Update()
         {
-
         }
 
         public override void Blow()
@@ -376,7 +358,6 @@ namespace GridGame
         Random rng = new Random();
         int xPos;
         int yPos;
-        AI ai;
 
         public Map()
         {
