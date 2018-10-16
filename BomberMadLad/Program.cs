@@ -224,7 +224,6 @@ namespace GridGame
 
             GameObjects.Add(player);
 
-
         }
 
         public void DrawBoard()
@@ -924,7 +923,6 @@ namespace GridGame
 
     class PowerUps : GameObject
     {
-        int number;
         public PowerUps()
         {
         }
