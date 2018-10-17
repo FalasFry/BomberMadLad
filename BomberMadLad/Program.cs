@@ -66,11 +66,11 @@ namespace GridGame
         public static void Menu()
         {
             int index = 0;
-            Buttons.Add("                                                          Start                                                         ");
-            Buttons.Add("                                                          Quit                                                          ");
-            Buttons.Add("                                                          Load                                                          ");
-            Buttons.Add("                                                          Save                                                          ");
-            Buttons.Add("                                                        HighScore                                                       ");
+            Buttons.Add("Start");
+            Buttons.Add("Quit");
+            Buttons.Add("Load");
+            Buttons.Add("Save");
+            Buttons.Add("HighScore");
 
             MenuList(index);
 
@@ -110,25 +110,38 @@ namespace GridGame
                     }
                 }
             }
-
             BackColour(black);
             ForColour(gray);
             Console.Clear();
-            Console.WriteLine(" Do you want AI? (Y/N)");
+            index = 0;
+
+            Buttons.Clear();
+            Buttons.Add("Yes");
+            Buttons.Add("No");
+            MenuList(index);
             while (true)
             {
                 ConsoleKey input = Console.ReadKey(true).Key;
+                if (input == ConsoleKey.DownArrow && index < Buttons.Count - 1)
+                {
+                    MenuList(index + 1);
+                    index = index + 1;
+                    
+                }
+                if (input == ConsoleKey.UpArrow && index > 0)
+                {
+                    MenuList(index - 1);
+                    index = index - 1;
+                }
 
-                if (input == ConsoleKey.Y)
+                if (index == 0 && input == ConsoleKey.Enter)
                 {
                     haveAI = true;
-                    Console.Clear();
                     break;
                 }
-                if (input == ConsoleKey.N)
+                if(index == 1 && input == ConsoleKey.Enter)
                 {
                     haveAI = false;
-                    Console.Clear();
                     break;
                 }
             }
@@ -181,6 +194,7 @@ namespace GridGame
         public Player player = new Player();
         public int x;
         public int y;
+
         //skapar game med måtten vi skickade in i Program
         public Game(int xSize, int ySize)
         {
@@ -197,15 +211,53 @@ namespace GridGame
                     {
                         //lägg till vägg i den positionen
                         Walls.Add(new Wall(j, i, false));
+                        Br();
                     }
                     //räkna ut koordinaterna för mönster. (OBS RÖR INGET DET FUNKAR)
                     if (i <= ySize / 2 && j <= xSize / 4)
                     {
                         Walls.Add(new Wall(j * 4, i * 2, false));
                     }
+                    
                 }
             }
+
             GameObjects.Add(player);
+        }
+        int index = 26;
+        public void Br()
+        {
+            for (int i = 0; i < index; i++)
+            {
+
+                for (int k = 0; k <= y + 1; k++)
+                {
+                    //sålänge J <= antal rutor i xLed (XSize + 1)
+                    for (int j = 0; j <= x + 1; j++)
+                    {
+                        //om j eller i är största eller minsta möjliga tal
+                        if (j == 0 || k == 0 || k == y + 1 || j == x + 1)
+                        {
+                            if (x / 2 < j)
+                            {
+                                Walls.Add(new Wall(j - i * 2, k, false));
+                            }
+                            if (x / 2 > j)
+                            {
+                                Walls.Add(new Wall(j + i * 2, k, false));
+                            }
+                            if (y / 2 < k)
+                            {
+                                Walls.Add(new Wall(j, k - i, false));
+                            }
+                            if (y / 2 > k)
+                            {
+                                Walls.Add(new Wall(j, k + i, false));
+                            }
+                        }
+                    }
+                }
+            }
         }
 
         public void DrawBoard()
