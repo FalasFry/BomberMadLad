@@ -211,7 +211,6 @@ namespace GridGame
                     {
                         //lägg till vägg i den positionen
                         Walls.Add(new Wall(j, i, false));
-                        Br();
                     }
                     //räkna ut koordinaterna för mönster. (OBS RÖR INGET DET FUNKAR)
                     if (i <= ySize / 2 && j <= xSize / 4)
@@ -221,10 +220,12 @@ namespace GridGame
                     
                 }
             }
+            TimerClass.AddTimer(0, 1000, 1000, 1, 0, Br);
 
             GameObjects.Add(player);
         }
-        int index = 26;
+        
+        int index = 23;
         public void Br()
         {
             for (int i = 0; i < index; i++)
@@ -929,5 +930,10 @@ namespace GridGame
             }
         }
         public static int elapsedTime = 0;
+        public static void Br()
+        {
+            Debug.Write("ello");
+            Program.mygame.Br();
+        }
     }
 }
