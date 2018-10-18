@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Threading;
 using System.Diagnostics;
 using System.Timers;
+using System.Windows;
 
 
 namespace GridGame
@@ -253,8 +254,9 @@ namespace GridGame
         public int YPosition;
         public abstract void Draw(int xBoxSize, int yBoxSize);
         public abstract void Update();
-        public abstract void Blow();
-        public abstract void RemoveBlow();
+        public abstract void Action1();
+        public abstract void Action2();
+        public abstract void Action3();
 
         //ta bort en ruta på positionen som skickas in
         public void Delete(int oldX, int oldY)
@@ -341,12 +343,17 @@ namespace GridGame
         {
         }
 
-        public override void Blow()
+        public override void Action1()
         {
             throw new NotImplementedException();
         }
 
-        public override void RemoveBlow()
+        public override void Action2()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void Action3()
         {
             throw new NotImplementedException();
         }
@@ -365,7 +372,7 @@ namespace GridGame
             yPos = Console.LargestWindowHeight / 2;
         }
 
-        public override void Blow()
+        public override void Action1()
         {
             throw new NotImplementedException();
         }
@@ -377,19 +384,24 @@ namespace GridGame
             Console.Write("██");
         }
 
-        public override void RemoveBlow()
+        public override void Action2()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void Action3()
         {
             throw new NotImplementedException();
         }
 
         public override void Update()
         {
-            int oldX = xPos;
+            int oldX = xPos / 2;
             int oldY = yPos;
             int dir = rng.Next(1, 5);
             bool moved = false;
             List<int[]> posList = new List<int[]>();
-            int maxMove = 5000;
+            int maxMove = 2;
             //en loop som ser till att han inte går in i väggar, principen är att om han går in i vägg får han gå igen tills han lyckats gå åt rätt håll
             for (int i = 0; i <= maxMove; i++)
             {
@@ -524,13 +536,13 @@ namespace GridGame
 
                 int index = TimerClass.GetIndex(xPos, yPos);
 
-                TimerClass.AddTimer(index, 1000, 0, 1, 0, Program.mygame.GameObjects[index].Blow);
+                TimerClass.AddTimer(index, 1000, 0, 1, 0, Program.mygame.GameObjects[index].Action1);
 
 
 
                 index = TimerClass.GetIndex(latestBoom.XPosition, latestBoom.YPosition);
 
-                TimerClass.AddTimer(index, 1000, 500, 10, 0, Program.mygame.GameObjects[index].Blow);
+                TimerClass.AddTimer(index, 1000, 500, 5, 0, Program.mygame.GameObjects[index].Action2);
             }
         }
 
@@ -539,12 +551,15 @@ namespace GridGame
             layBomb = true;
         }
 
-        public override void Blow()
+        public override void Action1()
         {
             layBomb = true;
         }
 
-        public override void RemoveBlow()
+        public override void Action2()
+        {
+        }
+        public override void Action3()
         {
         }
     }
@@ -561,7 +576,7 @@ namespace GridGame
             yPos = 10;
         }
 
-        public override void Blow()
+        public override void Action1()
         {
             throw new NotImplementedException();
         }
@@ -573,7 +588,11 @@ namespace GridGame
             Console.Write("██");
         }
 
-        public override void RemoveBlow()
+        public override void Action2()
+        {
+            throw new NotImplementedException();
+        }
+        public override void Action3()
         {
             throw new NotImplementedException();
         }
@@ -622,22 +641,29 @@ namespace GridGame
 
     class Exposions : GameObject
     {
-        public override void Blow()
+        
+        public override void Action1()
         {
             throw new NotImplementedException();
         }
 
         public override void Draw(int xBoxSize, int yBoxSize)
         {
-            throw new NotImplementedException();
+        Console.ForegroundColor = ConsoleColor.Red;
+        Console.SetCursorPosition(XPosition, YPosition);
+        Console.Write("██");
         }
 
-        public override void RemoveBlow()
+        public override void Action2()
         {
             throw new NotImplementedException();
         }
 
         public override void Update()
+        {
+            throw new NotImplementedException();
+        }
+        public override void Action3()
         {
             throw new NotImplementedException();
         }
@@ -649,9 +675,9 @@ namespace GridGame
         int xPos;
         int yPos;
         int f = 0;
-        int blinkTimes = 10;
+        int blinkTimes = 5;
         bool colorSwitch = true;
-
+        List<GameObject> ExList = new List<GameObject>();
 
         public BOOM(int playerPosX, int playerPosY)
         {
@@ -682,7 +708,7 @@ namespace GridGame
 
         }
 
-        public void RemoveBoom()
+        public override void Action1()
         {
             int index = TimerClass.GetIndex(xPos, yPos);
             if (index != 0)
@@ -692,13 +718,9 @@ namespace GridGame
             CrossBomb(xPos, yPos);
 
         }
-        public void BOOOOM()
-        {
-            CrossBomb(xPos, yPos);
-        }
         public void CrossBomb(int oldX, int oldY)
         {
-            List<GameObject> ExList = new List<GameObject>();
+            
             List<int> ExIntList = new List<int>();
             List<int> remaining = new List<int> { 1, 2, 3, 4 };
 
@@ -706,104 +728,130 @@ namespace GridGame
 
             oldX = oldX / 2;
 
-            ExIntList.Add(oldX);
-            ExIntList.Add(oldX);
+            int remaingnum = 4;
 
-            int Q = 1;
+            ExIntList.Add(oldX);
+            ExIntList.Add(oldX);
+            
             while (true)
             {
-                int remaingnum = 4;
-                for (int i = 0; i < remaining.Count; i++)
+                Mult++;
+                Console.ReadKey(true);
+                Debug.WriteLine("right");
+
+                if (CollisionCheck((oldX + Mult) * 2, oldY))
                 {
-                    switch (remaining[i])
-                    {
-                        case 0:
-                            break;
-                        case 1:
-
-                            if (Mult < 0) Mult *= -1;
-
-                            if (CollisionCheck((oldX + Mult) * 2, oldY))
-                            {
-                                ExIntList.Add((oldX + Mult) * 2);
-                                ExIntList.Add(oldY);
-                            }
-                            else
-                            {
-                                remaining[i] = 0;
-                            }
-
-                            break;
-
-
-                        case 2:
-
-                            if (Mult < 0) Mult *= -1;
-
-                            if (CollisionCheck((oldX) * 2, oldY + Mult))
-                            {
-                                ExIntList.Add((oldX) * 2);
-                                ExIntList.Add(oldY + Mult);
-                            }
-                            else
-                            {
-                                remaining[i] = 0;
-                            }
-
-                            break;
-
-                        case 3:
-
-                            if (Mult > 0) Mult *= -1;
-
-                            if (CollisionCheck((oldX + Mult) * 2, oldY))
-                            {
-                                ExIntList.Add((oldX + Mult) * 2);
-                                ExIntList.Add(oldY);
-                            }
-                            else
-                            {
-                                remaining[i] = 0;
-                            }
-                            break;
-
-                        case 4:
-
-                            if (Mult > 0) Mult *= -1;
-
-                            if (CollisionCheck((oldX) * 2, oldY + Mult))
-                            {
-                                ExIntList.Add((oldX) * 2);
-                                ExIntList.Add(oldY + Mult);
-                            }
-                            else
-                            {
-                                remaining[i] = 0;
-                            }
-                            break;
-                    }
-                    if (remaining[i] == 0)
-                    {
-                        remaingnum--;
-                    }
+                    Debug.WriteLine("booming");
+                    Exposions explo = new Exposions();
+                    explo.XPosition = (oldX + Mult) * 2;
+                    explo.YPosition = oldY;
+                    explo.Draw(0, 0);
+                    ExList.Add(new Exposions());
                 }
-
-                if (remaingnum == 0)
+                else
                 {
                     break;
                 }
+                
+
+                
+                //    for (int i = 0; i < remaingnum; i++)
+                //    {
+                //        Console.ReadKey(true);
+                //        Debug.WriteLine("remaing " + remaingnum + " remm " + remaining[i]);
+
+                //        if (remaining[i] == 0)
+                //        {
+                //            remaingnum--;
+                //        }
+
+                //        Mult++;
+
+                //        switch (remaining[i])
+                //        {
+                //            case 0:
+                //                break;
+
+                //            case 1:
+                //                
+
+
+                //            case 2:
+                //                Debug.WriteLine("up");
+                //                if (Mult < 0) Mult *= -1;
+
+                //                if (CollisionCheck((oldX)*2, oldY + Mult))
+                //                {
+                //                    Debug.WriteLine("booming");
+                //                    Exposions explo = new Exposions();
+                //                    explo.XPosition = oldX*2;
+                //                    explo.YPosition = oldY + Mult;
+                //                    explo.Draw(0, 0);
+                //                    ExList.Add(new Exposions());
+                //                }
+                //                else
+                //                {
+                //                    remaining[i] = 0;
+                //                }
+
+                //                break;
+
+                //            case 3:
+                //                Debug.WriteLine("left");
+                //                if (Mult > 0) Mult *= -1;
+
+                //                if (CollisionCheck((oldX + Mult)*2, oldY))
+                //                {
+                //                    Debug.WriteLine("booming");
+                //                    Exposions explo = new Exposions();
+                //                    explo.XPosition = (oldX + Mult)*2;
+                //                    explo.YPosition = oldY;
+                //                    explo.Draw(0, 0);
+                //                    ExList.Add(new Exposions());
+                //                }
+                //                else
+                //                {
+                //                    remaining[i] = 0;
+                //                }
+                //                break;
+
+                //            case 4:
+                //                Debug.WriteLine("down");
+                //                if (Mult < 0) Mult *= -1;
+
+                //                if (CollisionCheck(oldX*2, oldY + Mult))
+                //                {
+                //                    Debug.WriteLine("booming");
+                //                    Exposions explo = new Exposions();
+                //                    explo.XPosition = oldX*2;
+                //                    explo.YPosition = oldY + Mult;
+                //                    explo.Draw(0, 0);
+                //                    ExList.Add(new Exposions());
+                //                }
+                //                else
+                //                {
+                //                    remaining[i] = 0;
+                //                }
+                //                break;
+                //        }
+
+                //    }
+
+                //    if (remaingnum == 0)
+                //    {
+                //        break;
+                //    }
             }
 
-            for (int i = 0; i < ExIntList.Count; i += 2)
-            {
-                Debug.WriteLine("booming");
-                Exposions explo = new Exposions();
-                explo.XPosition = ExIntList[i];
-                explo.YPosition = ExIntList[i + 1];
-                ExList.Add(new Exposions());
-            }
+            //index = TimerClass.GetIndex(oldX, oldY);
+
+            //TimerClass.AddTimer(index, 5000, 0, 1, 5000, Program.mygame.GameObjects[index].Action3);
+
+            Action3();
+
+            Debug.WriteLine("end");
         }
-        public override void Blow()
+        public override void Action2()
         {
             if (f < blinkTimes - 1)
             {
@@ -812,23 +860,24 @@ namespace GridGame
             }
             else
             {
-                RemoveBoom();
+                Debug.WriteLine("xxx");
+                Action1();
 
+                //int index = TimerClass.GetIndex(XPosition, YPosition);
 
-                int index = TimerClass.GetIndex(XPosition, YPosition);
-
-                TimerClass.TimeList.Add(Program.mygame.GameObjects[index].RemoveBlow);
-
-                int[] list = { 1000, 1000, 1, index, 0, 0 };
-
-                TimerClass.intList.Add(list);
+                //TimerClass.AddTimer(index,1000,1000,1,0,Program.mygame.GameObjects[index].Action1);
             }
         }
 
-        public override void RemoveBlow()
+        public override void Action3()
         {
-            Debug.WriteLine("deathto guy");
-            BOOOOM();
+            Debug.WriteLine("destroy");
+            for (int i = 0; i < ExList.Count; i++)
+            {
+                Console.SetCursorPosition(ExList[i].XPosition, ExList[i].YPosition);
+                Debug.WriteLine("x " + XPosition + "y " + YPosition);
+                Console.Write("");
+            }
         }
     }
 
@@ -891,12 +940,17 @@ namespace GridGame
             wait = true;
         }
 
-        public override void Blow()
+        public override void Action1()
         {
             throw new NotImplementedException();
         }
 
-        public override void RemoveBlow()
+        public override void Action2()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void Action3()
         {
             throw new NotImplementedException();
         }
@@ -908,7 +962,7 @@ namespace GridGame
         {
         }
 
-        public override void Blow()
+        public override void Action1()
         {
             throw new NotImplementedException();
         }
@@ -918,7 +972,7 @@ namespace GridGame
 
         }
 
-        public override void RemoveBlow()
+        public override void Action2()
         {
             throw new NotImplementedException();
         }
@@ -927,6 +981,11 @@ namespace GridGame
         {
             //Om du nuddar en Poerup och det är powerup 1
 
+        }
+
+        public override void Action3()
+        {
+            throw new NotImplementedException();
         }
     }
 
