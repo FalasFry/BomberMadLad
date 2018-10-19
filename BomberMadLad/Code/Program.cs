@@ -16,7 +16,7 @@ namespace BomberMadLad
         public static Game mygame = new Game(Console.LargestWindowWidth - 13, Console.LargestWindowHeight - 12);
 
         //om vi ska använda AI
-        public static bool haveAI;
+        public static bool haveAI { get; set; }
 
         //metod som startas när spelet gör det
         static void Main(string[] args)
@@ -168,7 +168,7 @@ namespace BomberMadLad
             }
             if (Program.haveAI == true)
             {
-                GameObjects.Add(new AI());
+                GameObjects.Add(new Ai());
             }
         }
         //rita ut gameobjects
@@ -189,8 +189,6 @@ namespace BomberMadLad
 
         }
     }
-
-    
 
     class Wall : GameObject
     {
@@ -223,188 +221,6 @@ namespace BomberMadLad
         public override void RemoveBlow()
         {
             throw new NotImplementedException();
-        }
-    }
-
-    class Player : GameObject
-    {
-
-        int xPos = 10;
-        int yPos = 10;
-
-        int u = 0;
-
-        bool layBomb;
-
-        //senaste bomben som spawnats
-        public BOOM latestBoom;
-
-        public Player()
-        {
-            layBomb = true;
-        }
-
-        //rita ut cyan spelare
-        public override void Draw(int xBoxSize, int yBoxSize)
-        {
-            Console.ForegroundColor = ConsoleColor.DarkCyan;
-            Console.SetCursorPosition(xPos, yPos);
-            Console.Write("██");
-
-            if (u == 0)
-            {
-                TimerClass.GetIndex(xPos, yPos);
-            }
-            u++;
-        }
-
-        public override void Update()
-        {
-            //återställ oldX + old Y
-            int oldX = xPos;
-            int oldY = yPos;
-            ConsoleKey input = ConsoleKey.B;
-
-            //kollar efter spelarens input. OBS måste bytas ut för att inte bli turnbased eftersom readkey väntar på knapptryck.
-            if (Console.KeyAvailable)
-            {
-                input = Console.ReadKey(true).Key;
-            }
-            
-            //movement beroende på knapptryck, xpos är två steg i taget eftersom den är två pixlar bred
-            if (input == ConsoleKey.W)
-            {
-                yPos--;
-            }
-            if (input == ConsoleKey.S)
-            {
-                yPos++;
-            }
-            if (input == ConsoleKey.D)
-            {
-                xPos += 2;
-            }
-            if (input == ConsoleKey.A)
-            {
-                xPos -= 2;
-            }
-            //om collisionCheck träffar något så står vi stilla och deletar inte något
-            if (!CollisionCheck(xPos, yPos))
-            {
-                xPos = oldX;
-                yPos = oldY;
-            }
-            else Delete(oldX, oldY);
-            Draw(0, 0);
-
-            //lägg bomb
-            if (input == ConsoleKey.Spacebar && layBomb)
-            {
-                latestBoom = new BOOM(xPos, yPos);
-
-                //lägg till i gameobjects
-                Program.mygame.GameObjects.Add(latestBoom);
-
-                
-                layBomb = false;
-
-                //lägg till timer
-
-                int index = TimerClass.GetIndex(xPos, yPos);
-
-                TimerClass.AddTimer(index, 1000, 0, 1, 0, Program.mygame.GameObjects[index].Blow);
-
-
-
-                index = TimerClass.GetIndex(latestBoom.XPosition, latestBoom.YPosition);
-
-                TimerClass.AddTimer(index, 1000, 500, 10, 0, Program.mygame.GameObjects[index].Blow);
-            }
-        }
-
-        public void PlayerBoomCooldown(object o)
-        {
-            layBomb = true;
-        }
-
-        public override void Blow()
-        {
-            layBomb = true;
-        }
-
-        public override void RemoveBlow()
-        {
-        }
-    }
-
-    class AI : GameObject
-    {
-        public Random rng = new Random();
-        int xPos;
-        int yPos;
-
-        public AI()
-        {
-            xPos = Console.LargestWindowWidth - 22;
-            yPos = 10;
-        }
-
-        public override void Blow()
-        {
-            throw new NotImplementedException();
-        }
-
-        public override void Draw(int xBoxSize, int yBoxSize)
-        {
-            Console.SetCursorPosition(xPos, yPos);
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.Write("██");
-        }
-
-        public override void RemoveBlow()
-        {
-            throw new NotImplementedException();
-        }
-
-        public override void Update()
-        {
-
-            int oldX = xPos;
-            int oldY = yPos;
-            int dir = rng.Next(1, 5);
-            bool moved = false;
-
-
-            //en loop som ser till att han inte går in i väggar, principen är att om han går in i vägg får han gå igen tills han lyckats gå åt rätt håll
-            while (!moved)
-            {
-                xPos = oldX;
-                yPos = oldY;
-
-                dir = rng.Next(1, 5);
-
-                if (dir == 1)
-                {
-                    yPos--;
-                }
-                if (dir == 2)
-                {
-                    yPos++;
-                }
-                if (dir == 3)
-                {
-                    xPos += 2;
-                }
-                if (dir == 4)
-                {
-                    xPos -= 2;
-                }
-                if (!CollisionCheck(xPos, yPos)) moved = false;
-                else moved = true;
-
-            }
-            //efter loopen tar vi bort gamla spelaren
-            Delete(oldX, oldY);
         }
     }
 
