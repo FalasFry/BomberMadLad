@@ -24,7 +24,8 @@ namespace BomberMadLad
             //sätter musen till osynlig
             //frågar om AI
             Console.CursorVisible = false;
-            Menu();
+            Menu mainMenu = new Menu();
+            mainMenu.MainMenu();
 
             //ändra storlek på konsolfönstret till största möjliga
             Console.SetWindowSize(Console.LargestWindowWidth - 10, Console.LargestWindowHeight - 9);
@@ -55,133 +56,6 @@ namespace BomberMadLad
 
             }
         }
-
-        #region Main Menu
-
-        public static List<string> Buttons = new List<string>();
-        public static ConsoleColor gray = ConsoleColor.Gray;
-        public static ConsoleColor black = ConsoleColor.Black;
-
-        public static void Menu()
-        {
-            int index = 0;
-            Buttons.Add("Start");
-            Buttons.Add("Quit");
-            Buttons.Add("Load");
-            Buttons.Add("Save");
-            Buttons.Add("HighScore");
-
-            MenuList(index);
-
-            while (true)
-            {
-                ConsoleKey input = Console.ReadKey(true).Key;
-
-                if (input == ConsoleKey.DownArrow)
-                {
-                    if (index < Buttons.Count - 1)
-                    {
-                        MenuList(index + 1);
-                        index = index + 1;
-                    }
-                }
-                if (input == ConsoleKey.UpArrow)
-                {
-                    if (index > 0)
-                    {
-                        MenuList(index - 1);
-                        index = index - 1;
-                    }
-                }
-
-                if (index == 0)
-                {
-                    if (input == ConsoleKey.Enter)
-                    {
-                        break;
-                    }
-                }
-                if (index == 1)
-                {
-                    if (input == ConsoleKey.Enter)
-                    {
-                        Environment.Exit(0);
-                    }
-                }
-            }
-            BackColour(black);
-            ForColour(gray);
-            Console.Clear();
-            index = 1;
-
-            Buttons.Clear();
-            Buttons.Add("Do you want ai?");
-            Buttons.Add("Yes");
-            Buttons.Add("No");
-            MenuList(index);
-
-            while (true)
-            {
-                ConsoleKey input = Console.ReadKey(true).Key;
-                if (input == ConsoleKey.DownArrow && index < Buttons.Count - 1)
-                {
-                    MenuList(index + 1);
-                    index = index + 1;
-                    
-                }
-                if (input == ConsoleKey.UpArrow && index > 1)
-                {
-                    MenuList(index - 1);
-                    index = index - 1;
-                }
-
-                if (index == 0 && input == ConsoleKey.Enter)
-                {
-                    haveAI = true;
-                    break;
-                }
-                if(index == 1 && input == ConsoleKey.Enter)
-                {
-                    haveAI = false;
-                    break;
-                }
-            }
-            Console.Clear();
-        }
-
-        public static void ForColour(ConsoleColor consoleColor)
-        {
-            Console.ForegroundColor = consoleColor;
-        }
-        public static void BackColour(ConsoleColor consoleColor)
-        {
-            Console.BackgroundColor = consoleColor;
-        }
-
-        public static void MenuList(int index)
-        {
-            Console.Clear();
-            for (int i = 0; i < Buttons.Count; i++)
-            {
-                if(i != index)
-                {
-                    ForColour(gray);
-                    BackColour(black);
-                    Console.WriteLine(Buttons[i]);
-                }
-                //index == 2
-                else if (i == index)
-                {
-                    ForColour(black);
-                    BackColour(gray);
-                    Console.WriteLine(Buttons[index]);
-                }
-                Console.ResetColor();
-            }
-
-        }
-
-        #endregion
     }
 
     class Game
@@ -194,45 +68,58 @@ namespace BomberMadLad
 
         //skapa ny spelare
         public Player player = new Player();
-        public int x;
-        public int y;
+
+        public int x { get; set; }
+        public int y { get; set; }
 
         //skapar game med måtten vi skickade in i Program
         public Game(int xSize, int ySize)
         {
             y = ySize;
             x = xSize;
+
             //sålänge i <= så många rutor vi behöver i yLed (yZize + 1)
-            for (int i = 0; i <= ySize + 1; i++)
+            for (int i = 0; i <= y + 1; i++)
             {
                 //sålänge J <= antal rutor i xLed (XSize + 1)
-                for (int j = 0; j <= xSize + 1; j++)
+                for (int j = 0; j <= x + 1; j++)
                 {
                     //om j eller i är största eller minsta möjliga tal
-                    if (j == 0 || i == 0 || i == ySize + 1 || j == xSize + 1)
+                    if (j == 0 || i == 0 || i == y + 1 || j == x + 1)
                     {
                         //lägg till vägg i den positionen
                         Walls.Add(new Wall(j, i, false));
                     }
                     //räkna ut koordinaterna för mönster. (OBS RÖR INGET DET FUNKAR)
-                    if (i <= ySize / 2 && j <= xSize / 4)
+                    if (i <= ySize / 2 && j <= x / 4)
                     {
                         Walls.Add(new Wall(j * 4, i * 2, false));
                     }
-                    
+
                 }
             }
-            TimerClass.AddTimer(0, 5000, 1000, 1, 0, Br);
+
+            TimerClass.AddTimer(0, 3000, 1000, 1, 0, BrTimer);
 
             GameObjects.Add(player);
         }
-        
-        int index = 23;
+
+        int index = 1;
+        int maxIndex = 23;
+        public void BrTimer()
+        {
+            if(index < maxIndex)
+            {
+                index++;
+            }
+
+            TimerClass.AddTimer(0, 3000, 1000, 1, 0, BrTimer);
+            TimerClass.AddTimer(0, 3000, 1000, 1, 0, Br);
+        }
         public void Br()
         {
             for (int i = 0; i < index; i++)
             {
-
                 for (int k = 0; k <= y + 1; k++)
                 {
                     //såänge J <= antal rutor i xLed (XSize + 1)
@@ -248,28 +135,24 @@ namespace BomberMadLad
                                 wall = (new Wall(j - i * 2, k, false));
                                 wall.Draw(0, 0);
                                 Walls.Add(wall);
-
                             }
                             if (x / 2 > j)
                             {
                                 wall = (new Wall(j + i * 2, k, false));
                                 wall.Draw(0, 0);
                                 Walls.Add(wall);
-
                             }
                             if (y / 2 < k)
                             {
                                 wall = (new Wall(j, k - i, false));
                                 wall.Draw(0, 0);
                                 Walls.Add(wall);
-
                             }
                             if (y / 2 > k)
                             {
                                 wall = (new Wall(j, k + i, false));
                                 wall.Draw(0, 0);
                                 Walls.Add(wall);
-
                             }
                         }
                     }
