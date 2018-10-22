@@ -9,11 +9,15 @@ namespace BomberMadLad
     class Menu
     {
         public List<string> Buttons = new List<string>();
-        public ConsoleColor gray = ConsoleColor.Gray;
-        public ConsoleColor black = ConsoleColor.Black;
+
+        public ConsoleColor Gray { get; set; }
+        public ConsoleColor Black { get; set; }
 
         public void MainMenu()
         {
+            Black = ConsoleColor.Black;
+            Gray = ConsoleColor.Gray;
+
             int index = 0;
             Buttons.Add("Start");
             Buttons.Add("Quit");
@@ -59,8 +63,8 @@ namespace BomberMadLad
                     }
                 }
             }
-            BackColour(black);
-            ForColour(gray);
+            BackColour(Black);
+            ForColour(Gray);
             Console.Clear();
             index = 1;
 
@@ -116,21 +120,19 @@ namespace BomberMadLad
             {
                 if (i != index)
                 {
-                    ForColour(gray);
-                    BackColour(black);
+                    ForColour(Gray);
+                    BackColour(Black);
                     Console.WriteLine(Buttons[i]);
                 }
                 //index == 2
                 else if (i == index)
                 {
-                    ForColour(black);
-                    BackColour(gray);
+                    ForColour(Black);
+                    BackColour(Gray);
                     Console.WriteLine(Buttons[index]);
                 }
                 Console.ResetColor();
             }
-
         }
-
     }
 }

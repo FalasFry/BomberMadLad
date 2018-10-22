@@ -16,7 +16,7 @@ namespace BomberMadLad
         public static Game mygame = new Game(Console.LargestWindowWidth - 13, Console.LargestWindowHeight - 12);
 
         //om vi ska använda AI
-        public static bool haveAI;
+        public static bool haveAI { get; set; }
 
         //metod som startas när spelet gör det
         static void Main(string[] args)
@@ -113,8 +113,8 @@ namespace BomberMadLad
                 index++;
             }
 
-            TimerClass.AddTimer(0, 300, 1000, 1, 0, BrTimer);
-            TimerClass.AddTimer(0, 300, 1000, 1, 0, Br);
+            TimerClass.AddTimer(0, 3000, 1000, 1, 0, BrTimer);
+            TimerClass.AddTimer(0, 3000, 1000, 1, 0, Br);
         }
         public void Br()
         {
@@ -168,7 +168,7 @@ namespace BomberMadLad
             }
             if (Program.haveAI == true)
             {
-                GameObjects.Add(new AI());
+                GameObjects.Add(new Ai());
             }
         }
         //rita ut gameobjects
@@ -224,185 +224,216 @@ namespace BomberMadLad
         }
     }
 
-    class Player : GameObject
+    class Exposions : GameObject
     {
-
-        int xPos = 10;
-        int yPos = 10;
-
-        int u = 0;
-
-        bool layBomb;
-
-        //senaste bomben som spawnats
-        public Bombs latestBoom;
-
-        public Player()
-        {
-            layBomb = true;
-        }
-
-        //rita ut cyan spelare
-        public override void Draw(int xBoxSize, int yBoxSize)
-        {
-            Console.ForegroundColor = ConsoleColor.DarkCyan;
-            Console.SetCursorPosition(xPos, yPos);
-            Console.Write("██");
-
-            if (u == 0)
-            {
-                TimerClass.GetIndex(xPos, yPos);
-            }
-            u++;
-        }
-
-        public override void Update()
-        {
-            //återställ oldX + old Y
-            int oldX = xPos;
-            int oldY = yPos;
-            ConsoleKey input = ConsoleKey.B;
-
-            //kollar efter spelarens input. OBS måste bytas ut för att inte bli turnbased eftersom readkey väntar på knapptryck.
-            if (Console.KeyAvailable)
-            {
-                input = Console.ReadKey(true).Key;
-            }
-            
-            //movement beroende på knapptryck, xpos är två steg i taget eftersom den är två pixlar bred
-            if (input == ConsoleKey.W)
-            {
-                yPos--;
-            }
-            if (input == ConsoleKey.S)
-            {
-                yPos++;
-            }
-            if (input == ConsoleKey.D)
-            {
-                xPos += 2;
-            }
-            if (input == ConsoleKey.A)
-            {
-                xPos -= 2;
-            }
-            //om collisionCheck träffar något så står vi stilla och deletar inte något
-            if (!CollisionCheck(xPos, yPos))
-            {
-                xPos = oldX;
-                yPos = oldY;
-            }
-            else Delete(oldX, oldY);
-            Draw(0, 0);
-
-            //lägg bomb
-            if (input == ConsoleKey.Spacebar && layBomb)
-            {
-                latestBoom = new Bombs(xPos, yPos);
-
-                //lägg till i gameobjects
-                Program.mygame.GameObjects.Add(latestBoom);
-
-                
-                layBomb = false;
-
-                //lägg till timer
-
-                int index = TimerClass.GetIndex(xPos, yPos);
-
-                TimerClass.AddTimer(index, 1000, 0, 1, 0, Program.mygame.GameObjects[index].Blow);
-
-
-
-                index = TimerClass.GetIndex(latestBoom.XPosition, latestBoom.YPosition);
-
-                TimerClass.AddTimer(index, 1000, 500, 10, 0, Program.mygame.GameObjects[index].Blow);
-            }
-        }
-
-        public void PlayerBoomCooldown(object o)
-        {
-            layBomb = true;
-        }
-
         public override void Blow()
         {
-            layBomb = true;
+            throw new NotImplementedException();
+        }
+
+        public override void Draw(int xBoxSize, int yBoxSize)
+        {
+            throw new NotImplementedException();
         }
 
         public override void RemoveBlow()
         {
+            throw new NotImplementedException();
+        }
+
+        public override void Update()
+        {
+            throw new NotImplementedException();
         }
     }
 
-    class AI : GameObject
+    class BOOM : GameObject
     {
-        public Random rng = new Random();
+        //TimerClass timer;
+        int index;
         int xPos;
         int yPos;
+        int f = 0;
+        int blinkTimes = 10;
+        bool colorSwitch = true;
 
-        public AI()
-        {
-            xPos = Console.LargestWindowWidth - 22;
-            yPos = 10;
-        }
 
-        public override void Blow()
+        public BOOM(int playerPosX, int playerPosY)
         {
-            throw new NotImplementedException();
+            //timer = new TimerClass();
+            index = Program.mygame.GameObjects.Count;
+            xPos = playerPosX;
+            yPos = playerPosY;
+
         }
 
         public override void Draw(int xBoxSize, int yBoxSize)
         {
-            Console.SetCursorPosition(xPos, yPos);
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.Write("██");
-        }
+            if (colorSwitch)
+            {
+                Console.ForegroundColor = ConsoleColor.DarkGray;
+            }
+            else
+            {
+                Console.ForegroundColor = ConsoleColor.Yellow;
+            }
 
-        public override void RemoveBlow()
-        {
-            throw new NotImplementedException();
+            Console.SetCursorPosition(xPos, yPos);
+            Console.Write("██");
         }
 
         public override void Update()
         {
 
-            int oldX = xPos;
-            int oldY = yPos;
-            int dir = rng.Next(1, 5);
-            bool moved = false;
+        }
 
-
-            //en loop som ser till att han inte går in i väggar, principen är att om han går in i vägg får han gå igen tills han lyckats gå åt rätt håll
-            while (!moved)
+        public void RemoveBoom()
+        {
+            int index = TimerClass.GetIndex(xPos, yPos);
+            if (index != 0)
             {
-                xPos = oldX;
-                yPos = oldY;
-
-                dir = rng.Next(1, 5);
-
-                if (dir == 1)
-                {
-                    yPos--;
-                }
-                if (dir == 2)
-                {
-                    yPos++;
-                }
-                if (dir == 3)
-                {
-                    xPos += 2;
-                }
-                if (dir == 4)
-                {
-                    xPos -= 2;
-                }
-                if (!CollisionCheck(xPos, yPos)) moved = false;
-                else moved = true;
-
+                Program.mygame.GameObjects[index].Destroy(index, false);
             }
-            //efter loopen tar vi bort gamla spelaren
-            Delete(oldX, oldY);
+            CrossBomb(xPos, yPos);
+
+        }
+        public void BOOOOM()
+        {
+            CrossBomb(xPos, yPos);
+        }
+        public void CrossBomb(int oldX, int oldY)
+        {
+            List<GameObject> ExList = new List<GameObject>();
+            List<int> ExIntList = new List<int>();
+            List<int> remaining = new List<int> { 1, 2, 3, 4 };
+
+            int Mult = 0;
+
+            oldX = oldX / 2;
+
+            ExIntList.Add(oldX);
+            ExIntList.Add(oldX);
+
+            int Q = 1;
+            while (true)
+            {
+                int remaingnum = 4;
+                for (int i = 0; i < remaining.Count; i++)
+                {
+                    switch (remaining[i])
+                    {
+                        case 0:
+                            break;
+                        case 1:
+
+                            if (Mult < 0) Mult *= -1;
+
+                            if (CollisionCheck((oldX + Mult) * 2, oldY))
+                            {
+                                ExIntList.Add((oldX + Mult) * 2);
+                                ExIntList.Add(oldY);
+                            }
+                            else
+                            {
+                                remaining[i] = 0;
+                            }
+
+                            break;
+
+
+                        case 2:
+
+                            if (Mult < 0) Mult *= -1;
+
+                            if (CollisionCheck((oldX) * 2, oldY + Mult))
+                            {
+                                ExIntList.Add((oldX) * 2);
+                                ExIntList.Add(oldY + Mult);
+                            }
+                            else
+                            {
+                                remaining[i] = 0;
+                            }
+
+                            break;
+
+                        case 3:
+
+                            if (Mult > 0) Mult *= -1;
+
+                            if (CollisionCheck((oldX + Mult) * 2, oldY))
+                            {
+                                ExIntList.Add((oldX + Mult) * 2);
+                                ExIntList.Add(oldY);
+                            }
+                            else
+                            {
+                                remaining[i] = 0;
+                            }
+                            break;
+
+                        case 4:
+
+                            if (Mult > 0) Mult *= -1;
+
+                            if (CollisionCheck((oldX) * 2, oldY + Mult))
+                            {
+                                ExIntList.Add((oldX) * 2);
+                                ExIntList.Add(oldY + Mult);
+                            }
+                            else
+                            {
+                                remaining[i] = 0;
+                            }
+                            break;
+                    }
+                    if (remaining[i] == 0)
+                    {
+                        remaingnum--;
+                    }
+                }
+
+                if (remaingnum == 0)
+                {
+                    break;
+                }
+            }
+
+            for (int i = 0; i < ExIntList.Count; i += 2)
+            {
+                Debug.WriteLine("booming");
+                Exposions explo = new Exposions();
+                explo.XPosition = ExIntList[i];
+                explo.YPosition = ExIntList[i + 1];
+                ExList.Add(new Exposions());
+            }
+        }
+        public override void Blow()
+        {
+            if (f < blinkTimes - 1)
+            {
+                colorSwitch = !colorSwitch;
+                f++;
+            }
+            else
+            {
+                RemoveBoom();
+
+
+                int index = TimerClass.GetIndex(XPosition, YPosition);
+
+                TimerClass.TimeList.Add(Program.mygame.GameObjects[index].RemoveBlow);
+
+                int[] list = { 1000, 1000, 1, index, 0, 0 };
+
+                TimerClass.intList.Add(list);
+            }
+        }
+
+        public override void RemoveBlow()
+        {
+            Debug.WriteLine("deathto guy");
+            BOOOOM();
         }
     }
 

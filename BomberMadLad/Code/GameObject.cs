@@ -8,9 +8,10 @@ namespace BomberMadLad
 {
     abstract class GameObject
     {
-        public bool CanBlow;
-        public int XPosition;
-        public int YPosition;
+        public bool CanBlow { get; set; }
+        public int XPosition { get; set; }
+        public int YPosition { get; set; }
+
         public abstract void Draw(int xBoxSize, int yBoxSize);
         public abstract void Update();
         public abstract void Blow();
