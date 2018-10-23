@@ -69,29 +69,29 @@ namespace BomberMadLad
         //skapa ny spelare
         public Player player = new Player();
 
-        public int x { get; set; }
-        public int y { get; set; }
+        public int X { get; set; }
+        public int Y { get; set; }
 
         //skapar game med måtten vi skickade in i Program
         public Game(int xSize, int ySize)
         {
-            y = ySize;
-            x = xSize;
+            Y = ySize;
+            X = xSize;
 
             //sålänge i <= så många rutor vi behöver i yLed (yZize + 1)
-            for (int i = 0; i <= y + 1; i++)
+            for (int i = 0; i <= Y + 1; i++)
             {
                 //sålänge J <= antal rutor i xLed (XSize + 1)
-                for (int j = 0; j <= x + 1; j++)
+                for (int j = 0; j <= X + 1; j++)
                 {
                     //om j eller i är största eller minsta möjliga tal
-                    if (j == 0 || i == 0 || i == y + 1 || j == x + 1)
+                    if (j == 0 || i == 0 || i == Y + 1 || j == X + 1)
                     {
                         //lägg till vägg i den positionen
                         Walls.Add(new Wall(j, i, false));
                     }
                     //räkna ut koordinaterna för mönster. (OBS RÖR INGET DET FUNKAR)
-                    if (i <= ySize / 2 && j <= x / 4)
+                    if (i <= ySize / 2 && j <= X / 4)
                     {
                         Walls.Add(new Wall(j * 4, i * 2, false));
                     }
@@ -105,7 +105,7 @@ namespace BomberMadLad
         }
 
         int index = 1;
-        int maxIndex = 23;
+        readonly int maxIndex = 23;
         public void BrTimer()
         {
             if(index < maxIndex)
@@ -120,35 +120,35 @@ namespace BomberMadLad
         {
             for (int i = 0; i < index; i++)
             {
-                for (int k = 0; k <= y + 1; k++)
+                for (int k = 0; k <= Y + 1; k++)
                 {
                     //såänge J <= antal rutor i xLed (XSize + 1)
-                    for (int j = 0; j <= x + 1; j++)
+                    for (int j = 0; j <= X + 1; j++)
                     {
                         //om j eller i är största eller minsta möjliga tal
-                        if (j == 0 || k == 0 || k == y + 1 || j == x + 1)
+                        if (j == 0 || k == 0 || k == Y + 1 || j == X + 1)
                         {
                             Wall wall = null;
 
-                            if (x / 2 < j)
+                            if (X / 2 < j)
                             {
                                 wall = (new Wall(j - i * 2, k, false));
                                 wall.Draw(0, 0);
                                 Walls.Add(wall);
                             }
-                            if (x / 2 > j)
+                            if (X / 2 > j)
                             {
                                 wall = (new Wall(j + i * 2, k, false));
                                 wall.Draw(0, 0);
                                 Walls.Add(wall);
                             }
-                            if (y / 2 < k)
+                            if (Y / 2 < k)
                             {
                                 wall = (new Wall(j, k - i, false));
                                 wall.Draw(0, 0);
                                 Walls.Add(wall);
                             }
-                            if (y / 2 > k)
+                            if (Y / 2 > k)
                             {
                                 wall = (new Wall(j, k + i, false));
                                 wall.Draw(0, 0);
@@ -251,8 +251,8 @@ namespace BomberMadLad
     {
         //TimerClass timer;
         int index;
-        int xPos;
-        int yPos;
+        readonly int xPos;
+        readonly int yPos;
         int f = 0;
         int blinkTimes = 10;
         bool colorSwitch = true;
@@ -439,13 +439,14 @@ namespace BomberMadLad
 
     class PoweupsSpawn : GameObject
     {
-        Player player;
+        readonly Player player;
         Game game;
         Random rng = new Random();
+
         //TimerClass timer;
 
-        int Xpos;
-        int Ypos;
+        readonly int Xpos;
+        readonly int Ypos;
         bool wait = true;
         public int PowerNumber { get; set; }
 
@@ -454,7 +455,6 @@ namespace BomberMadLad
         {
             game = Program.mygame;
             player = game.player;
-            //timer = new TimerClass();
             Xpos = rng.Next(0, 113 / 2) * 2;
             Ypos = rng.Next(0, 51);
             PowerNumber = rng.Next(1, 4);

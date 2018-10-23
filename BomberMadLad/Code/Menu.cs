@@ -124,7 +124,6 @@ namespace BomberMadLad
                     BackColour(Black);
                     Console.WriteLine(Buttons[i]);
                 }
-                //index == 2
                 else if (i == index)
                 {
                     ForColour(Black);
