@@ -18,7 +18,7 @@ namespace BomberMadLad
             yPos = 10;
         }
 
-        public override void Blow()
+        public override void Action1()
         {
             throw new NotImplementedException();
         }
@@ -30,9 +30,12 @@ namespace BomberMadLad
             Console.Write("██");
         }
 
-        public override void RemoveBlow()
+        public override void Action2()
         {
             throw new NotImplementedException();
+        }
+        public override void Action3()
+        {
         }
 
         public override void Update()

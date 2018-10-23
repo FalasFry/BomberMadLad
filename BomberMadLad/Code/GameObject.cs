@@ -14,8 +14,9 @@ namespace BomberMadLad
 
         public abstract void Draw(int xBoxSize, int yBoxSize);
         public abstract void Update();
-        public abstract void Blow();
-        public abstract void RemoveBlow();
+        public abstract void Action1();
+        public abstract void Action2();
+        public abstract void Action3();
 
         //ta bort en ruta på positionen som skickas in
         public void Delete(int oldX, int oldY)
