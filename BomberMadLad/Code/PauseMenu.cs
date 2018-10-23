@@ -6,22 +6,21 @@ using System.Threading.Tasks;
 
 namespace BomberMadLad
 {
-    class Menu
+    class PauseMenu
     {
         public List<string> Buttons = new List<string>();
 
         public ConsoleColor Gray { get; set; }
         public ConsoleColor Black { get; set; }
 
-        public void MainMenu()
+        public void Pause()
         {
             Black = ConsoleColor.Black;
             Gray = ConsoleColor.Gray;
 
             int index = 0;
-            Buttons.Add("Start");
-            Buttons.Add("Quit");
-            Buttons.Add("HighScore");
+            Buttons.Add("Resume");
+            Buttons.Add("MainMenu");
 
             MenuList(index);
 
@@ -48,8 +47,13 @@ namespace BomberMadLad
 
                 if (index == 0)
                 {
+                    Console.Clear();
                     if (input == ConsoleKey.Enter)
                     {
+                        for (int i = 0; i < Program.mygame.Walls.Count; i++)
+                        {
+                            Program.mygame.Walls[i].Draw(0,0);
+                        }
                         break;
                     }
                 }
@@ -57,49 +61,13 @@ namespace BomberMadLad
                 {
                     if (input == ConsoleKey.Enter)
                     {
-                        Environment.Exit(0);
+                        Menu menu = new Menu();
+                        menu.MainMenu();
                     }
                 }
             }
             BackColour(Black);
             ForColour(Gray);
-            Console.Clear();
-            index = 1;
-
-            Buttons.Clear();
-            Buttons.Add("Do you want ai?");
-            Buttons.Add("Yes");
-            Buttons.Add("No");
-            MenuList(index);
-
-            while (true)
-            {
-                ConsoleKey input = Console.ReadKey(true).Key;
-
-                if (input == ConsoleKey.DownArrow && index < Buttons.Count - 1)
-                {
-                    MenuList(index + 1);
-                    index = index + 1;
-
-                }
-                if (input == ConsoleKey.UpArrow && index > 1)
-                {
-                    MenuList(index - 1);
-                    index = index - 1;
-                }
-
-                if (index == 1 && input == ConsoleKey.Enter)
-                {
-                    Program.HaveAi = true;
-                    break;
-                }
-                if (index == 2 && input == ConsoleKey.Enter)
-                {
-                    Program.HaveAi = false;
-                    break;
-                }
-            }
-            Console.Clear();
         }
 
         public void ForColour(ConsoleColor consoleColor)
@@ -133,3 +101,4 @@ namespace BomberMadLad
         }
     }
 }
+

@@ -53,8 +53,6 @@ namespace BomberMadLad
                 stopwatch.Stop();
 
                 TimerClass.elapsedTime = (int)stopwatch.ElapsedMilliseconds;
-                mygame.UpdateBoard();
-
             }
         }
     }
@@ -188,6 +186,11 @@ namespace BomberMadLad
                 GameObjects[i].Update();
             }
 
+        }
+        public void Pause()
+        {
+            PauseMenu pause = new PauseMenu();
+            pause.Pause();
         }
     }
     
