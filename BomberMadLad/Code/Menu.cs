@@ -50,6 +50,7 @@ namespace BomberMadLad
                 {
                     if (input == ConsoleKey.Enter)
                     {
+                        Program.mygame = new Game(Console.LargestWindowWidth - 13, Console.LargestWindowHeight - 12);
                         break;
                     }
                 }
