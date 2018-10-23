@@ -62,7 +62,6 @@ namespace BomberMadLad
                     TimeList.RemoveAt(i);
                     intList.RemoveAt(i);
                     continuee = false;
-                    //break;
                 }
             }
 

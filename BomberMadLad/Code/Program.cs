@@ -17,7 +17,7 @@ namespace BomberMadLad
         public static Game mygame = new Game(Console.LargestWindowWidth - 13, Console.LargestWindowHeight - 12);
 
         //om vi ska använda AI
-        public static bool haveAI;
+        public static bool haveAI { get; set; }
 
         //metod som startas när spelet gör det
         static void Main(string[] args)
@@ -25,7 +25,8 @@ namespace BomberMadLad
             //sätter musen till osynlig
             //frågar om AI
             Console.CursorVisible = false;
-            Menu();
+            Menu mainMenu = new Menu();
+            mainMenu.MainMenu();
 
             //ändra storlek på konsolfönstret till största möjliga
             Console.SetWindowSize(Console.LargestWindowWidth - 10, Console.LargestWindowHeight - 9);
@@ -56,133 +57,6 @@ namespace BomberMadLad
 
             }
         }
-
-        #region Main Menu
-
-        public static List<string> Buttons = new List<string>();
-        public static ConsoleColor gray = ConsoleColor.Gray;
-        public static ConsoleColor black = ConsoleColor.Black;
-
-        public static void Menu()
-        {
-            int index = 0;
-            Buttons.Add("Start");
-            Buttons.Add("Quit");
-            Buttons.Add("Load");
-            Buttons.Add("Save");
-            Buttons.Add("HighScore");
-
-            MenuList(index);
-
-            while (true)
-            {
-                ConsoleKey input = Console.ReadKey(true).Key;
-
-                if (input == ConsoleKey.DownArrow)
-                {
-                    if (index < Buttons.Count - 1)
-                    {
-                        MenuList(index + 1);
-                        index = index + 1;
-                    }
-                }
-                if (input == ConsoleKey.UpArrow)
-                {
-                    if (index > 0)
-                    {
-                        MenuList(index - 1);
-                        index = index - 1;
-                    }
-                }
-
-                if (index == 0)
-                {
-                    if (input == ConsoleKey.Enter)
-                    {
-                        break;
-                    }
-                }
-                if (index == 1)
-                {
-                    if (input == ConsoleKey.Enter)
-                    {
-                        Environment.Exit(0);
-                    }
-                }
-            }
-            BackColour(black);
-            ForColour(gray);
-            Console.Clear();
-            index = 1;
-
-            Buttons.Clear();
-            Buttons.Add("Do you want ai?");
-            Buttons.Add("Yes");
-            Buttons.Add("No");
-            MenuList(index);
-
-            while (true)
-            {
-                ConsoleKey input = Console.ReadKey(true).Key;
-                if (input == ConsoleKey.DownArrow && index < Buttons.Count - 1)
-                {
-                    MenuList(index + 1);
-                    index = index + 1;
-                    
-                }
-                if (input == ConsoleKey.UpArrow && index > 1)
-                {
-                    MenuList(index - 1);
-                    index = index - 1;
-                }
-
-                if (index == 0 && input == ConsoleKey.Enter)
-                {
-                    haveAI = true;
-                    break;
-                }
-                if(index == 1 && input == ConsoleKey.Enter)
-                {
-                    haveAI = false;
-                    break;
-                }
-            }
-            Console.Clear();
-        }
-
-        public static void ForColour(ConsoleColor consoleColor)
-        {
-            Console.ForegroundColor = consoleColor;
-        }
-        public static void BackColour(ConsoleColor consoleColor)
-        {
-            Console.BackgroundColor = consoleColor;
-        }
-
-        public static void MenuList(int index)
-        {
-            Console.Clear();
-            for (int i = 0; i < Buttons.Count; i++)
-            {
-                if(i != index)
-                {
-                    ForColour(gray);
-                    BackColour(black);
-                    Console.WriteLine(Buttons[i]);
-                }
-                //index == 2
-                else if (i == index)
-                {
-                    ForColour(black);
-                    BackColour(gray);
-                    Console.WriteLine(Buttons[index]);
-                }
-                Console.ResetColor();
-            }
-
-        }
-
-        #endregion
     }
 
     class Game
@@ -195,45 +69,58 @@ namespace BomberMadLad
 
         //skapa ny spelare
         public Player player = new Player();
-        public int x;
-        public int y;
+
+        public int x { get; set; }
+        public int y { get; set; }
 
         //skapar game med måtten vi skickade in i Program
         public Game(int xSize, int ySize)
         {
             y = ySize;
             x = xSize;
+
             //sålänge i <= så många rutor vi behöver i yLed (yZize + 1)
-            for (int i = 0; i <= ySize + 1; i++)
+            for (int i = 0; i <= y + 1; i++)
             {
                 //sålänge J <= antal rutor i xLed (XSize + 1)
-                for (int j = 0; j <= xSize + 1; j++)
+                for (int j = 0; j <= x + 1; j++)
                 {
                     //om j eller i är största eller minsta möjliga tal
-                    if (j == 0 || i == 0 || i == ySize + 1 || j == xSize + 1)
+                    if (j == 0 || i == 0 || i == y + 1 || j == x + 1)
                     {
                         //lägg till vägg i den positionen
                         Walls.Add(new Wall(j, i, false));
                     }
                     //räkna ut koordinaterna för mönster. (OBS RÖR INGET DET FUNKAR)
-                    if (i <= ySize / 2 && j <= xSize / 4)
+                    if (i <= ySize / 2 && j <= x / 4)
                     {
                         Walls.Add(new Wall(j * 4, i * 2, false));
                     }
-                    
+
                 }
             }
-            TimerClass.AddTimer(0, 5000, 1000, 1, 0, Br);
+
+            TimerClass.AddTimer(0, 3000, 1000, 1, 0, BrTimer);
 
             GameObjects.Add(player);
         }
-        
-        int index = 23;
+
+        int index = 1;
+        int maxIndex = 23;
+        public void BrTimer()
+        {
+            if(index < maxIndex)
+            {
+                index++;
+            }
+
+            TimerClass.AddTimer(0, 3000, 1000, 1, 0, BrTimer);
+            TimerClass.AddTimer(0, 3000, 1000, 1, 0, Br);
+        }
         public void Br()
         {
             for (int i = 0; i < index; i++)
             {
-
                 for (int k = 0; k <= y + 1; k++)
                 {
                     //såänge J <= antal rutor i xLed (XSize + 1)
@@ -249,28 +136,24 @@ namespace BomberMadLad
                                 wall = (new Wall(j - i * 2, k, false));
                                 wall.Draw(0, 0);
                                 Walls.Add(wall);
-
                             }
                             if (x / 2 > j)
                             {
                                 wall = (new Wall(j + i * 2, k, false));
                                 wall.Draw(0, 0);
                                 Walls.Add(wall);
-
                             }
                             if (y / 2 < k)
                             {
                                 wall = (new Wall(j, k - i, false));
                                 wall.Draw(0, 0);
                                 Walls.Add(wall);
-
                             }
                             if (y / 2 > k)
                             {
                                 wall = (new Wall(j, k + i, false));
                                 wall.Draw(0, 0);
                                 Walls.Add(wall);
-
                             }
                         }
                     }
@@ -286,7 +169,7 @@ namespace BomberMadLad
             }
             if (Program.haveAI == true)
             {
-                GameObjects.Add(new AI());
+                GameObjects.Add(new Ai());
             }
         }
         //rita ut gameobjects
@@ -307,80 +190,7 @@ namespace BomberMadLad
 
         }
     }
-
-    abstract class GameObject
-    {
-        public bool CanBlow;
-        public int XPosition;
-        public int YPosition;
-        public abstract void Draw(int xBoxSize, int yBoxSize);
-        public abstract void Update();
-        public abstract void Action1();
-        public abstract void Action2();
-        public abstract void Action3();
-
-        //ta bort en ruta på positionen som skickas in
-        public void Delete(int oldX, int oldY)
-        {
-            Console.SetCursorPosition(oldX, oldY);
-            Console.Write("  ");
-        }
-        public void Destroy(int index, bool walls)
-        {
-            if (walls)
-            {
-                if (index > Program.mygame.GameObjects.Count)
-                {
-                    Program.mygame.Walls.RemoveAt(index);
-                }
-
-            }
-            else Program.mygame.GameObjects.RemoveAt(index);
-
-            Console.SetCursorPosition(XPosition, YPosition);
-            Console.Write("  ");
-        }
-
-        //kolla kollision på inskickade koordinater
-        public bool CollisionCheck(int xPos, int yPos)
-        {
-            //för varje vägg som finns
-            for (int i = 0; i < Program.mygame.Walls.Count; i++)
-            {
-                //om y positionen är samma
-                if (Program.mygame.Walls[i].YPosition == yPos)
-                {
-                    //och x positionen och dens grannar är samma (vet ej varför men det funkar)
-                    if (Program.mygame.Walls[i].XPosition == xPos - 1 || Program.mygame.Walls[i].XPosition == xPos || Program.mygame.Walls[i].XPosition == xPos + 1)
-                    {
-                        //WE GOT COLLISION
-                        return false;
-                    }
-                }
-            }
-            return true;
-        }
-
-        public bool CollisionCheckGameObj(int xPos, int yPos)
-        {
-            //för varje vägg som finns
-            for (int i = 0; i < Program.mygame.GameObjects.Count; i++)
-            {
-                //om y positionen är samma
-                if (Program.mygame.GameObjects[i].YPosition == yPos)
-                {
-                    //och x positionen och dens grannar är samma (vet ej varför men det funkar)
-                    if (Program.mygame.GameObjects[i].XPosition == xPos - 1 || Program.mygame.GameObjects[i].XPosition == xPos || Program.mygame.GameObjects[i].XPosition == xPos + 1)
-                    {
-                        //WE GOT COLLISION
-                        return false;
-                    }
-                }
-            }
-            return true;
-        }
-    }
-
+    
     class Wall : GameObject
     {
         public Wall(int xPosition, int yPosition, bool Destroyable)
@@ -420,282 +230,6 @@ namespace BomberMadLad
         }
     }
     
-    class Map : GameObject
-    {
-
-        Random rng = new Random();
-        int xPos;
-        int yPos;
-
-        public Map()
-        {
-            xPos = Console.LargestWindowWidth / 2;
-            yPos = Console.LargestWindowHeight / 2;
-        }
-
-        public override void Action1()
-        {
-            throw new NotImplementedException();
-        }
-
-        public override void Draw(int xBoxSize, int yBoxSize)
-        {
-            Console.ForegroundColor = ConsoleColor.White;
-            Console.SetCursorPosition(xPos, yPos);
-            Console.Write("██");
-        }
-
-        public override void Action2()
-        {
-            throw new NotImplementedException();
-        }
-
-        public override void Action3()
-        {
-            throw new NotImplementedException();
-        }
-
-        public override void Update()
-        {
-            int oldX = xPos / 2;
-            int oldY = yPos;
-            int dir = rng.Next(1, 5);
-            bool moved = false;
-            List<int[]> posList = new List<int[]>();
-            int maxMove = 2;
-            //en loop som ser till att han inte går in i väggar, principen är att om han går in i vägg får han gå igen tills han lyckats gå åt rätt håll
-            for (int i = 0; i <= maxMove; i++)
-            {
-                moved = false;
-                while (!moved)
-                {
-                    xPos = oldX;
-                    yPos = oldY;
-                    dir = rng.Next(1, 5);
-
-                    if (dir == 1)
-                    {
-                        yPos--;
-                    }
-                    if (dir == 2)
-                    {
-                        yPos++;
-                    }
-                    if (dir == 3)
-                    {
-                        xPos += 2;
-                    }
-                    if (dir == 4)
-                    {
-                        xPos -= 2;
-                    }
-                    if (!CollisionCheck(xPos, yPos)) moved = false;
-                    else moved = true;
-
-                }
-
-                posList.Add(new int[2] { xPos, yPos });
-                oldX = xPos;
-                oldY = yPos;
-                Draw(0, 0);
-            }
-            for (int i = 0; i < posList.Count; i++)
-            {
-                Program.mygame.Walls.Add(new Wall(posList[i][0], posList[i][1], true));
-            }
-
-        }
-    }
-    
-    class Player : GameObject
-    {
-
-        int xPos = 10;
-        int yPos = 10;
-
-        int u = 0;
-
-        bool layBomb;
-
-        //senaste bomben som spawnats
-        public BOOM latestBoom;
-
-        public Player()
-        {
-            layBomb = true;
-        }
-
-        //rita ut cyan spelare
-        public override void Draw(int xBoxSize, int yBoxSize)
-        {
-            Console.ForegroundColor = ConsoleColor.DarkCyan;
-            Console.SetCursorPosition(xPos, yPos);
-            Console.Write("██");
-
-            if (u == 0)
-            {
-                TimerClass.GetIndex(xPos, yPos);
-            }
-            u++;
-        }
-
-        public override void Update()
-        {
-            //återställ oldX + old Y
-            int oldX = xPos;
-            int oldY = yPos;
-            ConsoleKey input = ConsoleKey.B;
-
-            //kollar efter spelarens input. OBS måste bytas ut för att inte bli turnbased eftersom readkey väntar på knapptryck.
-            if (Console.KeyAvailable)
-            {
-                input = Console.ReadKey(true).Key;
-            }
-            
-            //movement beroende på knapptryck, xpos är två steg i taget eftersom den är två pixlar bred
-            if (input == ConsoleKey.W)
-            {
-                yPos--;
-            }
-            if (input == ConsoleKey.S)
-            {
-                yPos++;
-            }
-            if (input == ConsoleKey.D)
-            {
-                xPos += 2;
-            }
-            if (input == ConsoleKey.A)
-            {
-                xPos -= 2;
-            }
-            //om collisionCheck träffar något så står vi stilla och deletar inte något
-            if (!CollisionCheck(xPos, yPos))
-            {
-                xPos = oldX;
-                yPos = oldY;
-            }
-            else Delete(oldX, oldY);
-            Draw(0, 0);
-
-            //lägg bomb
-            if (input == ConsoleKey.Spacebar && layBomb)
-            {
-                latestBoom = new BOOM(xPos, yPos);
-
-                //lägg till i gameobjects
-                Program.mygame.GameObjects.Add(latestBoom);
-
-                
-                layBomb = false;
-
-                //lägg till timer
-
-                int index = TimerClass.GetIndex(xPos, yPos);
-
-                TimerClass.AddTimer(index, 1000, 0, 1, 0, Program.mygame.GameObjects[index].Action1);
-
-
-
-                index = TimerClass.GetIndex(latestBoom.XPosition, latestBoom.YPosition);
-
-                TimerClass.AddTimer(index, 1000, 500, 5, 0, Program.mygame.GameObjects[index].Action2);
-            }
-        }
-
-        public void PlayerBoomCooldown(object o)
-        {
-            layBomb = true;
-        }
-
-        public override void Action1()
-        {
-            layBomb = true;
-        }
-
-        public override void Action2()
-        {
-        }
-        public override void Action3()
-        {
-        }
-    }
-
-    class AI : GameObject
-    {
-        public Random rng = new Random();
-        int xPos;
-        int yPos;
-
-        public AI()
-        {
-            xPos = Console.LargestWindowWidth - 22;
-            yPos = 10;
-        }
-
-        public override void Action1()
-        {
-            throw new NotImplementedException();
-        }
-
-        public override void Draw(int xBoxSize, int yBoxSize)
-        {
-            Console.SetCursorPosition(xPos, yPos);
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.Write("██");
-        }
-
-        public override void Action2()
-        {
-            throw new NotImplementedException();
-        }
-        public override void Action3()
-        {
-            throw new NotImplementedException();
-        }
-
-        public override void Update()
-        {
-
-            int oldX = xPos;
-            int oldY = yPos;
-            int dir = rng.Next(1, 5);
-            bool moved = false;
-
-
-            //en loop som ser till att han inte går in i väggar, principen är att om han går in i vägg får han gå igen tills han lyckats gå åt rätt håll
-            while (!moved)
-            {
-                xPos = oldX;
-                yPos = oldY;
-
-                dir = rng.Next(1, 5);
-
-                if (dir == 1)
-                {
-                    yPos--;
-                }
-                if (dir == 2)
-                {
-                    yPos++;
-                }
-                if (dir == 3)
-                {
-                    xPos += 2;
-                }
-                if (dir == 4)
-                {
-                    xPos -= 2;
-                }
-                if (!CollisionCheck(xPos, yPos)) moved = false;
-                else moved = true;
-
-            }
-            //efter loopen tar vi bort gamla spelaren
-            Delete(oldX, oldY);
-        }
-    }
-
     class Exposions : GameObject
     {
         
