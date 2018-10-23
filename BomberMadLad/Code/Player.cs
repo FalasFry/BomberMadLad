@@ -89,16 +89,11 @@ namespace BomberMadLad
                 layBomb = false;
 
                 //lägg till timer
+                
 
-                int index = TimerClass.GetIndex(xPos, yPos);
+                int index = TimerClass.GetIndex(latestBoom.XPosition, latestBoom.YPosition);
 
-                TimerClass.AddTimer(index, 1000, 0, 1, 0, Program.mygame.GameObjects[index].Blow);
-
-
-
-                index = TimerClass.GetIndex(latestBoom.XPosition, latestBoom.YPosition);
-
-                TimerClass.AddTimer(index, 1000, 500, 10, 0, Program.mygame.GameObjects[index].Blow);
+                TimerClass.AddTimer(index, 1000, 500, 10, 0, Program.mygame.GameObjects[index].Action1);
             }
         }
 
@@ -107,12 +102,14 @@ namespace BomberMadLad
             layBomb = true;
         }
 
-        public override void Blow()
+        public override void Action1()
         {
             layBomb = true;
         }
-
-        public override void RemoveBlow()
+        public override void Action2()
+        {
+        }
+        public override void Action3()
         {
         }
     }
