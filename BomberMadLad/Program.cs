@@ -9,7 +9,7 @@ using System.Timers;
 using System.Windows;
 
 
-namespace GridGame
+namespace BomberMadLad
 {
     class Program
     {
@@ -44,7 +44,6 @@ namespace GridGame
 
                 //kallar på update i alla GameObjects
                 mygame.UpdateBoard();
-
                 for (int i = 0; i < TimerClass.TimeList.Count; i++)
                 {
                     TimerClass.TimeMethod(TimerClass.intList[i][0], TimerClass.intList[i][1], TimerClass.intList[i][2], TimerClass.intList[i][3], TimerClass.intList[i][4], TimerClass.intList[i][5], TimerClass.TimeList[i]);
@@ -67,11 +66,11 @@ namespace GridGame
         public static void Menu()
         {
             int index = 0;
-            Buttons.Add("                                                          Start                                                         ");
-            Buttons.Add("                                                          Quit                                                          ");
-            Buttons.Add("                                                          Load                                                          ");
-            Buttons.Add("                                                          Save                                                          ");
-            Buttons.Add("                                                        HighScore                                                       ");
+            Buttons.Add("Start");
+            Buttons.Add("Quit");
+            Buttons.Add("Load");
+            Buttons.Add("Save");
+            Buttons.Add("HighScore");
 
             MenuList(index);
 
@@ -111,28 +110,44 @@ namespace GridGame
                     }
                 }
             }
-
             BackColour(black);
             ForColour(gray);
             Console.Clear();
-            Console.WriteLine(" Do you want AI? (Y/N)");
+            index = 1;
+
+            Buttons.Clear();
+            Buttons.Add("Do you want ai?");
+            Buttons.Add("Yes");
+            Buttons.Add("No");
+            MenuList(index);
+
             while (true)
             {
                 ConsoleKey input = Console.ReadKey(true).Key;
+                if (input == ConsoleKey.DownArrow && index < Buttons.Count - 1)
+                {
+                    MenuList(index + 1);
+                    index = index + 1;
+                    
+                }
+                if (input == ConsoleKey.UpArrow && index > 1)
+                {
+                    MenuList(index - 1);
+                    index = index - 1;
+                }
 
-                if (input == ConsoleKey.Y)
+                if (index == 0 && input == ConsoleKey.Enter)
                 {
                     haveAI = true;
-                    Console.Clear();
                     break;
                 }
-                if (input == ConsoleKey.N)
+                if(index == 1 && input == ConsoleKey.Enter)
                 {
                     haveAI = false;
-                    Console.Clear();
                     break;
                 }
             }
+            Console.Clear();
         }
 
         public static void ForColour(ConsoleColor consoleColor)
@@ -178,15 +193,16 @@ namespace GridGame
         //väggar
         public List<GameObject> Walls = new List<GameObject>();
 
-        public List<GameObject> Map = new List<GameObject>();
-
         //skapa ny spelare
         public Player player = new Player();
-
+        public int x;
+        public int y;
 
         //skapar game med måtten vi skickade in i Program
         public Game(int xSize, int ySize)
         {
+            y = ySize;
+            x = xSize;
             //sålänge i <= så många rutor vi behöver i yLed (yZize + 1)
             for (int i = 0; i <= ySize + 1; i++)
             {
@@ -204,21 +220,66 @@ namespace GridGame
                     {
                         Walls.Add(new Wall(j * 4, i * 2, false));
                     }
+                    
                 }
             }
-            Map.Add(new Map());
+            TimerClass.AddTimer(0, 5000, 1000, 1, 0, Br);
 
             GameObjects.Add(player);
+        }
+        
+        int index = 23;
+        public void Br()
+        {
+            for (int i = 0; i < index; i++)
+            {
 
+                for (int k = 0; k <= y + 1; k++)
+                {
+                    //såänge J <= antal rutor i xLed (XSize + 1)
+                    for (int j = 0; j <= x + 1; j++)
+                    {
+                        //om j eller i är största eller minsta möjliga tal
+                        if (j == 0 || k == 0 || k == y + 1 || j == x + 1)
+                        {
+                            Wall wall = null;
+
+                            if (x / 2 < j)
+                            {
+                                wall = (new Wall(j - i * 2, k, false));
+                                wall.Draw(0, 0);
+                                Walls.Add(wall);
+
+                            }
+                            if (x / 2 > j)
+                            {
+                                wall = (new Wall(j + i * 2, k, false));
+                                wall.Draw(0, 0);
+                                Walls.Add(wall);
+
+                            }
+                            if (y / 2 < k)
+                            {
+                                wall = (new Wall(j, k - i, false));
+                                wall.Draw(0, 0);
+                                Walls.Add(wall);
+
+                            }
+                            if (y / 2 > k)
+                            {
+                                wall = (new Wall(j, k + i, false));
+                                wall.Draw(0, 0);
+                                Walls.Add(wall);
+
+                            }
+                        }
+                    }
+                }
+            }
         }
 
         public void DrawBoard()
         {
-            //rita ut väggar
-            foreach (GameObject gameObject in Map)
-            {
-                gameObject.Update();
-            }
             foreach (GameObject gameObject in Walls)
             {
                 gameObject.Draw(1, 1);
@@ -335,7 +396,7 @@ namespace GridGame
             int startY = YPosition * yBoxSize;
             if (!CanBlow) Console.ForegroundColor = ConsoleColor.DarkGray;
             else Console.ForegroundColor = ConsoleColor.White;
-            Console.SetCursorPosition(startX, startY);
+            Console.SetCursorPosition(XPosition, YPosition);
             Console.Write("██");
         }
 
@@ -358,7 +419,7 @@ namespace GridGame
             throw new NotImplementedException();
         }
     }
-
+    
     class Map : GameObject
     {
 
@@ -445,7 +506,7 @@ namespace GridGame
 
         }
     }
-
+    
     class Player : GameObject
     {
 
@@ -461,7 +522,6 @@ namespace GridGame
 
         public Player()
         {
-
             layBomb = true;
         }
 
@@ -486,14 +546,12 @@ namespace GridGame
             int oldY = yPos;
             ConsoleKey input = ConsoleKey.B;
 
-            //kollar efter spelarens input. OBS måste bytas ut för att inte bli turnbased eftersom readkey väntar på knapptryck
-
+            //kollar efter spelarens input. OBS måste bytas ut för att inte bli turnbased eftersom readkey väntar på knapptryck.
             if (Console.KeyAvailable)
             {
                 input = Console.ReadKey(true).Key;
             }
-
-
+            
             //movement beroende på knapptryck, xpos är två steg i taget eftersom den är två pixlar bred
             if (input == ConsoleKey.W)
             {
@@ -509,7 +567,6 @@ namespace GridGame
             }
             if (input == ConsoleKey.A)
             {
-                Debug.WriteLine("x " + xPos + " y " + yPos);
                 xPos -= 2;
             }
             //om collisionCheck träffar något så står vi stilla och deletar inte något
@@ -668,6 +725,7 @@ namespace GridGame
             throw new NotImplementedException();
         }
     }
+
     class BOOM : GameObject
     {
         //TimerClass timer;
@@ -934,7 +992,7 @@ namespace GridGame
                 Console.ForegroundColor = ConsoleColor.Cyan;
             }
         }
-
+        
         public void SpawnPowerup(object o)
         {
             wait = true;
@@ -942,7 +1000,7 @@ namespace GridGame
 
         public override void Action1()
         {
-            throw new NotImplementedException();
+
         }
 
         public override void Action2()
@@ -987,86 +1045,5 @@ namespace GridGame
         {
             throw new NotImplementedException();
         }
-    }
-
-    class TimerClass
-    {
-        public static List<Action> TimeList = new List<Action>();
-
-        public static List<int[]> intList = new List<int[]>();
-
-        public static void AddTimer(int index, int timetostart, int intervalTime, int timeAmount, int starttime, Action method)
-        {
-
-            TimeList.Add(method);
-
-            int[] list = { timetostart, intervalTime, timeAmount, index, 0, starttime };
-
-            intList.Add(list);
-        }
-    
-            
-
-        public static int GetIndex(int x, int y)
-        {
-            int index = 0;
-            for (int i = 0; i < Program.mygame.GameObjects.Count; i++)
-            {
-                if (Program.mygame.GameObjects[i].XPosition == x && Program.mygame.GameObjects[i].YPosition == y)
-                {
-                    index = i;
-                }
-            }
-            return index;
-
-        }
-        public static int GetWallIndex(int x, int y)
-        {
-            int index = 0;
-            for (int i = 0; i < Program.mygame.Walls.Count; i++)
-            {
-                if (Program.mygame.Walls[i].XPosition == x && Program.mygame.Walls[i].YPosition == y)
-                {
-                    index = i;
-                }
-            }
-            return index;
-        }
-
-        public static void TimeMethod(int timeToStart, int intervalTime, int timeAmount, int index, int f, int starttime, Action method)
-        {
-            if (starttime == 0)
-            {
-                starttime = elapsedTime;
-            }
-            bool continuee = true;
-            for (int i = 0; i < TimeList.Count; i++)
-            {
-                if (TimeList[i] == method && continuee)
-                {
-                    TimeList.RemoveAt(i);
-                    intList.RemoveAt(i);
-                    continuee = false;
-                    //break;
-                }
-            }
-
-            if (f < timeAmount)
-            {
-                if (elapsedTime - starttime >= timeToStart && f == 0 || elapsedTime - starttime > intervalTime && f != 0)
-                {
-                    f++;
-                    starttime = elapsedTime;
-                    method();
-
-                }
-                TimeList.Add(method);
-
-                int[] list = { timeToStart, intervalTime, timeAmount, index, f, starttime };
-
-                intList.Add(list);
-            }
-        }
-        public static int elapsedTime = 0;
     }
 }
