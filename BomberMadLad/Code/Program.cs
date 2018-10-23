@@ -16,7 +16,7 @@ namespace BomberMadLad
         public static Game mygame = new Game(Console.LargestWindowWidth - 13, Console.LargestWindowHeight - 12);
 
         //om vi ska använda AI
-        public static bool haveAI { get; set; }
+        public static bool HaveAi { get; set; }
 
         //metod som startas när spelet gör det
         static void Main(string[] args)
@@ -166,7 +166,7 @@ namespace BomberMadLad
             {
                 gameObject.Draw(1, 1);
             }
-            if (Program.haveAI == true)
+            if (Program.HaveAi == true)
             {
                 GameObjects.Add(new Ai());
             }
