@@ -93,7 +93,7 @@ namespace BomberMadLad
 
                 int index = TimerClass.GetIndex(latestBoom.XPosition, latestBoom.YPosition);
 
-                TimerClass.AddTimer(index, 1000, 500, 10, 0, Program.mygame.GameObjects[index].Action1);
+                TimerClass.AddTimer(index, 1000, 500, 1, 0, Program.mygame.GameObjects[index].Action1);
             }
         }
 

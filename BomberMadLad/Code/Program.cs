@@ -235,7 +235,9 @@ namespace BomberMadLad
         
         public override void Action1()
         {
-            throw new NotImplementedException();
+            Debug.WriteLine("erasing + " + XPosition);
+            Console.SetCursorPosition(XPosition, YPosition);
+            Console.Write("  ");
         }
 
         public override void Draw(int xBoxSize, int yBoxSize)
@@ -307,6 +309,7 @@ namespace BomberMadLad
             {
                 Program.mygame.GameObjects[index].Destroy(index, false);
             }
+            Debug.WriteLine("ddddd");
             CrossBomb(xPos, yPos);
 
         }
@@ -320,7 +323,10 @@ namespace BomberMadLad
 
             oldX = oldX / 2;
 
-            int remaingnum = 4;
+            bool right = true;
+            bool left = true;
+            bool up = true;
+            bool down = true;
 
             ExIntList.Add(oldX);
             ExIntList.Add(oldX);
@@ -328,121 +334,73 @@ namespace BomberMadLad
             while (true)
             {
                 Mult++;
-                Console.ReadKey(true);
-                Debug.WriteLine("right");
 
-                if (CollisionCheck((oldX + Mult) * 2, oldY))
+                if (CollisionCheck((oldX + Mult) * 2, oldY) && right)
                 {
-                    Debug.WriteLine("booming");
                     Exposions explo = new Exposions();
                     explo.XPosition = (oldX + Mult) * 2;
                     explo.YPosition = oldY;
                     explo.Draw(0, 0);
-                    ExList.Add(new Exposions());
+                    ExList.Add(explo);
+                    
                 }
                 else
                 {
+                    right = false;
+                }
+
+                if (CollisionCheck((oldX - Mult) * 2, oldY) && left)
+                {
+                    Exposions explo = new Exposions();
+                    explo.XPosition = (oldX - Mult) * 2;
+                    explo.YPosition = oldY;
+                    explo.Draw(0, 0);
+                    ExList.Add(explo);
+                }
+                else
+                {
+                    left = false;
+                }
+
+                if (CollisionCheck(oldX * 2, oldY + Mult) && up)
+                {
+                    Exposions explo = new Exposions();
+                    explo.XPosition = oldX * 2;
+                    explo.YPosition = oldY + Mult;
+                    explo.Draw(0, 0);
+                    ExList.Add(explo);
+                }
+                else
+                {
+                    up = false;
+                }
+
+                if (CollisionCheck(oldX * 2, oldY - Mult) && down)
+                {
+                    Exposions explo = new Exposions();
+                    explo.XPosition = oldX * 2;
+                    explo.YPosition = oldY - Mult;
+                    explo.Draw(0, 0);
+                    ExList.Add(explo);
+                }
+                else
+                {
+                    down = false;
+                }
+                if (!down && !up && !left && !right)
+                {
+                    Debug.WriteLine("RATP");
                     break;
                 }
-                
-
-                
-                //    for (int i = 0; i < remaingnum; i++)
-                //    {
-                //        Console.ReadKey(true);
-                //        Debug.WriteLine("remaing " + remaingnum + " remm " + remaining[i]);
-
-                //        if (remaining[i] == 0)
-                //        {
-                //            remaingnum--;
-                //        }
-
-                //        Mult++;
-
-                //        switch (remaining[i])
-                //        {
-                //            case 0:
-                //                break;
-
-                //            case 1:
-                //                
-
-
-                //            case 2:
-                //                Debug.WriteLine("up");
-                //                if (Mult < 0) Mult *= -1;
-
-                //                if (CollisionCheck((oldX)*2, oldY + Mult))
-                //                {
-                //                    Debug.WriteLine("booming");
-                //                    Exposions explo = new Exposions();
-                //                    explo.XPosition = oldX*2;
-                //                    explo.YPosition = oldY + Mult;
-                //                    explo.Draw(0, 0);
-                //                    ExList.Add(new Exposions());
-                //                }
-                //                else
-                //                {
-                //                    remaining[i] = 0;
-                //                }
-
-                //                break;
-
-                //            case 3:
-                //                Debug.WriteLine("left");
-                //                if (Mult > 0) Mult *= -1;
-
-                //                if (CollisionCheck((oldX + Mult)*2, oldY))
-                //                {
-                //                    Debug.WriteLine("booming");
-                //                    Exposions explo = new Exposions();
-                //                    explo.XPosition = (oldX + Mult)*2;
-                //                    explo.YPosition = oldY;
-                //                    explo.Draw(0, 0);
-                //                    ExList.Add(new Exposions());
-                //                }
-                //                else
-                //                {
-                //                    remaining[i] = 0;
-                //                }
-                //                break;
-
-                //            case 4:
-                //                Debug.WriteLine("down");
-                //                if (Mult < 0) Mult *= -1;
-
-                //                if (CollisionCheck(oldX*2, oldY + Mult))
-                //                {
-                //                    Debug.WriteLine("booming");
-                //                    Exposions explo = new Exposions();
-                //                    explo.XPosition = oldX*2;
-                //                    explo.YPosition = oldY + Mult;
-                //                    explo.Draw(0, 0);
-                //                    ExList.Add(new Exposions());
-                //                }
-                //                else
-                //                {
-                //                    remaining[i] = 0;
-                //                }
-                //                break;
-                //        }
-
-                //    }
-
-                //    if (remaingnum == 0)
-                //    {
-                //        break;
-                //    }
             }
-
-            //index = TimerClass.GetIndex(oldX, oldY);
-
-            //TimerClass.AddTimer(index, 5000, 0, 1, 5000, Program.mygame.GameObjects[index].Action3);
-
-            Action3();
+            for (int i = 0; i < ExList.Count; i++)
+            {
+                ExList[i].Action1();
+            }
 
             Debug.WriteLine("end");
         }
+
         public override void Action2()
         {
             if (f < blinkTimes - 1)
@@ -454,10 +412,6 @@ namespace BomberMadLad
             {
                 Debug.WriteLine("xxx");
                 Action1();
-
-                //int index = TimerClass.GetIndex(XPosition, YPosition);
-
-                //TimerClass.AddTimer(index,1000,1000,1,0,Program.mygame.GameObjects[index].Action1);
             }
         }
 
