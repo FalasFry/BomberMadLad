@@ -92,12 +92,12 @@ namespace BomberMadLad
 
                 if (index == 1 && input == ConsoleKey.Enter)
                 {
-                    Program.haveAI = true;
+                    Program.HaveAi = true;
                     break;
                 }
                 if (index == 2 && input == ConsoleKey.Enter)
                 {
-                    Program.haveAI = false;
+                    Program.HaveAi = false;
                     break;
                 }
             }
