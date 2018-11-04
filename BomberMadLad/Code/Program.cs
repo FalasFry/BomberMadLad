@@ -457,8 +457,6 @@ namespace BomberMadLad
         Game game;
         Random rng = new Random();
 
-        //TimerClass timer;
-
         readonly int Xpos;
         readonly int Ypos;
         bool wait = true;
@@ -518,39 +516,6 @@ namespace BomberMadLad
         public override void Action2()
         {
             throw new NotImplementedException();
-        }
-
-        public override void Action3()
-        {
-            throw new NotImplementedException();
-        }
-    }
-
-    class PowerUps : GameObject
-    {
-        public PowerUps()
-        {
-        }
-
-        public override void Action1()
-        {
-            throw new NotImplementedException();
-        }
-
-        public override void Draw(int xBoxSize, int yBoxSize)
-        {
-
-        }
-
-        public override void Action2()
-        {
-            throw new NotImplementedException();
-        }
-
-        public override void Update()
-        {
-            //Om du nuddar en Poerup och det är powerup 1
-
         }
 
         public override void Action3()
