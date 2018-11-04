@@ -8,9 +8,6 @@ namespace BomberMadLad
 {
     class Player : GameObject
     {
-        int xPos = 10;
-        int yPos = 10;
-
         bool u = false;
 
         bool layBomb;
@@ -18,21 +15,23 @@ namespace BomberMadLad
         //senaste bomben som spawnats
         public BOOM latestBoom;
 
-        public Player()
+        public Player(int x, int y)
         {
             layBomb = true;
+            XPosition = x;
+            YPosition = y;
         }
 
         //rita ut cyan spelare
         public override void Draw(int xBoxSize, int yBoxSize)
         {
             Console.ForegroundColor = ConsoleColor.DarkCyan;
-            Console.SetCursorPosition(xPos, yPos);
+            Console.SetCursorPosition(XPosition, YPosition);
             Console.Write("██");
 
             if (!u)
             {
-                TimerClass.GetIndex(xPos, yPos);
+                TimerClass.GetIndex(XPosition, YPosition);
                 u = true;
             }
             
@@ -41,8 +40,8 @@ namespace BomberMadLad
         public override void Update()
         {
             //återställ oldX + old Y
-            int oldX = xPos;
-            int oldY = yPos;
+            int oldX = XPosition;
+            int oldY = YPosition;
             ConsoleKey input = ConsoleKey.B;
 
             //kollar efter spelarens input. OBS måste bytas ut för att inte bli turnbased eftersom readkey väntar på knapptryck.
@@ -54,25 +53,25 @@ namespace BomberMadLad
             //movement beroende på knapptryck, xpos är två steg i taget eftersom den är två pixlar bred
             if (input == ConsoleKey.W)
             {
-                yPos--;
+                YPosition--;
             }
             if (input == ConsoleKey.S)
             {
-                yPos++;
+                YPosition++;
             }
             if (input == ConsoleKey.D)
             {
-                xPos += 2;
+                XPosition += 2;
             }
             if (input == ConsoleKey.A)
             {
-                xPos -= 2;
+                XPosition -= 2;
             }
             //om collisionCheck träffar något så står vi stilla och deletar inte något
-            if (!CollisionCheck(xPos, yPos))
+            if (!CollisionCheck(XPosition, YPosition))
             {
-                xPos = oldX;
-                yPos = oldY;
+                XPosition = oldX;
+                YPosition = oldY;
             }
             else Delete(oldX, oldY);
             Draw(0, 0);
@@ -80,20 +79,20 @@ namespace BomberMadLad
             //lägg bomb
             if (input == ConsoleKey.Spacebar && layBomb)
             {
-                latestBoom = new BOOM(xPos, yPos);
+                latestBoom = new BOOM(XPosition, YPosition);
 
                 //lägg till i gameobjects
                 Program.mygame.GameObjects.Add(latestBoom);
 
 
-                layBomb = false;
+                layBomb = true;
 
                 //lägg till timer
                 
 
                 int index = TimerClass.GetIndex(latestBoom.XPosition, latestBoom.YPosition);
 
-                TimerClass.AddTimer(index, 1000, 500, 1, 0, Program.mygame.GameObjects[index].Action1);
+                TimerClass.AddTimer(index, 1000, 500, 1, Program.mygame.GameObjects[index].Action1);
             }
 
             if (input == ConsoleKey.Escape)

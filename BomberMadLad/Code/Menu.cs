@@ -75,6 +75,7 @@ namespace BomberMadLad
 
             while (true)
             {
+                
                 ConsoleKey input = Console.ReadKey(true).Key;
 
                 if (input == ConsoleKey.DownArrow && index < Buttons.Count - 1)

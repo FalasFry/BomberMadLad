@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Diagnostics;
 
 namespace BomberMadLad
 {
@@ -26,18 +27,23 @@ namespace BomberMadLad
         }
         public void Destroy(int index, bool walls)
         {
+
             if (walls)
             {
-                if (index > Program.mygame.GameObjects.Count)
+                if (index > Program.mygame.GameObjects.Count && Program.mygame.Walls[index].CanBlow)
                 {
-                    Program.mygame.Walls.RemoveAt(index);
+                    Delete(Program.mygame.Walls[index].XPosition, Program.mygame.Walls[index].YPosition);
+                    Wall replacement = new Wall(0,0,false);
+                    Program.mygame.Walls[index] = replacement;
                 }
-
             }
-            else Program.mygame.GameObjects.RemoveAt(index);
-
-            Console.SetCursorPosition(XPosition, YPosition);
-            Console.Write("  ");
+            else
+            {
+                Delete(Program.mygame.GameObjects[index].XPosition, Program.mygame.GameObjects[index].YPosition);
+                GameObject replacement = new Exposions();
+                Program.mygame.GameObjects[index] = replacement;
+            }
+            
         }
 
         //kolla kollision på inskickade koordinater
