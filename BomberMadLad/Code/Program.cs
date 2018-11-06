@@ -289,6 +289,7 @@ namespace BomberMadLad
         //TimerClass timer;
         int index;
         int f = 0;
+        bool didBlow = false;
         int blinkTimes = 5;
         bool colorSwitch = true;
         List<GameObject> ExList = new List<GameObject>();
@@ -362,9 +363,18 @@ namespace BomberMadLad
                 }
                 else if (right)
                 {
-                    Program.mygame.Walls[0].Destroy(TimerClass.GetWallIndex((oldX + Mult) * 2, oldY), true);
+                    if (Program.mygame.Walls[TimerClass.GetWallIndex((oldX + Mult) * 2, oldY)].CanBlow)
+                    {
+                        Program.mygame.Walls[0].Destroy(TimerClass.GetWallIndex((oldX + Mult) * 2, oldY), true);
+                        Exposions explo = new Exposions();
+                        explo.XPosition = (oldX + Mult) * 2;
+                        explo.YPosition = oldY;
+                        explo.Draw(0, 0);
+                        ExList.Add(explo);
+                    }
+                    
                     right = false;
-                    //Debug.WriteLine("cant go right");
+                    
                 }
 
                 if (CollisionCheck((oldX - Mult) * 2, oldY) && left)
@@ -377,8 +387,16 @@ namespace BomberMadLad
                 }
                 else if (left)
                 {
+                    if (Program.mygame.Walls[TimerClass.GetWallIndex((oldX - Mult) * 2, oldY)].CanBlow)
+                    {
+                        Program.mygame.Walls[0].Destroy(TimerClass.GetWallIndex((oldX - Mult) * 2, oldY), true);
+                        Exposions explo = new Exposions();
+                        explo.XPosition = (oldX - Mult) * 2;
+                        explo.YPosition = oldY;
+                        explo.Draw(0, 0);
+                        ExList.Add(explo);
+                    }
                     //Debug.WriteLine("cant go left");
-                    Program.mygame.Walls[0].Destroy(TimerClass.GetWallIndex((oldX- Mult) * 2, oldY), true);
                     left = false;
                 }
 
@@ -394,7 +412,15 @@ namespace BomberMadLad
                 else if (up)
                 {
                     //Debug.WriteLine("cant go üp");
-                    Program.mygame.Walls[0].Destroy(TimerClass.GetWallIndex(oldX * 2, oldY + Mult), true);
+                    if (Program.mygame.Walls[TimerClass.GetWallIndex(oldX * 2, oldY + Mult)].CanBlow)
+                    {
+                        Program.mygame.Walls[0].Destroy(TimerClass.GetWallIndex(oldX * 2 , oldY + Mult), true);
+                        Exposions explo = new Exposions();
+                        explo.XPosition = oldX * 2;
+                        explo.YPosition = oldY + Mult;
+                        explo.Draw(0, 0);
+                        ExList.Add(explo);
+                    }
                     up = false;
                 }
 
@@ -408,8 +434,16 @@ namespace BomberMadLad
                 }
                 else if (down)
                 {
+                    if (Program.mygame.Walls[TimerClass.GetWallIndex(oldX * 2, oldY - Mult)].CanBlow)
+                    {
+                        Program.mygame.Walls[0].Destroy(TimerClass.GetWallIndex(oldX * 2, oldY - Mult), true);
+                        Exposions explo = new Exposions();
+                        explo.XPosition = oldX * 2;
+                        explo.YPosition = oldY - Mult;
+                        explo.Draw(0, 0);
+                        ExList.Add(explo);
+                    }
                     //Debug.WriteLine("cant go down");
-                    Program.mygame.Walls[0].Destroy(TimerClass.GetWallIndex(oldX * 2, oldY - Mult), true);
                     down = false;
                 }
                 if (!down && !up && !left && !right)
@@ -431,9 +465,10 @@ namespace BomberMadLad
                 colorSwitch = !colorSwitch;
                 f++;
             }
-            else
+            else if (!didBlow)
             {
                 Action1();
+                didBlow = true;
             }
         }
 

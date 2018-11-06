@@ -73,8 +73,11 @@ namespace BomberMadLad
                 XPosition = oldX;
                 YPosition = oldY;
             }
-            else Delete(oldX, oldY);
-            Draw(0, 0);
+            else
+            {
+                Delete(oldX, oldY);
+                Draw(0, 0);
+            }
 
             //lägg bomb
             if (input == ConsoleKey.Spacebar && layBomb)
@@ -92,7 +95,7 @@ namespace BomberMadLad
 
                 int index = TimerClass.GetIndex(latestBoom.XPosition, latestBoom.YPosition);
 
-                TimerClass.AddTimer(index, 1000, 500, 1, Program.mygame.GameObjects[index].Action1);
+                TimerClass.AddTimer(index, 1000, 500, 10, Program.mygame.GameObjects[index].Action2);
             }
 
             if (input == ConsoleKey.Escape)
