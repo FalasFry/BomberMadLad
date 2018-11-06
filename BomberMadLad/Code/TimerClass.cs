@@ -13,30 +13,30 @@ namespace BomberMadLad
 
         public static List<int[]> intList = new List<int[]>();
 
-        //lägg till en timer med värdena som skickas in.
-        //index används i method om man behöver komma åt ett specifikt gameobject.
+        // Lägg till en timer med värdena som skickas in.
+        // Index används i method om man behöver komma åt ett specifikt gameobject.
         public static void AddTimer(int index, int timetostart, int intervalTime, int timeAmount, Action method)
         {
-            //alla listor får ett unikt värde så att systemet inte blandar ihop likadana methods med olika tider.
-            //om det inte finns några timers så blir värdet 0
+            // Alla listor får ett unikt värde så att systemet inte blandar ihop likadana methods med olika tider.
+            // Om det inte finns några timers så blir värdet 0
             int indexNum = 0;
             if (intList.Count != 0)
             {
                 indexNum = intList[intList.Count - 1][6] + 1;
             }
-            //lägg till metoden i sin lista
+            // Lägg till metoden i sin lista
             TimeList.Add(method);
 
-            //lägg till värdena vi skickade in innan
-            //två av värdena är 0, en av dem är ett index för hur många ggr metoden körts innan vilket alltid är 0 i en ny timer
-            //den andra håller reda på tiden men den fixas i Timemethod.
+            // Lägg till värdena vi skickade in innan
+            // Två av värdena är 0, en av dem är ett index för hur många ggr metoden körts innan vilket alltid är 0 i en ny timer
+            // Den andra håller reda på tiden men den fixas i Timemethod.
             int[] list = { timetostart, intervalTime, timeAmount, index, 0, 0, indexNum };
             
             intList.Add(list);
             
         }
 
-        //hitta index för gameobjects
+        // Hitta index för gameobjects.
         public static int GetIndex(int x, int y)
         {
             int index = 0;
@@ -51,7 +51,7 @@ namespace BomberMadLad
 
         }
 
-        //hitta index för väggar
+        // Hitta index för väggar.
         public static int GetWallIndex(int x, int y)
         {
             int index = 0;
@@ -65,7 +65,7 @@ namespace BomberMadLad
             return index;
         }
 
-        //körs varje update
+        // Körs varje update.
         public static void TimeMethod()
         {
             //körs en gång för alla aktiva timers.
