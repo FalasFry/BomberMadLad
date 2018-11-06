@@ -48,7 +48,6 @@
     <Compile Include="Code\Menu.cs" />
     <Compile Include="Code\Player.cs" />
     <Compile Include="Code\Program.cs" />
-    <Compile Include="Code\PauseMenu.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Code\TimerClass.cs" />
   </ItemGroup>

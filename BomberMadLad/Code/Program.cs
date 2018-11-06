@@ -210,11 +210,6 @@ namespace BomberMadLad
             }
 
         }
-        public void Pause()
-        {
-            PauseMenu pause = new PauseMenu();
-            pause.Pause();
-        }
     }
     
     class Wall : GameObject
