@@ -103,27 +103,40 @@ namespace BomberMadLad
                 }
             }
 
-            //merClass.AddTimer(0, 3000, 1000, 1, 0, BrTimer);
-
             GameObjects.Add(player);
             
         }
 
-        int index = 1;
-        readonly int maxIndex = 23;
-        public void BrTimer()
-        {
-            if(index < maxIndex)
-            {
-                index++;
-            }
+        int BrIndex = 0;
+        int maxIndex = 10;
 
-            TimerClass.AddTimer(0, 3000, 1000, 1, BrTimer);
-            TimerClass.AddTimer(0, 3000, 1000, 1, Br);
-        }
         public void Br()
         {
-            for (int i = 0; i < index; i++)
+            BrIndex++;
+            List<ConsoleColor> färg = new List<ConsoleColor>()
+            {
+                ConsoleColor.Red,
+                ConsoleColor.Blue,
+                ConsoleColor.DarkMagenta,
+                ConsoleColor.Green,
+                ConsoleColor.Yellow,
+                ConsoleColor.White,
+                ConsoleColor.Red,
+                ConsoleColor.Blue,
+                ConsoleColor.DarkMagenta,
+                ConsoleColor.Green,
+                ConsoleColor.Yellow,
+                ConsoleColor.White,
+                ConsoleColor.Red,
+                ConsoleColor.Blue,
+                ConsoleColor.DarkMagenta,
+                ConsoleColor.Green,
+                ConsoleColor.Yellow,
+                ConsoleColor.White,
+
+            };
+            Console.ForegroundColor = färg[BrIndex];
+            for (int i = 0; i < BrIndex; i++)
             {
                 for (int k = 0; k <= Y + 1; k++)
                 {
@@ -137,25 +150,25 @@ namespace BomberMadLad
 
                             if (X / 2 < j)
                             {
-                                wall = (new Wall(j - i * 2, k, false));
+                                wall = (new Wall(j - BrIndex * 2, k, false));
                                 wall.Draw(0, 0);
                                 Walls.Add(wall);
                             }
-                            if (X / 2 > j)
+                             if (X / 2 > j)
                             {
-                                wall = (new Wall(j + i * 2, k, false));
+                                wall = (new Wall(j + BrIndex * 2, k, false));
                                 wall.Draw(0, 0);
                                 Walls.Add(wall);
                             }
                             if (Y / 2 < k)
                             {
-                                wall = (new Wall(j, k - i, false));
+                                wall = (new Wall(j, k - BrIndex, false));
                                 wall.Draw(0, 0);
                                 Walls.Add(wall);
                             }
                             if (Y / 2 > k)
                             {
-                                wall = (new Wall(j, k + i, false));
+                                wall = (new Wall(j, k + BrIndex, false));
                                 wall.Draw(0, 0);
                                 Walls.Add(wall);
                             }
@@ -164,23 +177,24 @@ namespace BomberMadLad
                 }
             }
         }
-
+        
         public void DrawBoard()
         {
-            
+            TimerClass.AddTimer(0, 3000, 3000, maxIndex, Br);
+            int wallsIndex = 1;
             for (int i = 0; i < GameObjects.Count; i++)
             {
-                    index = TimerClass.GetWallIndex(GameObjects[i].XPosition, GameObjects[i].YPosition);
-                    Walls[index].Destroy(index, true);
-                    index = TimerClass.GetWallIndex(GameObjects[i].XPosition - 2, GameObjects[i].YPosition);
-                    Walls[index].Destroy(index, true);
-                index = TimerClass.GetWallIndex(GameObjects[i].XPosition + 2, GameObjects[i].YPosition);
-                Walls[index].Destroy(index, true);
-                index = TimerClass.GetWallIndex(GameObjects[i].XPosition, GameObjects[i].YPosition - 1);
-                Walls[index].Destroy(index, true);
-                index = TimerClass.GetWallIndex(GameObjects[i].XPosition, GameObjects[i].YPosition + 1);
-                Walls[index].Destroy(index, true);
-               
+                wallsIndex = TimerClass.GetWallIndex(GameObjects[i].XPosition, GameObjects[i].YPosition);
+                Walls[wallsIndex].Destroy(wallsIndex, true);
+                wallsIndex = TimerClass.GetWallIndex(GameObjects[i].XPosition - 2, GameObjects[i].YPosition);
+                Walls[wallsIndex].Destroy(wallsIndex, true);
+                wallsIndex = TimerClass.GetWallIndex(GameObjects[i].XPosition + 2, GameObjects[i].YPosition);
+                Walls[wallsIndex].Destroy(wallsIndex, true);
+                wallsIndex = TimerClass.GetWallIndex(GameObjects[i].XPosition, GameObjects[i].YPosition - 1);
+                Walls[wallsIndex].Destroy(wallsIndex, true);
+                wallsIndex = TimerClass.GetWallIndex(GameObjects[i].XPosition, GameObjects[i].YPosition + 1);
+                Walls[wallsIndex].Destroy(wallsIndex, true);
+
 
             }
             foreach (GameObject gameObject in Walls)
