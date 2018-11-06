@@ -27,7 +27,6 @@ namespace BomberMadLad
         }
         public void Destroy(int index, bool walls)
         {
-
             if (walls)
             {
                 if (index > Program.mygame.GameObjects.Count && Program.mygame.Walls[index].CanBlow)

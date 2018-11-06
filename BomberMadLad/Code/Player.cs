@@ -97,11 +97,6 @@ namespace BomberMadLad
 
                 TimerClass.AddTimer(index, 1000, 500, 10, Program.mygame.GameObjects[index].Action2);
             }
-
-            if (input == ConsoleKey.Escape)
-            {
-                Program.mygame.Pause();
-            }
         }
 
         public void PlayerBoomCooldown(object o)

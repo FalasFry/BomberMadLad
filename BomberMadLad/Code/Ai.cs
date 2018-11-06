@@ -79,6 +79,4 @@ namespace BomberMadLad
             Delete(oldX, oldY);
         }
     }
-
-
 }
