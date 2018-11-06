@@ -27,7 +27,7 @@ namespace BomberMadLad
 
         static void AddHighScore()
         {
-
+            List<int> score = new List<int>();
         }
         static void ShowHighScore()
         {
