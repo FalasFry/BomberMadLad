@@ -135,48 +135,44 @@ namespace BomberMadLad
                 ConsoleColor.White,
 
             };
-            Console.ForegroundColor = färg[BrIndex];
-            for (int i = 0; i < BrIndex; i++)
+            //Console.ForegroundColor = färg[BrIndex];
+            for (int k = 0; k <= Y + 1; k++)
             {
-                for (int k = 0; k <= Y + 1; k++)
+                //såänge J <= antal rutor i xLed (XSize + 1)
+                for (int j = 0; j <= X + 1; j++)
                 {
-                    //såänge J <= antal rutor i xLed (XSize + 1)
-                    for (int j = 0; j <= X + 1; j++)
+                    Wall wall = null;
+                    if (j == (X+1) - BrIndex)
                     {
-                        //om j eller i är största eller minsta möjliga tal
-                        if (j == 0 || k == 0 || k == Y + 1 || j == X + 1)
-                        {
-                            Wall wall = null;
+                        wall = (new Wall(j - BrIndex, k, false));
+                        wall.Draw(0, 0);
+                        Walls.Add(wall);
+                    }
 
-                            if (X / 2 < j)
-                            {
-                                wall = (new Wall(j - BrIndex * 2, k, false));
-                                wall.Draw(0, 0);
-                                Walls.Add(wall);
-                            }
-                             if (X / 2 > j)
-                            {
-                                wall = (new Wall(j + BrIndex * 2, k, false));
-                                wall.Draw(0, 0);
-                                Walls.Add(wall);
-                            }
-                            if (Y / 2 < k)
-                            {
-                                wall = (new Wall(j, k - BrIndex, false));
-                                wall.Draw(0, 0);
-                                Walls.Add(wall);
-                            }
-                            if (Y / 2 > k)
-                            {
-                                wall = (new Wall(j, k + BrIndex, false));
-                                wall.Draw(0, 0);
-                                Walls.Add(wall);
-                            }
-                        }
+                    if (j == 0 + BrIndex)
+                    {
+                        wall = (new Wall(j + BrIndex, k, false));
+                        wall.Draw(0, 0);
+                        Walls.Add(wall);
+                    }
+
+                    if (k == (Y+1) - BrIndex)
+                    {
+                        wall = (new Wall(j, k, false));
+                        wall.Draw(0, 0);
+                        Walls.Add(wall);
+                    }
+
+                    if (k == 0 + BrIndex)
+                    {
+                        wall = (new Wall(j, k, false));
+                        wall.Draw(0, 0);
+                        Walls.Add(wall);
                     }
                 }
             }
         }
+        
         
         public void DrawBoard()
         {
@@ -222,7 +218,6 @@ namespace BomberMadLad
             {
                 GameObjects[i].Update();
             }
-
         }
     }
     
@@ -237,8 +232,6 @@ namespace BomberMadLad
 
         public override void Draw(int xBoxSize, int yBoxSize)
         {
-            int startX = XPosition * xBoxSize;
-            int startY = YPosition * yBoxSize;
             if (!CanBlow) Console.ForegroundColor = ConsoleColor.DarkGray;
             else Console.ForegroundColor = ConsoleColor.White;
             Console.SetCursorPosition(XPosition, YPosition);
