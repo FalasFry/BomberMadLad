@@ -10,48 +10,52 @@ namespace BomberMadLad
 {
     static class HighScore
     {
-        public static string[] lines = File.ReadAllLines(@"C:\Users\william.persson8\Documents\Visual Studio 2017\Projects\BomberMadLad\HighScore\WriteLines.txt");
+        public static string[] OldHighScore;
+        public static List<int> Score = new List<int>();
 
         public static void ReadHighScore()
         {
-            // Display the file contents by using a foreach loop.
-            Console.WriteLine("Contents of WriteLines2.txt = ");
-            foreach (string line in lines)
+            OldHighScore = File.ReadAllLines(@"C:\Users\william.persson8\Documents\Visual Studio 2017\Projects\BomberMadLad\HighScore\WriteLines.txt");
+        }
+
+        public static void AddHighScore()
+        {
+            for (int i = 0; i < OldHighScore.Length; i++)
             {
-                // Use a tab to indent each line of the file.
-                Console.WriteLine("\t" + line);
+                Score.Add(Convert.ToInt32(OldHighScore[i]));
+                Score.Sort();
+            }
+
+            if(Score.Count > 5)
+            {
+                Score.RemoveAt(0);
+            }
+        }
+        static public void ShowHighScore()
+        {
+            Console.WriteLine("Contents of WriteLines2.txt = ");
+            for (int i = 0; i < Score.Count; i++)
+            {
+                Console.WriteLine("\t" + i + "s place got: " + Convert.ToString(Score[i]) + " Score");
             }
 
             Console.WriteLine("Press any key to exit.");
             Console.ReadKey();
         }
 
-        public static void AddHighScore()
-        {
-            List<int> score = new List<int>();
-
-            for (int i = 0; i < lines.Length; i++)
-            {
-                score.Add(Convert.ToInt32(lines[i]));
-                score.Sort();
-            }
-        }
-        static public void ShowHighScore()
-        {
-
-        }
-
         static public void WriteHighScore()
         {
+            List<string> lines = new List<string>();
+            for (int i = 0; i < lines.Count; i++)
+            {
+                lines.Add(Convert.ToString(Score[i]));
+            }
 
-            string[] lines = { "first line", "second line", "third line", "fourth line", "fifth line" };
-
-            StreamWriter file = new System.IO.StreamWriter(@"C:\Users\william.persson8\Documents\Visual Studio 2017\Projects\BomberMadLad\HighScore\WriteLines.txt");
+            StreamWriter file = new StreamWriter(@"C:\Users\william.persson8\Documents\Visual Studio 2017\Projects\BomberMadLad\HighScore\WriteLines.txt");
 
             foreach (string line in lines)
             {
-                // If the line doesn't contain the word 'Second', write the line to the file.
-                if (!line.Contains("Second"))
+                if (lines.Count <= 5)
                 {
                     file.WriteLine(line);
                 }
