@@ -4,17 +4,18 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Diagnostics;
+using System.IO;
 
 namespace BomberMadLad
 {
     static class HighScore
     {
-        static void ReadHighScore()
-        {
-            string[] lines = System.IO.File.ReadAllLines(@"C:\Users\william.persson8\Documents\Visual Studio 2017\Projects\BomberMadLad\HighScore\WriteLines.txt");
+        public static string[] lines = File.ReadAllLines(@"C:\Users\william.persson8\Documents\Visual Studio 2017\Projects\BomberMadLad\HighScore\WriteLines.txt");
 
+        public static void ReadHighScore()
+        {
             // Display the file contents by using a foreach loop.
-            System.Console.WriteLine("Contents of WriteLines2.txt = ");
+            Console.WriteLine("Contents of WriteLines2.txt = ");
             foreach (string line in lines)
             {
                 // Use a tab to indent each line of the file.
@@ -25,21 +26,27 @@ namespace BomberMadLad
             Console.ReadKey();
         }
 
-        static void AddHighScore()
+        public static void AddHighScore()
         {
             List<int> score = new List<int>();
+
+            for (int i = 0; i < lines.Length; i++)
+            {
+                score.Add(Convert.ToInt32(lines[i]));
+                score.Sort();
+            }
         }
-        static void ShowHighScore()
+        static public void ShowHighScore()
         {
 
         }
 
-        static void WriteHighScore()
+        static public void WriteHighScore()
         {
 
             string[] lines = { "first line", "second line", "third line", "fourth line", "fifth line" };
 
-            System.IO.StreamWriter file = new System.IO.StreamWriter(@"C:\Users\william.persson8\Documents\Visual Studio 2017\Projects\BomberMadLad\HighScore\WriteLines.txt");
+            StreamWriter file = new System.IO.StreamWriter(@"C:\Users\william.persson8\Documents\Visual Studio 2017\Projects\BomberMadLad\HighScore\WriteLines.txt");
 
             foreach (string line in lines)
             {
