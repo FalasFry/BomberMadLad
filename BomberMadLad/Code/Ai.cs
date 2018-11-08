@@ -9,23 +9,32 @@ namespace BomberMadLad
     class Ai : GameObject
     {
         public Random rng = new Random();
-        int xPos;
-        int yPos;
-
+        public BOOM latestBoom;
+        public bool layBomb = true;
         public Ai()
         {
-            xPos = Console.LargestWindowWidth - 22;
-            yPos = 10;
+            XPosition = Console.LargestWindowWidth - 22;
+            YPosition = 11;
         }
 
         public override void Action1()
         {
-            throw new NotImplementedException();
+            latestBoom = new BOOM(XPosition, YPosition);
+
+            //lägg till i gameobjects
+            Program.mygame.GameObjects.Add(latestBoom);
+
+            //lägg till timer
+            int index = TimerClass.GetIndex(latestBoom.XPosition, latestBoom.YPosition);
+
+            TimerClass.AddTimer(index, 1000, 500, 10, Program.mygame.GameObjects[index].Action2);
+
+            layBomb = true;
         }
 
         public override void Draw(int xBoxSize, int yBoxSize)
         {
-            Console.SetCursorPosition(xPos, yPos);
+            Console.SetCursorPosition(XPosition, YPosition);
             Console.ForegroundColor = ConsoleColor.Green;
             Console.Write("██");
         }
@@ -41,42 +50,47 @@ namespace BomberMadLad
         public override void Update()
         {
 
-            int oldX = xPos;
-            int oldY = yPos;
+            int oldX = XPosition;
+            int oldY = YPosition;
             int dir = rng.Next(1, 5);
-            bool moved = false;
-
 
             //en loop som ser till att han inte går in i väggar, principen är att om han går in i vägg får han gå igen tills han lyckats gå åt rätt håll
-            while (!moved)
+            XPosition = oldX;
+            YPosition = oldY;
+
+            dir = rng.Next(1, 6);
+
+            if (dir == 1)
             {
-                xPos = oldX;
-                yPos = oldY;
-
-                dir = rng.Next(1, 5);
-
-                if (dir == 1)
-                {
-                    yPos--;
-                }
-                if (dir == 2)
-                {
-                    yPos++;
-                }
-                if (dir == 3)
-                {
-                    xPos += 2;
-                }
-                if (dir == 4)
-                {
-                    xPos -= 2;
-                }
-                if (!CollisionCheck(xPos, yPos)) moved = false;
-                else moved = true;
-
+                YPosition--;
             }
-            //efter loopen tar vi bort gamla spelaren
-            Delete(oldX, oldY);
+            if (dir == 2)
+            {
+                YPosition++;
+            }
+            if (dir == 3)
+            {
+                XPosition += 2;
+            }
+            if (dir == 4)
+            {
+                XPosition -= 2;
+            }
+            if(dir == 5 && layBomb)
+            {
+                TimerClass.AddTimer(0, 5000, 0, 1, Action1);
+                layBomb = false;
+            }
+            if (!CollisionCheck(XPosition, YPosition))
+            {
+                XPosition = oldX;
+                YPosition = oldY;
+            }
+            else
+            {
+                Delete(oldX, oldY);
+                Draw(0, 0);
+            }
         }
     }
 }

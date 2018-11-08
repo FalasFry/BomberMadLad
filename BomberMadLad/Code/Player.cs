@@ -42,7 +42,7 @@ namespace BomberMadLad
             //återställ oldX + old Y
             int oldX = XPosition;
             int oldY = YPosition;
-            ConsoleKey input = ConsoleKey.B;
+            ConsoleKey input = new ConsoleKey();
 
             //kollar efter spelarens input. OBS måste bytas ut för att inte bli turnbased eftersom readkey väntar på knapptryck.
             if (Console.KeyAvailable)
@@ -91,8 +91,6 @@ namespace BomberMadLad
                 layBomb = true;
 
                 //lägg till timer
-                
-
                 int index = TimerClass.GetIndex(latestBoom.XPosition, latestBoom.YPosition);
 
                 TimerClass.AddTimer(index, 1000, 500, 10, Program.mygame.GameObjects[index].Action2);

@@ -103,7 +103,7 @@ namespace BomberMadLad
         }
 
         int BrIndex = 0;
-        int maxIndex = 10;
+        int maxIndex = 20;
 
         public void Br()
         {
@@ -147,13 +147,14 @@ namespace BomberMadLad
         
         public void DrawBoard()
         {
-            TimerClass.AddTimer(0, 3000, 3000, maxIndex, Br);
+            TimerClass.AddTimer(0, 10000, 10000, maxIndex, Br);
             int wallsIndex = 1;
 
             if (Program.HaveAi == true)
             {
                 GameObjects.Add(new Ai());
             }
+            
 
             for (int i = 0; i < GameObjects.Count; i++)
             {
