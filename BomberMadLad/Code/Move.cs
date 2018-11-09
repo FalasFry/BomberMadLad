@@ -42,5 +42,6 @@ namespace BomberMadLad
 
             TimerClass.AddTimer(index, 1000, 500, 10, Program.mygame.GameObjects[index].Action2);
         }
+
     }
 }

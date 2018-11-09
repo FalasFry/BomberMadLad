@@ -82,16 +82,15 @@ namespace BomberMadLad
                 control.LayBomb(XPosition, YPosition);
             }
         }
+
         public override void Action2()
         {
         }
         public override void Action3()
         {
         }
-
         public override void Action1()
         {
-            throw new NotImplementedException();
         }
     }
 }
