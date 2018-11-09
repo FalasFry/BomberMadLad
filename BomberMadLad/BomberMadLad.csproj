@@ -50,7 +50,7 @@
     <Compile Include="Code\Program.cs" />
     <Compile Include="Code\HighScore.cs" />
     <Compile Include="Code\PowerUps.cs" />
-    <Compile Include="Code\PlayerControl.cs" />
+    <Compile Include="Code\Move.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Code\TimerClass.cs" />
   </ItemGroup>

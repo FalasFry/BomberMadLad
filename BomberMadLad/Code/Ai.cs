@@ -52,7 +52,7 @@ namespace BomberMadLad
 
             int oldX = XPosition;
             int oldY = YPosition;
-            int dir = rng.Next(1, 5);
+            int dir;
 
             //en loop som ser till att han inte går in i väggar, principen är att om han går in i vägg får han gå igen tills han lyckats gå åt rätt håll
             XPosition = oldX;
