@@ -8,12 +8,15 @@ namespace BomberMadLad
 {
     class Ai : GameObject
     {
-        public Random rng = new Random();
         public BOOM latestBoom;
         public bool layBomb = true;
 
         public List<List<int>> bombPoints = new List<List<int>>();
 
+        Random rng = new Random();
+        Move control = new Move();
+
+        bool Bomb = true;
 
         public Ai(int xpoz, int ypoz)
         {
@@ -34,8 +37,10 @@ namespace BomberMadLad
             TimerClass.AddTimer(index, 1000, 500, 10, Program.mygame.GameObjects[index].Action2);
 
             layBomb = true;
+            
         }
-
+        
+        
         public override void Draw(int xBoxSize, int yBoxSize)
         {
             Console.SetCursorPosition(XPosition, YPosition);
@@ -43,20 +48,12 @@ namespace BomberMadLad
             Console.Write("██");
         }
 
-        public override void Action2()
-        {
-            throw new NotImplementedException();
-        }
-        public override void Action3()
-        {
-        }
-
         public override void Update()
         {
 
             int oldX = XPosition;
             int oldY = YPosition;
-            int dir = rng.Next(1, 5);
+            int dir;
 
             //en loop som ser till att han inte går in i väggar, principen är att om han går in i vägg får han gå igen tills han lyckats gå åt rätt håll
             XPosition = oldX;
@@ -66,15 +63,15 @@ namespace BomberMadLad
 
             if (dir == 1)
             {
-                YPosition--;
+                control.Up(this);
             }
             if (dir == 2)
             {
-                YPosition++;
+                control.Down(this);
             }
             if (dir == 3)
             {
-                XPosition += 2;
+                control.Left(this);
             }
             if (dir == 4)
             {
@@ -87,17 +84,34 @@ namespace BomberMadLad
                 
                 TimerClass.AddTimer(0, 5000, 0, 1, Action1);
                 layBomb = false;
+                control.Right(this);
             }
             if (!CollisionCheck(XPosition, YPosition))
             {
                 XPosition = oldX;
                 YPosition = oldY;
+
+                if (Bomb)
+                {
+                    TimerClass.AddTimer(0, 1, 0, 1, Action1);
+                    Bomb = false;
+                }
             }
             else
             {
                 Delete(oldX, oldY);
                 Draw(0, 0);
             }
+        }
+
+        public override void Action2()
+        {
+            Bomb = true;
+        }
+        public override void Action3()
+        {
+            TimerClass.AddTimer(0, 5000, 0, 1, Action2);
+            control.LayBomb(XPosition, YPosition);
         }
     }
 }

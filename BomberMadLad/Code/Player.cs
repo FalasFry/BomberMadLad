@@ -10,14 +10,11 @@ namespace BomberMadLad
     {
         bool u = false;
 
-        bool layBomb;
-
+        Move control = new Move();
         //senaste bomben som spawnats
-        public BOOM latestBoom;
 
         public Player(int x, int y)
         {
-            layBomb = true;
             XPosition = x;
             YPosition = y;
         }
@@ -39,7 +36,7 @@ namespace BomberMadLad
 
         public override void Update()
         {
-            //återställ oldX + old Y
+            // Återställ oldX +old Y
             int oldX = XPosition;
             int oldY = YPosition;
             ConsoleKey input = new ConsoleKey();
@@ -53,19 +50,19 @@ namespace BomberMadLad
             //movement beroende på knapptryck, xpos är två steg i taget eftersom den är två pixlar bred
             if (input == ConsoleKey.W)
             {
-                YPosition--;
+                control.Up(this);
             }
             if (input == ConsoleKey.S)
             {
-                YPosition++;
+                control.Down(this);
             }
             if (input == ConsoleKey.D)
             {
-                XPosition += 2;
+                control.Right(this);
             }
             if (input == ConsoleKey.A)
             {
-                XPosition -= 2;
+                control.Left(this);
             }
             //om collisionCheck träffar något så står vi stilla och deletar inte något
             if (!CollisionCheck(XPosition, YPosition))
@@ -79,40 +76,24 @@ namespace BomberMadLad
                 Draw(0, 0);
             }
 
-            //lägg bomb
-            if (input == ConsoleKey.Spacebar && layBomb)
+            // Lägg bomb
+            if (input == ConsoleKey.Spacebar)
             {
                 List<int> position = new List<int> {XPosition,YPosition };
+
                 Program.mygame.ai.bombPoints.Add(position);
-
-                latestBoom = new BOOM(XPosition, YPosition);
-
-                //lägg till i gameobjects
-                Program.mygame.GameObjects.Add(latestBoom);
-
-
-                layBomb = true;
-
-                //lägg till timer
-                int index = TimerClass.GetIndex(latestBoom.XPosition, latestBoom.YPosition);
-
-                TimerClass.AddTimer(index, 1000, 500, 10, Program.mygame.GameObjects[index].Action2);
+                
+                control.LayBomb(XPosition, YPosition);
             }
         }
 
-        public void PlayerBoomCooldown(object o)
-        {
-            layBomb = true;
-        }
-
-        public override void Action1()
-        {
-            layBomb = true;
-        }
         public override void Action2()
         {
         }
         public override void Action3()
+        {
+        }
+        public override void Action1()
         {
         }
     }

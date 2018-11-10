@@ -335,7 +335,7 @@ namespace BomberMadLad
                 {
                     if (CollisionCheck((oldX + Mult) * 2, oldY))
                     {
-                        position = new List<int> { (oldX +de Mult) * 2, oldY };
+                        position = new List<int> { (oldX + Mult) * 2, oldY };
                         rightslist.Add(position);
                     }
                     else

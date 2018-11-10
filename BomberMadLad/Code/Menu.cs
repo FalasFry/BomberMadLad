@@ -12,13 +12,20 @@ namespace BomberMadLad
 
         public ConsoleColor Gray { get; set; }
         public ConsoleColor Black { get; set; }
+        string logo = (@"  ____                        _                     __  __               _   _                    _ 
+ |  _ \                      | |                   |  \/  |             | | | |                  | |
+ | |_) |   ___    _ __ ___   | |__     ___   _ __  | \  / |   __ _    __| | | |        __ _    __| |
+ |  _ <   / _ \  |  _   _ \  |  _ \   / _ \ |  __| | |\/| |  / _  |  / _  | | |       / _  |  / _  |
+ | |_) | | (_) | | | | | | | | |_) | |  __/ | |    | |  | | | (_| | | (_| | | |____  | (_| | | (_| |
+ |____/   \___/  |_| |_| |_| |____/   \___| |_|    |_|  |_|  \____|  \____| |______|  \____|  \____|");
 
         public void MainMenu()
         {
             Black = ConsoleColor.Black;
             Gray = ConsoleColor.Gray;
 
-            int index = 0;
+            int index = 1;
+            Buttons.Add(logo);
             Buttons.Add("Start");
             Buttons.Add("Quit");
             Buttons.Add("HighScore");
@@ -39,14 +46,14 @@ namespace BomberMadLad
                 }
                 if (input == ConsoleKey.UpArrow)
                 {
-                    if (index > 0)
+                    if (index > 1)
                     {
                         MenuList(index - 1);
                         index = index - 1;
                     }
                 }
 
-                if (index == 0)
+                if (index == 1)
                 {
                     if (input == ConsoleKey.Enter)
                     {
@@ -54,7 +61,7 @@ namespace BomberMadLad
                         break;
                     }
                 }
-                if (index == 1)
+                if (index == 2)
                 {
                     if (input == ConsoleKey.Enter)
                     {
