@@ -11,10 +11,14 @@ namespace BomberMadLad
         public Random rng = new Random();
         public BOOM latestBoom;
         public bool layBomb = true;
-        public Ai()
+
+        public List<List<int>> bombPoints = new List<List<int>>();
+
+
+        public Ai(int xpoz, int ypoz)
         {
-            XPosition = Console.LargestWindowWidth - 22;
-            YPosition = 11;
+            XPosition = xpoz;
+            YPosition = ypoz;
         }
 
         public override void Action1()
@@ -78,6 +82,9 @@ namespace BomberMadLad
             }
             if(dir == 5 && layBomb)
             {
+                List<int> position = new List<int> { XPosition, YPosition };
+                bombPoints.Add(position);
+                
                 TimerClass.AddTimer(0, 5000, 0, 1, Action1);
                 layBomb = false;
             }

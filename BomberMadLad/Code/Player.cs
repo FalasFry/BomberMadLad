@@ -82,6 +82,9 @@ namespace BomberMadLad
             //lägg bomb
             if (input == ConsoleKey.Spacebar && layBomb)
             {
+                List<int> position = new List<int> {XPosition,YPosition };
+                Program.mygame.ai.bombPoints.Add(position);
+
                 latestBoom = new BOOM(XPosition, YPosition);
 
                 //lägg till i gameobjects

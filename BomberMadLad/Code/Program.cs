@@ -66,6 +66,8 @@ namespace BomberMadLad
         //skapa ny spelare
         public Player player = new Player(10,11);
 
+        public Ai ai = new Ai(Console.LargestWindowWidth - 22, 11);
+
         public int X { get; set; }
         public int Y { get; set; }
 
@@ -147,12 +149,12 @@ namespace BomberMadLad
         
         public void DrawBoard()
         {
-            TimerClass.AddTimer(0, 10000, 10000, maxIndex, Br);
+            //TimerClass.AddTimer(0, 10000, 10000, maxIndex, Br);
             int wallsIndex = 1;
 
             if (Program.HaveAi == true)
             {
-                GameObjects.Add(new Ai());
+                GameObjects.Add(ai);
             }
             
 
@@ -262,6 +264,11 @@ namespace BomberMadLad
 
     class BOOM : GameObject
     {
+        List<List<int>> upList = new List<List<int>>();
+        List<List<int>> downList = new List<List<int>>();
+        List<List<int>> rightslist = new List<List<int>>();
+        List<List<int>> leftList = new List<List<int>>();
+
         int index;
         int f = 0;
         bool didBlow = false;
@@ -305,9 +312,11 @@ namespace BomberMadLad
         }
         public void CrossBomb(int oldX, int oldY)
         {
-            
+
             List<int> ExIntList = new List<int>();
             List<int> remaining = new List<int> { 1, 2, 3, 4 };
+            List<int> position = new List<int>();
+
 
             int Mult = 0;
 
@@ -318,110 +327,91 @@ namespace BomberMadLad
             bool up = true;
             bool down = true;
 
-            ExIntList.Add(oldX);
-            ExIntList.Add(oldX);
-            
+
             while (true)
             {
                 Mult++;
-
-                if (CollisionCheck((oldX + Mult) * 2, oldY) && right)
+                if (right)
                 {
-                    Exposions explo = new Exposions();
-                    explo.XPosition = (oldX + Mult) * 2;
-                    explo.YPosition = oldY;
-                    explo.Draw(0, 0);
-                    ExList.Add(explo);
-                    
-                }
-                else if (right)
-                {
-                    if (Program.mygame.Walls[TimerClass.GetWallIndex((oldX + Mult) * 2, oldY)].CanBlow)
+                    if (CollisionCheck((oldX + Mult) * 2, oldY))
                     {
-                        Program.mygame.Walls[0].Destroy(TimerClass.GetWallIndex((oldX + Mult) * 2, oldY), true);
-                        Exposions explo = new Exposions();
-                        explo.XPosition = (oldX + Mult) * 2;
-                        explo.YPosition = oldY;
-                        explo.Draw(0, 0);
-                        ExList.Add(explo);
+                        position = new List<int> { (oldX +de Mult) * 2, oldY };
+                        rightslist.Add(position);
+                    }
+                    else
+                    {
+                        if (Program.mygame.Walls[TimerClass.GetWallIndex((oldX + Mult) * 2, oldY)].CanBlow)
+                        {
+                            position = new List<int> { (oldX + Mult) * 2, oldY };
+                            Program.mygame.Walls[0].Destroy(TimerClass.GetWallIndex((oldX + Mult) * 2, oldY), true);
+                            rightslist.Add(position);
+                        }
+                        right = false;
                     }
                     
-                    right = false;
                 }
 
-                if (CollisionCheck((oldX - Mult) * 2, oldY) && left)
+                if (left)
                 {
-                    Exposions explo = new Exposions();
-                    explo.XPosition = (oldX - Mult) * 2;
-                    explo.YPosition = oldY;
-                    explo.Draw(0, 0);
-                    ExList.Add(explo);
-                }
-                else if (left)
-                {
-                    if (Program.mygame.Walls[TimerClass.GetWallIndex((oldX - Mult) * 2, oldY)].CanBlow)
+                    if (CollisionCheck((oldX - Mult) * 2, oldY))
                     {
-                        Program.mygame.Walls[0].Destroy(TimerClass.GetWallIndex((oldX - Mult) * 2, oldY), true);
-                        Exposions explo = new Exposions();
-                        explo.XPosition = (oldX - Mult) * 2;
-                        explo.YPosition = oldY;
-                        explo.Draw(0, 0);
-                        ExList.Add(explo);
+                        position = new List<int> { (oldX - Mult) * 2, oldY };
+                        leftList.Add(position);
                     }
-                    //Debug.WriteLine("cant go left");
-                    Program.mygame.Walls[0].Destroy(TimerClass.GetWallIndex((oldX- Mult) * 2, oldY), true);
-                    left = false;
-                }
-
-                if (CollisionCheck(oldX * 2, oldY + Mult) && up)
-                {
-
-                    Exposions explo = new Exposions();
-                    explo.XPosition = oldX * 2;
-                    explo.YPosition = oldY + Mult;
-                    explo.Draw(0, 0);
-                    ExList.Add(explo);
-                }
-                else if (up)
-                {
-                    //Debug.WriteLine("cant go üp");
-                    if (Program.mygame.Walls[TimerClass.GetWallIndex(oldX * 2, oldY + Mult)].CanBlow)
+                    else
                     {
-                        Program.mygame.Walls[0].Destroy(TimerClass.GetWallIndex(oldX * 2 , oldY + Mult), true);
-                        Exposions explo = new Exposions();
-                        explo.XPosition = oldX * 2;
-                        explo.YPosition = oldY + Mult;
-                        explo.Draw(0, 0);
-                        ExList.Add(explo);
+                        if (Program.mygame.Walls[TimerClass.GetWallIndex((oldX - Mult) * 2, oldY)].CanBlow)
+                        {
+                            position = new List<int> { (oldX - Mult) * 2, oldY };
+                            Program.mygame.Walls[0].Destroy(TimerClass.GetWallIndex((oldX - Mult) * 2, oldY), true);
+                            leftList.Add(position);
+                        }
+                        left = false;
                     }
-                    Program.mygame.Walls[0].Destroy(TimerClass.GetWallIndex(oldX * 2, oldY + Mult), true);
-                    up = false;
+                    
                 }
 
-                if (CollisionCheck(oldX * 2, oldY - Mult) && down)
+                if (up)
                 {
-                    Exposions explo = new Exposions();
-                    explo.XPosition = oldX * 2;
-                    explo.YPosition = oldY - Mult;
-                    explo.Draw(0, 0);
-                    ExList.Add(explo);
-                }
-                else if (down)
-                {
-                    if (Program.mygame.Walls[TimerClass.GetWallIndex(oldX * 2, oldY - Mult)].CanBlow)
+                    if (CollisionCheck(oldX * 2, oldY + Mult))
                     {
-                        Program.mygame.Walls[0].Destroy(TimerClass.GetWallIndex(oldX * 2, oldY - Mult), true);
-                        Exposions explo = new Exposions();
-                        explo.XPosition = oldX * 2;
-                        explo.YPosition = oldY - Mult;
-                        explo.Draw(0, 0);
-                        ExList.Add(explo);
+                        position = new List<int> { oldX * 2, oldY + Mult };
+                        upList.Add(position);
                     }
-                    //Debug.WriteLine("cant go down");
-
-                    Program.mygame.Walls[0].Destroy(TimerClass.GetWallIndex(oldX * 2, oldY - Mult), true);
-                    down = false;
+                    else
+                    {
+                        if (Program.mygame.Walls[TimerClass.GetWallIndex(oldX * 2, oldY + Mult)].CanBlow)
+                        {
+                            position = new List<int> { oldX * 2, oldY + Mult };
+                            Program.mygame.Walls[0].Destroy(TimerClass.GetWallIndex(oldX * 2, oldY + Mult), true);
+                            upList.Add(position);
+                        }
+                        up = false;
+                    }
+                    
                 }
+
+                if (down)
+                {
+                    if (CollisionCheck(oldX * 2, oldY - Mult))
+                    {
+                        position = new List<int> { oldX * 2, oldY - Mult };
+                        downList.Add(position);
+                    }
+                    else
+                    {
+
+                        if (Program.mygame.Walls[TimerClass.GetWallIndex(oldX * 2, oldY - Mult)].CanBlow)
+                        {
+                            position = new List<int> { oldX * 2, oldY - Mult };
+                            Program.mygame.Walls[0].Destroy(TimerClass.GetWallIndex(oldX * 2, oldY - Mult), true);
+                            downList.Add(position);
+                        }
+                        down = false;
+                    }
+                    
+                }
+
                 if (!down && !up && !left && !right)
                 {
                     break;
@@ -429,11 +419,41 @@ namespace BomberMadLad
 
                 index = TimerClass.GetIndex(XPosition, YPosition);
 
-                TimerClass.AddTimer(index, 500,500, 1, Program.mygame.GameObjects[index].Action3);
+                TimerClass.AddTimer(index, 500, 500, 1, Program.mygame.GameObjects[index].Action3);
 
             }
         }
 
+        public void drawExplosions()
+        {
+            Debug.WriteLine(downList.Count + " downs   " + upList.Count + " up " + rightslist.Count + " right " + leftList.Count + " left ");
+            List<List<int>> totalList = new List<List<int>>();
+            for (int i = 0; i < downList.Count; i++)
+            {
+                totalList.Add(downList[i]);
+            }
+            for (int i = 0; i < upList.Count; i++)
+            {
+                totalList.Add(upList[i]);
+            }
+            for (int i = 0; i < rightslist.Count; i++)
+            {
+                totalList.Add(rightslist[i]);
+            }
+            for (int i = 0; i < leftList.Count; i++)
+            {
+                totalList.Add(leftList[i]);
+            }
+            Debug.WriteLine("total  blocks " + totalList.Count);
+            for (int i = 0; i < totalList.Count; i++)
+            {
+                Exposions explo = new Exposions();
+                explo.XPosition = totalList[i][0];
+                explo.YPosition = totalList[i][1];
+                explo.Draw(0, 0);
+                ExList.Add(explo);
+            }
+        }
         public override void Action2()
         {
             if (f < blinkTimes - 1)
@@ -444,6 +464,7 @@ namespace BomberMadLad
             else if (!didBlow)
             {
                 Action1();
+                drawExplosions();
                 didBlow = true;
             }
         }
