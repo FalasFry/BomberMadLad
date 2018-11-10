@@ -85,6 +85,12 @@ namespace BomberMadLad
                 
                 control.LayBomb(XPosition, YPosition);
             }
+
+            // Om du Träffar en bomb så dör du
+            if (!CollisionCheckGameObj(XPosition, YPosition))
+            {
+
+            }
         }
 
         public override void Action2()

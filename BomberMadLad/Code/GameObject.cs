@@ -67,7 +67,7 @@ namespace BomberMadLad
 
         public bool CollisionCheckGameObj(int xPos, int yPos)
         {
-            //för varje vägg som finns
+            //för varje gameobject som finns
             for (int i = 0; i < Program.mygame.GameObjects.Count; i++)
             {
                 //om y positionen är samma

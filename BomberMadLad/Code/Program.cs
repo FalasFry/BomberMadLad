@@ -60,6 +60,9 @@ namespace BomberMadLad
         //allt som har update
         public List<GameObject> GameObjects = new List<GameObject>();
 
+        // Lista för spelare.
+        public List<GameObject> Characters = new List<GameObject>();
+
         //väggar
         public List<GameObject> Walls = new List<GameObject>();
 
@@ -101,7 +104,7 @@ namespace BomberMadLad
                     }
                 }
             }
-            GameObjects.Add(player);
+            Characters.Add(player);
         }
 
         int BrIndex = 0;
@@ -154,21 +157,21 @@ namespace BomberMadLad
 
             if (Program.HaveAi == true)
             {
-                GameObjects.Add(ai);
+                Characters.Add(ai);
             }
             
 
-            for (int i = 0; i < GameObjects.Count; i++)
+            for (int i = 0; i < Characters.Count; i++)
             {
-                wallsIndex = TimerClass.GetWallIndex(GameObjects[i].XPosition, GameObjects[i].YPosition);
+                wallsIndex = TimerClass.GetWallIndex(Characters[i].XPosition, Characters[i].YPosition);
                 Walls[wallsIndex].Destroy(wallsIndex, true);
-                wallsIndex = TimerClass.GetWallIndex(GameObjects[i].XPosition - 2, GameObjects[i].YPosition);
+                wallsIndex = TimerClass.GetWallIndex(Characters[i].XPosition - 2, Characters[i].YPosition);
                 Walls[wallsIndex].Destroy(wallsIndex, true);
-                wallsIndex = TimerClass.GetWallIndex(GameObjects[i].XPosition + 2, GameObjects[i].YPosition);
+                wallsIndex = TimerClass.GetWallIndex(Characters[i].XPosition + 2, Characters[i].YPosition);
                 Walls[wallsIndex].Destroy(wallsIndex, true);
-                wallsIndex = TimerClass.GetWallIndex(GameObjects[i].XPosition, GameObjects[i].YPosition - 1);
+                wallsIndex = TimerClass.GetWallIndex(Characters[i].XPosition, Characters[i].YPosition - 1);
                 Walls[wallsIndex].Destroy(wallsIndex, true);
-                wallsIndex = TimerClass.GetWallIndex(GameObjects[i].XPosition, GameObjects[i].YPosition + 1);
+                wallsIndex = TimerClass.GetWallIndex(Characters[i].XPosition, Characters[i].YPosition + 1);
                 Walls[wallsIndex].Destroy(wallsIndex, true);
 
             }
@@ -185,6 +188,10 @@ namespace BomberMadLad
             {
                 GameObjects[i].Draw(1, 1);
             }
+            for (int i = 0; i < Characters.Count; i++)
+            {
+                Characters[i].Draw(1, 1);
+            }
         }
 
         // Uppdatera alla objekt.
@@ -193,6 +200,10 @@ namespace BomberMadLad
             for (int i = 0; i < GameObjects.Count; i++)
             {
                 GameObjects[i].Update();
+            }
+            for (int i = 0; i < Characters.Count; i++)
+            {
+                Characters[i].Update();
             }
         }
     }
