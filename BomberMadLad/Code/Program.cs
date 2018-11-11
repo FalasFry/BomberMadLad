@@ -359,7 +359,6 @@ namespace BomberMadLad
                         }
                         right = false;
                     }
-                    
                 }
 
                 if (left)

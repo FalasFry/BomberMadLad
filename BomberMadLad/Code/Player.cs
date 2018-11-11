@@ -89,7 +89,8 @@ namespace BomberMadLad
             // Om du Träffar en bomb så dör du
             if (!CollisionCheckGameObj(XPosition, YPosition))
             {
-
+                // Ropa på metod som kollar colision när bomberna sprängs, I bomb klassen.
+                // Om det blir collision när bomben sorängts ska vi gå in i end klassen.
             }
         }
 
