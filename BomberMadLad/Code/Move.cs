@@ -43,5 +43,15 @@ namespace BomberMadLad
             TimerClass.AddTimer(index, 1000, 500, 10, Program.mygame.GameObjects[index].Action2);
         }
 
+        public bool CollisionWithBomb(int XPosition, int YPosition)
+        {
+            bool colision = false;
+
+
+
+
+            return colision;
+        }
+
     }
 }

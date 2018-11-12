@@ -279,13 +279,17 @@ namespace BomberMadLad
         List<List<int>> downList = new List<List<int>>();
         List<List<int>> rightslist = new List<List<int>>();
         List<List<int>> leftList = new List<List<int>>();
+        List<GameObject> ExList = new List<GameObject>();
+
+        public Move control = new Move();
+        public End end = new End();
 
         int index;
         int f = 0;
         bool didBlow = false;
         int blinkTimes = 5;
         bool colorSwitch = true;
-        List<GameObject> ExList = new List<GameObject>();
+
 
         public BOOM(int playerPosX, int playerPosY)
         {
@@ -436,7 +440,6 @@ namespace BomberMadLad
 
         public void drawExplosions()
         {
-            Debug.WriteLine(downList.Count + " downs   " + upList.Count + " up " + rightslist.Count + " right " + leftList.Count + " left ");
             List<List<int>> totalList = new List<List<int>>();
             for (int i = 0; i < downList.Count; i++)
             {
@@ -454,7 +457,6 @@ namespace BomberMadLad
             {
                 totalList.Add(leftList[i]);
             }
-            Debug.WriteLine("total  blocks " + totalList.Count);
             for (int i = 0; i < totalList.Count; i++)
             {
                 Exposions explo = new Exposions();
@@ -476,6 +478,11 @@ namespace BomberMadLad
                 Action1();
                 drawExplosions();
                 didBlow = true;
+
+                if(!CollisionCheckGameObj(XPosition, YPosition))
+                {
+                    end.GameOver();
+                }
             }
         }
 

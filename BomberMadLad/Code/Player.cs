@@ -25,7 +25,7 @@ namespace BomberMadLad
             Console.ForegroundColor = ConsoleColor.DarkCyan;
             Console.SetCursorPosition(XPosition, YPosition);
             Console.Write("██");
-
+            
             if (!u)
             {
                 TimerClass.GetIndex(XPosition, YPosition);
@@ -87,10 +87,10 @@ namespace BomberMadLad
             }
 
             // Om du Träffar en bomb så dör du
-            if (!CollisionCheckGameObj(XPosition, YPosition))
+            if (control.CollisionWithBomb(XPosition, YPosition))
             {
-                // Ropa på metod som kollar colision när bomberna sprängs, I bomb klassen.
-                // Om det blir collision när bomben sorängts ska vi gå in i end klassen.
+                //End end = new End();
+                //end.GameOver();
             }
         }
 
