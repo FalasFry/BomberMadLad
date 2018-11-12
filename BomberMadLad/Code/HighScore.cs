@@ -11,6 +11,7 @@ namespace BomberMadLad
     static class HighScore
     {
         public static string[] OldHighScore;
+
         public static List<int> Score = new List<int>();
 
         public static void ReadHighScore()
@@ -18,8 +19,10 @@ namespace BomberMadLad
             OldHighScore = File.ReadAllLines(@"C:\Users\william.persson8\Documents\Visual Studio 2017\Projects\BomberMadLad\HighScore\WriteLines.txt");
         }
 
-        public static void AddHighScore()
+        public static void AddHighScore(int thisScore)
         {
+            Score.Add(thisScore);
+
             for (int i = 0; i < OldHighScore.Length; i++)
             {
                 Score.Add(Convert.ToInt32(OldHighScore[i]));
@@ -28,19 +31,25 @@ namespace BomberMadLad
 
             if(Score.Count > 5)
             {
-                Score.RemoveAt(0);
+                while(Score.Count > 5)
+                {
+                    Score.Sort();
+                    Score.RemoveAt(0);
+                }
             }
         }
         static public void ShowHighScore()
         {
-            Console.WriteLine("Contents of WriteLines2.txt = ");
+            WriteHighScore();
+            Console.WriteLine("Contents of HighScore = ");
             for (int i = 0; i < Score.Count; i++)
             {
-                Console.WriteLine("\t" + i + "s place got: " + Convert.ToString(Score[i]) + " Score");
+                Console.WriteLine("\t" + i+1 + "s place got: " + Convert.ToString(Score[i]) + " Score");
             }
 
             Console.WriteLine("Press any key to exit.");
             Console.ReadKey();
+            Environment.Exit(0);
         }
 
         static public void WriteHighScore()
