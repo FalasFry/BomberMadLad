@@ -479,7 +479,7 @@ namespace BomberMadLad
                 drawExplosions();
                 didBlow = true;
 
-                if(!CollisionCheckGameObj(Program.mygame.player.XPosition, Program.mygame.player.YPosition))
+                if(CollisionCheckGameObj(Program.mygame.player.XPosition, Program.mygame.player.YPosition) || CollisionCheckGameObj(Program.mygame.ai.XPosition, Program.mygame.ai.YPosition))
                 {
                     end.GameOver();
                 }
@@ -488,15 +488,11 @@ namespace BomberMadLad
 
         public override void Action3()
         {
-            Debug.WriteLine("removed explosion");
             for (int i = 0; i < ExList.Count; i++)
             {
                 ExList[i].Action1();
             }
-            if (TimerClass.GetIndex(XPosition, YPosition) != 0)
-            {
-                Program.mygame.GameObjects[0].Destroy(TimerClass.GetIndex(XPosition, YPosition), false);
-            }
+            Program.mygame.GameObjects[0].Destroy(TimerClass.GetIndex(XPosition, YPosition), false);
         }
     }
 }
