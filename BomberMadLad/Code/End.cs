@@ -25,7 +25,6 @@ namespace BomberMadLad
         {
             HighScore.AddHighScore(points);
 
-            Debug.Write("Game Over");
             int index = 0;
 
             menu.Buttons.Clear();
@@ -75,6 +74,8 @@ namespace BomberMadLad
         public void MenuList(int index)
         {
             Console.Clear();
+            menu.ForColour(Gray);
+            Console.WriteLine("Your Score Was " + points);
             for (int i = 0; i < menu.Buttons.Count; i++)
             {
                 if (i != index)

@@ -79,18 +79,11 @@ namespace BomberMadLad
             // Lägg bomb
             if (input == ConsoleKey.Spacebar)
             {
-                List<int> position = new List<int> {XPosition,YPosition };
+                List<int> position = new List<int> { XPosition, YPosition };
 
                 Program.mygame.ai.bombPoints.Add(position);
-                
-                control.LayBomb(XPosition, YPosition);
-            }
 
-            // Om du Träffar en bomb så dör du
-            if (control.CollisionWithBomb(XPosition, YPosition))
-            {
-                //End end = new End();
-                //end.GameOver();
+                control.LayBomb(XPosition, YPosition);
             }
         }
 

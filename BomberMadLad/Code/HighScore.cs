@@ -10,17 +10,20 @@ namespace BomberMadLad
 {
     static class HighScore
     {
+        static string path = "HighScore.txt";
         public static string[] OldHighScore;
 
         public static List<int> Score = new List<int>();
 
         public static void ReadHighScore()
         {
-            OldHighScore = File.ReadAllLines(@"C:\Users\william.persson8\Documents\Visual Studio 2017\Projects\BomberMadLad\HighScore\WriteLines.txt");
+            OldHighScore = File.ReadAllLines(path);
         }
 
         public static void AddHighScore(int thisScore)
         {
+            ReadHighScore();
+
             Score.Add(thisScore);
 
             for (int i = 0; i < OldHighScore.Length; i++)
@@ -40,12 +43,21 @@ namespace BomberMadLad
         }
         static public void ShowHighScore()
         {
+            Console.Clear();
             WriteHighScore();
+
             Console.WriteLine("Contents of HighScore = ");
-            for (int i = 0; i < Score.Count; i++)
+            Console.ForegroundColor = ConsoleColor.Green;
+            if (Score.Count > 1)
             {
-                Console.WriteLine("\t" + i+1 + "s place got: " + Convert.ToString(Score[i]) + " Score");
+                Console.WriteLine("\t" + "1st " + "place got: " + Convert.ToString(Score[1]) + " Score");
+                Console.WriteLine("\t" + "2nd " + "place got: " + Convert.ToString(Score[0]) + " Score");
             }
+            else
+            {
+                Console.WriteLine("\t" + "1st " + "place got: " + Convert.ToString(Score[0]) + " Score");
+            }
+            Console.ForegroundColor = ConsoleColor.Gray;
 
             Console.WriteLine("Press any key to exit.");
             Console.ReadKey();
@@ -55,18 +67,20 @@ namespace BomberMadLad
         static public void WriteHighScore()
         {
             List<string> lines = new List<string>();
-            for (int i = 0; i < lines.Count; i++)
+
+            for (int i = 0; i < Score.Count; i++)
             {
                 lines.Add(Convert.ToString(Score[i]));
             }
 
-            StreamWriter file = new StreamWriter(@"C:\Users\william.persson8\Documents\Visual Studio 2017\Projects\BomberMadLad\HighScore\WriteLines.txt");
+            //StreamWriter file = new StreamWriter(path);
 
-            foreach (string line in lines)
+
+            for (int i = 0; i < lines.Count; i++)
             {
-                if (lines.Count <= 5)
+                if(lines.Count <= 5)
                 {
-                    file.WriteLine(line);
+                    File.WriteAllText(path, lines[i]);
                 }
             }
 

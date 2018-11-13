@@ -479,7 +479,7 @@ namespace BomberMadLad
                 drawExplosions();
                 didBlow = true;
 
-                if(!CollisionCheckGameObj(XPosition, YPosition))
+                if(!CollisionCheckGameObj(Program.mygame.player.XPosition, Program.mygame.player.YPosition))
                 {
                     end.GameOver();
                 }
