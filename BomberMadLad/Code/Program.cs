@@ -253,7 +253,7 @@ namespace BomberMadLad
             Console.SetCursorPosition(XPosition, YPosition);
             Console.Write("  ");
 
-            if(!CollisionCheckChar(XPosition, YPosition))
+            if (!CollisionCheckChar(XPosition, YPosition))
             {
                 End end = new End();
                 end.GameOver();
