@@ -79,6 +79,7 @@ namespace BomberMadLad
         {
             Y = ySize;
             X = xSize;
+            Random Steffe = new Random();
 
             //sålänge i <= så många rutor vi behöver i yLed (yZize + 1)
             for (int i = 0; i <= Y + 1; i++)
@@ -92,8 +93,9 @@ namespace BomberMadLad
                         //lägg till vägg i den positionen
                         Walls.Add(new Wall(j, i, false));
                     }
-                    else if((j + 2) % 4 == 0 || (i + 1) % 2 == 0)
+                    else if((j + 2) % 4 == 0 || (i + 1) % 2 == 0 )
                     {
+                        if (Steffe.Next(0,4) == 1)
                         Walls.Add(new Wall(j, i, true));
                     }
 
@@ -152,7 +154,7 @@ namespace BomberMadLad
         
         public void DrawBoard()
         {
-            //TimerClass.AddTimer(0, 10000, 10000, maxIndex, Br);
+            TimerClass.AddTimer(0, 10000, 10000, maxIndex, Br);
             int wallsIndex = 1;
 
             if (Program.HaveAi == true)
@@ -444,7 +446,7 @@ namespace BomberMadLad
             }
         }
 
-        public void drawExplosions()
+        public void DrawExplosions()
         {
             List<List<int>> totalList = new List<List<int>>();
             for (int i = 0; i < downList.Count; i++)
@@ -482,7 +484,7 @@ namespace BomberMadLad
             else if (!didBlow)
             {
                 Action1();
-                drawExplosions();
+                DrawExplosions();
                 didBlow = true;
             }
         }
