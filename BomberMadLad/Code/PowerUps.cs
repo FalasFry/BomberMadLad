@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace BomberMadLad
 {
-
+    // Onödig kod, används ej.
     class PoweupsSpawn : GameObject
     {
         readonly Player player;

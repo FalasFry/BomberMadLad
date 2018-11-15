@@ -14,12 +14,14 @@ namespace BomberMadLad
         public static string[] OldHighScore;
 
         public static List<int> Score = new List<int>();
-
+        
+        // Sparar ner gamla higscore till en array.
         public static void ReadHighScore()
         {
             OldHighScore = File.ReadAllLines(path);
         }
 
+        // Lägger till de gamla och de nya poängen i en lista.
         public static void AddHighScore(int thisScore)
         {
             ReadHighScore();
@@ -41,6 +43,8 @@ namespace BomberMadLad
                 }
             }
         }
+
+        // Skriver ut highscore som man har och.
         static public void ShowHighScore()
         {
             Console.Clear();
@@ -61,9 +65,9 @@ namespace BomberMadLad
 
             Console.WriteLine("Press any key to exit.");
             Console.ReadKey();
-            Environment.Exit(0);
         }
 
+        // Skriver ner allt till en fil.
         static public void WriteHighScore()
         {
             List<string> lines = new List<string>();
@@ -72,9 +76,6 @@ namespace BomberMadLad
             {
                 lines.Add(Convert.ToString(Score[i]));
             }
-
-            //StreamWriter file = new StreamWriter(path);
-
 
             for (int i = 0; i < lines.Count; i++)
             {

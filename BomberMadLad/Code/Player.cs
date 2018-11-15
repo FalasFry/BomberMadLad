@@ -8,10 +8,8 @@ namespace BomberMadLad
 {
     class Player : GameObject
     {
-        bool u = false;
-
+        // Hämtar kontroller.
         Move control = new Move();
-        //senaste bomben som spawnats
 
         public Player(int x, int y)
         {
@@ -25,13 +23,6 @@ namespace BomberMadLad
             Console.ForegroundColor = ConsoleColor.DarkCyan;
             Console.SetCursorPosition(XPosition, YPosition);
             Console.Write("██");
-            
-            if (!u)
-            {
-                TimerClass.GetIndex(XPosition, YPosition);
-                u = true;
-            }
-            
         }
 
         public override void Update()

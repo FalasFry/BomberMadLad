@@ -13,6 +13,7 @@ namespace BomberMadLad
         ConsoleColor Black;
         ConsoleColor Gray;
         int points;
+
         public End()
         {
             menu = new Menu();
@@ -21,17 +22,18 @@ namespace BomberMadLad
             points = TimerClass.elapsedTime;
         }
 
+        // Gör samma sak som main menu gör men denna är mer fokuserad på att avsluta spelet.
         public void GameOver()
         {
             HighScore.AddHighScore(points);
 
             int index = 0;
 
-            menu.Buttons.Clear();
             menu.Buttons.Add("High Score");
             menu.Buttons.Add("Quit");
 
             MenuList(index);
+
             while(true)
             {
                 ConsoleKey input = Console.ReadKey(true).Key;
@@ -40,7 +42,7 @@ namespace BomberMadLad
                 {
                     if (index < menu.Buttons.Count - 1)
                     {
-                        MenuList(index + 1);
+                        menu.MenuList(index + 1);
                         index = index + 1;
                     }
                 }
@@ -48,7 +50,7 @@ namespace BomberMadLad
                 {
                     if (index > 0)
                     {
-                        MenuList(index - 1);
+                        menu.MenuList(index - 1);
                         index = index - 1;
                     }
                 }
@@ -58,6 +60,7 @@ namespace BomberMadLad
                     if (input == ConsoleKey.Enter)
                     {
                         HighScore.ShowHighScore();
+                        Environment.Exit(0);
                     }
                 }
                 if (index == 1)
@@ -71,6 +74,7 @@ namespace BomberMadLad
             }
         }
 
+        // Gör samma sak som i Menu klassen men var tvungen att göra ny annars fungerade det inte. (menu.MenuList) fungerade inte korrekt.
         public void MenuList(int index)
         {
             Console.Clear();
