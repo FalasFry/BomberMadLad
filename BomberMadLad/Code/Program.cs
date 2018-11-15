@@ -252,6 +252,12 @@ namespace BomberMadLad
         {
             Console.SetCursorPosition(XPosition, YPosition);
             Console.Write("  ");
+
+            if(!CollisionCheckChar(XPosition, YPosition))
+            {
+                End end = new End();
+                end.GameOver();
+            }
         }
 
         public override void Draw(int xBoxSize, int yBoxSize)
@@ -282,7 +288,7 @@ namespace BomberMadLad
         List<GameObject> ExList = new List<GameObject>();
 
         public Move control = new Move();
-        public End end = new End();
+
 
         int index;
         int f = 0;
@@ -478,11 +484,6 @@ namespace BomberMadLad
                 Action1();
                 drawExplosions();
                 didBlow = true;
-
-                if(CollisionCheckGameObj(Program.mygame.player.XPosition, Program.mygame.player.YPosition) || CollisionCheckGameObj(Program.mygame.ai.XPosition, Program.mygame.ai.YPosition))
-                {
-                    end.GameOver();
-                }
             }
         }
 

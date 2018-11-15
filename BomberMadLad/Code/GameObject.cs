@@ -83,5 +83,24 @@ namespace BomberMadLad
             }
             return true;
         }
+
+        public bool CollisionCheckChar(int xPos, int yPos)
+        {
+            //för varje gameobject som finns
+            for (int i = 0; i < Program.mygame.Characters.Count; i++)
+            {
+                //om y positionen är samma
+                if (Program.mygame.Characters[i].YPosition == yPos)
+                {
+                    //och x positionen och dens grannar är samma (vet ej varför men det funkar)
+                    if (Program.mygame.Characters[i].XPosition == xPos - 1 || Program.mygame.Characters[i].XPosition == xPos || Program.mygame.Characters[i].XPosition == xPos + 1)
+                    {
+                        //WE GOT COLLISION
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
     }
 }
