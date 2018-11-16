@@ -50,6 +50,7 @@ namespace BomberMadLad
             return true;
         }
 
+        // Hämtar index från ett gameobject.
         public static int GetIndex(int x, int y)
         {
             int index = 0;
@@ -63,6 +64,7 @@ namespace BomberMadLad
             return index;
         }
 
+        // Hämtar index från väggarna.
         public static int GetWallIndex(int x, int y)
         {
             int index = 0;

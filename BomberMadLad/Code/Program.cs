@@ -291,9 +291,9 @@ namespace BomberMadLad
         List<List<int>> leftList = new List<List<int>>();
         List<GameObject> ExList = new List<GameObject>();
         int index;
-        int f = 0;
+        int timesHaveBlinked = 0;
         bool didBlow = false;
-        int blinkTimes = 5;
+        int timesToBlink = 5;
         bool colorSwitch = true;
 
 
@@ -474,10 +474,10 @@ namespace BomberMadLad
         }
         public override void Action2()
         {
-            if (f < blinkTimes - 1)
+            if (timesHaveBlinked < timesToBlink - 1)
             {
                 colorSwitch = !colorSwitch;
-                f++;
+                timesHaveBlinked++;
             }
             else if (!didBlow)
             {
