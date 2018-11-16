@@ -258,7 +258,10 @@ namespace BomberMadLad
             if (!CollisionCheckChar(XPosition, YPosition))
             {
                 End end = new End();
-                end.GameOver();
+                if (XPosition == Program.mygame.player.XPosition && YPosition == Program.mygame.player.YPosition)
+                {
+                    end.GameOver(false);
+                }
             }
         }
 

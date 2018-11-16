@@ -23,7 +23,7 @@ namespace BomberMadLad
         }
 
         // Gör samma sak som main menu gör men denna är mer fokuserad på att avsluta spelet.
-        public void GameOver()
+        public void GameOver(bool win)
         {
             HighScore.AddHighScore(points);
 

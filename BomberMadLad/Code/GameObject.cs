@@ -92,7 +92,7 @@ namespace BomberMadLad
                 //om y positionen är samma
                 if (Program.mygame.Characters[i].YPosition == yPos)
                 {
-                    //och x positionen och dens grannar är samma (vet ej varför men det funkar)
+                    //och x positionen och dens grannar är samma.
                     if (Program.mygame.Characters[i].XPosition == xPos - 1 || Program.mygame.Characters[i].XPosition == xPos || Program.mygame.Characters[i].XPosition == xPos + 1)
                     {
                         //WE GOT COLLISION
