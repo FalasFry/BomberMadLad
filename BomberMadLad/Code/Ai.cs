@@ -65,22 +65,22 @@ namespace BomberMadLad
 
                     List<Node> kids = new List<Node>();
 
-                    if (CollisionCheck(bestNode.nodePos[0] - 2, bestNode.nodePos[1]))
+                    if (Collision.Wall(bestNode.nodePos[0] - 2, bestNode.nodePos[1]))
                     {
                         kids.Add(new Node(bestNode.goalPos, new int[] { bestNode.nodePos[0] - 2, bestNode.nodePos[1] }));
 
                     }
-                    if (CollisionCheck(bestNode.nodePos[0] + 2, bestNode.nodePos[1]))
+                    if (Collision.Wall(bestNode.nodePos[0] + 2, bestNode.nodePos[1]))
                     {
                         kids.Add(new Node(bestNode.goalPos, new int[] { bestNode.nodePos[0] + 2, bestNode.nodePos[1] }));
 
                     }
-                    if (CollisionCheck(bestNode.nodePos[0], bestNode.nodePos[1] + 1))
+                    if (Collision.Wall(bestNode.nodePos[0], bestNode.nodePos[1] + 1))
                     {
                         kids.Add(new Node(bestNode.goalPos, new int[] { bestNode.nodePos[0], bestNode.nodePos[1] + 1 }));
 
                     }
-                    if (CollisionCheck(bestNode.nodePos[0], bestNode.nodePos[1] - 1))
+                    if (Collision.Wall(bestNode.nodePos[0], bestNode.nodePos[1] - 1))
                     {
                         kids.Add(new Node(bestNode.goalPos, new int[] { bestNode.nodePos[0], bestNode.nodePos[1] - 1 }));
 
@@ -180,7 +180,6 @@ namespace BomberMadLad
         public List<int[]> bombPoints = new List<int[]>();
 
         Random rng = new Random();
-        Move control = new Move();
 
         public Ai(int xpoz, int ypoz)
         {
@@ -192,10 +191,8 @@ namespace BomberMadLad
         {
 
             layBomb = true;
-
+            
         }
-
-
         public override void Draw(int xBoxSize, int yBoxSize)
         {
             Console.SetCursorPosition(XPosition, YPosition);
@@ -211,7 +208,6 @@ namespace BomberMadLad
                 temp = true;
 
                 int index = TimerClass.GetCharIndex(XPosition, YPosition);
-
                 TimerClass.AddTimer(index, 500, 500, 10000, Program.mygame.Characters[index].Action2);
             }
         }
@@ -236,7 +232,10 @@ namespace BomberMadLad
                 Action3();
 
                 layBomb = false;
-
+                Move.Right(this);
+            }
+            if (!Collision.Wall(XPosition, YPosition))
+            {
                 int index = TimerClass.GetCharIndex(XPosition, YPosition);
 
                 TimerClass.AddTimer(index, 3000, 3000, 1, Program.mygame.Characters[index].Action1);
@@ -250,7 +249,7 @@ namespace BomberMadLad
 
         public override void Action3()
         {
-            control.LayBomb(XPosition, YPosition);
+            Move.LayBomb(XPosition, YPosition);
         }
     }
 
@@ -268,9 +267,9 @@ namespace BomberMadLad
         public bool beenUsed = false;
 
         //håller alla möjliga vägar.
-        
 
-       
+
+
 
         public int[] goalPos = new int[2];
 
@@ -278,15 +277,15 @@ namespace BomberMadLad
 
         public int[] nodePos = new int[2];
         //programet väljer den rutan av åtta som har lägst Fcost, om det finns flera likadana så tar den den med minst Hcost.
-        
+
 
         public Node(int[] goalPosition, int[] nodePosition)
         {
             goalPos = goalPosition;
             nodePos = nodePosition;
         }
-        
-       
+
+
 
 
 
@@ -305,8 +304,9 @@ namespace BomberMadLad
         }
 
         public override void Action3()
-        {
-            throw new NotImplementedException();
+        { 
+            TimerClass.AddTimer(0, 5000, 0, 1, Action2);
+            Move.LayBomb(XPosition, YPosition);
         }
 
         public override void Draw(int xBoxSize, int yBoxSize)

@@ -35,7 +35,6 @@ namespace BomberMadLad
             intList.Add(list);
             
         }
-
         // Hitta index för gameobjects.
         public static int GetIndex(int x, int y)
         {
