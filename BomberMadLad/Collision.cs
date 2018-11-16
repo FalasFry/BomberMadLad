@@ -49,5 +49,31 @@ namespace BomberMadLad
             }
             return true;
         }
+
+        public static int GetIndex(int x, int y)
+        {
+            int index = 0;
+            for (int i = 0; i < Program.mygame.GameObjects.Count; i++)
+            {
+                if (Program.mygame.GameObjects[i].XPosition == x && Program.mygame.GameObjects[i].YPosition == y)
+                {
+                    index = i;
+                }
+            }
+            return index;
+        }
+
+        public static int GetWallIndex(int x, int y)
+        {
+            int index = 0;
+            for (int i = 0; i < Program.mygame.Walls.Count; i++)
+            {
+                if (Program.mygame.Walls[i].XPosition == x && Program.mygame.Walls[i].YPosition == y)
+                {
+                    index = i;
+                }
+            }
+            return index;
+        }
     }
 }

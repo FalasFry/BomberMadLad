@@ -37,7 +37,7 @@ namespace BomberMadLad
                 while (true)
                 {
                     ConsoleKey input = Console.ReadKey(true).Key;
-
+                    Console.WriteLine("You won the EPIC BomberLad Royal");
                     if (input == ConsoleKey.DownArrow)
                     {
                         if (index < Menu.Buttons.Count - 1)

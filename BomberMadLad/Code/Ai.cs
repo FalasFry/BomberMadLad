@@ -31,7 +31,7 @@ namespace BomberMadLad
             Program.mygame.GameObjects.Add(latestBoom);
 
             //lägg till timer
-            int index = TimerClass.GetIndex(latestBoom.XPosition, latestBoom.YPosition);
+            int index = Collision.GetIndex(latestBoom.XPosition, latestBoom.YPosition);
 
             TimerClass.AddTimer(index, 1000, 500, 10, Program.mygame.GameObjects[index].Action2);
 
