@@ -48,7 +48,6 @@ namespace BomberMadLad
                 }
             }
             return index;
-
         }
 
         // Hitta index för väggar.

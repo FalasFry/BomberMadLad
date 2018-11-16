@@ -25,8 +25,7 @@ namespace BomberMadLad
             //sätter musen till osynlig
             //frågar om AI
             Console.CursorVisible = false;
-            Menu mainMenu = new Menu();
-            mainMenu.MainMenu();
+            Menu.MainMenu();
 
             //ändra storlek på konsolfönstret till största möjliga
             Console.SetWindowSize(Console.LargestWindowWidth - 10, Console.LargestWindowHeight - 9);
@@ -109,39 +108,39 @@ namespace BomberMadLad
             Characters.Add(player);
         }
 
-        int BrIndex = 0;
+        int brIndex = 0;
         int maxIndex = 20;
 
         public void Br()
         {
-            BrIndex++;
+            brIndex++;
             for (int k = 0; k <= Y + 1; k++)
             {
                 for (int j = 0; j <= X + 1; j++)
                 {
                     Wall wall = null;
-                    if (j == (X+1) - BrIndex)
+                    if (j == (X+1) - brIndex)
                     {
-                        wall = (new Wall(j - BrIndex, k, false));
+                        wall = (new Wall(j - brIndex, k, false));
                         wall.Draw(0, 0);
                         Walls.Add(wall);
                     }
 
-                    if (j == 0 + BrIndex)
+                    if (j == 0 + brIndex)
                     {
-                        wall = (new Wall(j + BrIndex, k, false));
+                        wall = (new Wall(j + brIndex, k, false));
                         wall.Draw(0, 0);
                         Walls.Add(wall);
                     }
 
-                    if (k == (Y+1) - BrIndex)
+                    if (k == (Y+1) - brIndex)
                     {
                         wall = (new Wall(j, k, false));
                         wall.Draw(0, 0);
                         Walls.Add(wall);
                     }
 
-                    if (k == 0 + BrIndex)
+                    if (k == 0 + brIndex)
                     {
                         wall = (new Wall(j, k, false));
                         wall.Draw(0, 0);
@@ -255,7 +254,7 @@ namespace BomberMadLad
             Console.SetCursorPosition(XPosition, YPosition);
             Console.Write("  ");
 
-            if (!CollisionCheckChar(XPosition, YPosition))
+            if (!Collision.Char(XPosition, YPosition))
             {
                 End end = new End();
                 if (XPosition == Program.mygame.player.XPosition && YPosition == Program.mygame.player.YPosition)
@@ -291,10 +290,6 @@ namespace BomberMadLad
         List<List<int>> rightslist = new List<List<int>>();
         List<List<int>> leftList = new List<List<int>>();
         List<GameObject> ExList = new List<GameObject>();
-
-        public Move control = new Move();
-
-
         int index;
         int f = 0;
         bool didBlow = false;
@@ -359,7 +354,7 @@ namespace BomberMadLad
                 Mult++;
                 if (right)
                 {
-                    if (CollisionCheck((oldX + Mult) * 2, oldY))
+                    if (Collision.Wall((oldX + Mult) * 2, oldY))
                     {
                         position = new List<int> { (oldX + Mult) * 2, oldY };
                         rightslist.Add(position);
@@ -378,7 +373,7 @@ namespace BomberMadLad
 
                 if (left)
                 {
-                    if (CollisionCheck((oldX - Mult) * 2, oldY))
+                    if (Collision.Wall((oldX - Mult) * 2, oldY))
                     {
                         position = new List<int> { (oldX - Mult) * 2, oldY };
                         leftList.Add(position);
@@ -398,7 +393,7 @@ namespace BomberMadLad
 
                 if (up)
                 {
-                    if (CollisionCheck(oldX * 2, oldY + Mult))
+                    if (Collision.Wall(oldX * 2, oldY + Mult))
                     {
                         position = new List<int> { oldX * 2, oldY + Mult };
                         upList.Add(position);
@@ -418,7 +413,7 @@ namespace BomberMadLad
 
                 if (down)
                 {
-                    if (CollisionCheck(oldX * 2, oldY - Mult))
+                    if (Collision.Wall(oldX * 2, oldY - Mult))
                     {
                         position = new List<int> { oldX * 2, oldY - Mult };
                         downList.Add(position);

@@ -6,30 +6,30 @@ using System.Threading.Tasks;
 
 namespace BomberMadLad
 {
-    class Move
+    static class Move
     {
         // Går Upp.
-        public void Up(GameObject obj)
+        public static  void Up(GameObject obj)
         {
             obj.YPosition--;
         }
         // Går ner.
-        public void Down(GameObject obj)
+        public static void Down(GameObject obj)
         {
             obj.YPosition++;
         }
         // Går Vänster.
-        public void Left(GameObject obj)
+        public static void Left(GameObject obj)
         {
             obj.XPosition -= 2;
         }
         // Går Höger.
-        public void Right(GameObject obj)
+        public static void Right(GameObject obj)
         {
             obj.XPosition += 2;
         }
         // Skapar en ny bomb och lägger ut den.
-        public void LayBomb(int XPosition, int YPosition)
+        public static void LayBomb(int XPosition, int YPosition)
         {
             BOOM latestBoom = new BOOM(XPosition, YPosition);
 

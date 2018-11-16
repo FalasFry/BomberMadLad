@@ -47,45 +47,5 @@ namespace BomberMadLad
             }
             
         }
-
-        //kolla kollision på inskickade koordinater
-        public bool CollisionCheck(int xPos, int yPos)
-        {
-            //för varje vägg som finns
-            for (int i = 0; i < Program.mygame.Walls.Count; i++)
-            {
-                //om y positionen är samma
-                if (Program.mygame.Walls[i].YPosition == yPos)
-                {
-                    //och x positionen och dens grannar är samma (vet ej varför men det funkar)
-                    if (Program.mygame.Walls[i].XPosition == xPos - 1 || Program.mygame.Walls[i].XPosition == xPos || Program.mygame.Walls[i].XPosition == xPos + 1)
-                    {
-                        //WE GOT COLLISION
-                        return false;
-                    }
-                }
-            }
-            return true;
-        }
-
-        // Kollar om spelaren kolliderar med det vi skickade in.
-        public bool CollisionCheckChar(int xPos, int yPos)
-        {
-            //för varje karraktär som finns
-            for (int i = 0; i < Program.mygame.Characters.Count; i++)
-            {
-                //om y positionen är samma
-                if (Program.mygame.Characters[i].YPosition == yPos)
-                {
-                    // Om x positionen eller dens grannar är samma.
-                    if (Program.mygame.Characters[i].XPosition == xPos - 1 || Program.mygame.Characters[i].XPosition == xPos || Program.mygame.Characters[i].XPosition == xPos + 1)
-                    {
-                        //WE GOT COLLISION
-                        return false;
-                    }
-                }
-            }
-            return true;
-        }
     }
 }

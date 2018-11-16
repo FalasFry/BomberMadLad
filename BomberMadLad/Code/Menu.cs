@@ -6,14 +6,14 @@ using System.Threading.Tasks;
 
 namespace BomberMadLad
 {
-    class Menu
+    static class Menu
     {
         // Skapar en lista med knappar.
-        public List<string> Buttons = new List<string>();
+        public static  List<string> Buttons = new List<string>();
 
-        public ConsoleColor Gray { get; set; }
-        public ConsoleColor Black { get; set; }
-        string logo = (@"  ____                        _                     __  __               _   _                    _ 
+        public static ConsoleColor Gray { get; set; }
+        public static ConsoleColor Black { get; set; }
+        static string logo = (@"  ____                        _                     __  __               _   _                    _ 
  |  _ \                      | |                   |  \/  |             | | | |                  | |
  | |_) |   ___    _ __ ___   | |__     ___   _ __  | \  / |   __ _    __| | | |        __ _    __| |
  |  _ <   / _ \  |  _   _ \  |  _ \   / _ \ |  __| | |\/| |  / _  |  / _  | | |       / _  |  / _  |
@@ -21,7 +21,7 @@ namespace BomberMadLad
  |____/   \___/  |_| |_| |_| |____/   \___| |_|    |_|  |_|  \____|  \____| |______|  \____|  \____|");
         
         // Ser till så att knapparna fungerar och gör så något händer.
-        public void MainMenu()
+        public static  void MainMenu()
         {
             Black = ConsoleColor.Black;
             Gray = ConsoleColor.Gray;
@@ -114,17 +114,17 @@ namespace BomberMadLad
             Console.Clear();
         }
 
-        public void ForColour(ConsoleColor consoleColor)
+        public static void ForColour(ConsoleColor consoleColor)
         {
             Console.ForegroundColor = consoleColor;
         }
-        public void BackColour(ConsoleColor consoleColor)
+        public static  void BackColour(ConsoleColor consoleColor)
         {
             Console.BackgroundColor = consoleColor;
         }
 
         // Ritar ut menyn så fint det går.
-        public void MenuList(int index)
+        public static  void MenuList(int index)
         {
             Console.Clear();
             for (int i = 0; i < Buttons.Count; i++)

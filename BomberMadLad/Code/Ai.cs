@@ -14,7 +14,6 @@ namespace BomberMadLad
         public List<List<int>> bombPoints = new List<List<int>>();
 
         Random rng = new Random();
-        Move control = new Move();
 
         bool Bomb = true;
 
@@ -63,15 +62,15 @@ namespace BomberMadLad
 
             if (dir == 1)
             {
-                control.Up(this);
+               Move.Up(this);
             }
             if (dir == 2)
             {
-                control.Down(this);
+                Move.Down(this);
             }
             if (dir == 3)
             {
-                control.Left(this);
+                Move.Left(this);
             }
             if (dir == 4)
             {
@@ -84,9 +83,9 @@ namespace BomberMadLad
                 
                 TimerClass.AddTimer(0, 5000, 0, 1, Action1);
                 layBomb = false;
-                control.Right(this);
+                Move.Right(this);
             }
-            if (!CollisionCheck(XPosition, YPosition))
+            if (!Collision.Wall(XPosition, YPosition))
             {
                 XPosition = oldX;
                 YPosition = oldY;
@@ -111,7 +110,7 @@ namespace BomberMadLad
         public override void Action3()
         {
             TimerClass.AddTimer(0, 5000, 0, 1, Action2);
-            control.LayBomb(XPosition, YPosition);
+            Move.LayBomb(XPosition, YPosition);
         }
     }
 }

@@ -8,9 +8,6 @@ namespace BomberMadLad
 {
     class Player : GameObject
     {
-        // Hämtar kontroller.
-        Move control = new Move();
-
         public Player(int x, int y)
         {
             XPosition = x;
@@ -41,29 +38,32 @@ namespace BomberMadLad
             //movement beroende på knapptryck, xpos är två steg i taget eftersom den är två pixlar bred
             if (input == ConsoleKey.W)
             {
-                control.Up(this);
+                Move.Up(this);
+                Delete(oldX, oldY);
             }
             if (input == ConsoleKey.S)
             {
-                control.Down(this);
+                Move.Down(this);
+                Delete(oldX, oldY);
             }
             if (input == ConsoleKey.D)
             {
-                control.Right(this);
+                Move.Right(this);
+                Delete(oldX, oldY);
             }
             if (input == ConsoleKey.A)
             {
-                control.Left(this);
+                Move.Left(this);
+                Delete(oldX, oldY);
             }
             //om collisionCheck träffar något så står vi stilla och deletar inte något
-            if (!CollisionCheck(XPosition, YPosition))
+            if (!Collision.Wall(XPosition, YPosition))
             {
                 XPosition = oldX;
                 YPosition = oldY;
             }
             else
             {
-                Delete(oldX, oldY);
                 Draw(0, 0);
             }
 
@@ -74,10 +74,10 @@ namespace BomberMadLad
 
                 Program.mygame.ai.bombPoints.Add(position);
 
-                control.LayBomb(XPosition, YPosition);
+                Move.LayBomb(XPosition, YPosition);
             }
         }
-
+        
         public override void Action2()
         {
         }
