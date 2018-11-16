@@ -25,52 +25,65 @@ namespace BomberMadLad
         // Gör samma sak som main menu gör men denna är mer fokuserad på att avsluta spelet.
         public void GameOver(bool win)
         {
-            HighScore.AddHighScore(points);
-
-            int index = 0;
-
-            menu.Buttons.Add("High Score");
-            menu.Buttons.Add("Quit");
-
-            MenuList(index);
-
-            while(true)
+            if(win)
             {
-                ConsoleKey input = Console.ReadKey(true).Key;
+                HighScore.AddHighScore(points);
 
-                if (input == ConsoleKey.DownArrow)
+                int index = 0;
+
+                menu.Buttons.Add("High Score");
+                menu.Buttons.Add("Quit");
+
+                MenuList(index);
+
+                while (true)
                 {
-                    if (index < menu.Buttons.Count - 1)
+                    ConsoleKey input = Console.ReadKey(true).Key;
+
+                    if (input == ConsoleKey.DownArrow)
                     {
-                        menu.MenuList(index + 1);
-                        index = index + 1;
+                        if (index < menu.Buttons.Count - 1)
+                        {
+                            menu.MenuList(index + 1);
+                            index = index + 1;
+                        }
                     }
-                }
-                if (input == ConsoleKey.UpArrow)
-                {
-                    if (index > 0)
+                    if (input == ConsoleKey.UpArrow)
                     {
-                        menu.MenuList(index - 1);
-                        index = index - 1;
+                        if (index > 0)
+                        {
+                            menu.MenuList(index - 1);
+                            index = index - 1;
+                        }
+                    }
+
+                    if (index == 0)
+                    {
+                        if (input == ConsoleKey.Enter)
+                        {
+                            HighScore.ShowHighScore();
+                            Environment.Exit(0);
+                        }
+                    }
+                    if (index == 1)
+                    {
+                        if (input == ConsoleKey.Enter)
+                        {
+                            HighScore.WriteHighScore();
+                            Environment.Exit(0);
+                        }
                     }
                 }
 
-                if (index == 0)
-                {
-                    if (input == ConsoleKey.Enter)
-                    {
-                        HighScore.ShowHighScore();
-                        Environment.Exit(0);
-                    }
-                }
-                if (index == 1)
-                {
-                    if (input == ConsoleKey.Enter)
-                    {
-                        HighScore.WriteHighScore();
-                        Environment.Exit(0);
-                    }
-                }
+            }
+            if (!win)
+            {
+                Console.ForegroundColor = ConsoleColor.Cyan;
+                Console.Clear();
+                Console.WriteLine("Game Over, You Lost!");
+                Console.WriteLine("Press any key to exit");
+                Console.ReadKey(true);
+                Environment.Exit(0);
             }
         }
 
