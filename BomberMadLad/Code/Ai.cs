@@ -60,22 +60,22 @@ namespace BomberMadLad
 
             dir = rng.Next(1, 6);
 
-            if (dir == 1)
-            {
-               Move.Up(this);
-            }
-            if (dir == 2)
-            {
-                Move.Down(this);
-            }
-            if (dir == 3)
-            {
-                Move.Left(this);
-            }
-            if (dir == 4)
-            {
-                XPosition -= 2;
-            }
+            //if (dir == 1)
+            //{
+            //   Move.Up(this);
+            //}
+            //if (dir == 2)
+            //{
+            //    Move.Down(this);
+            //}
+            //if (dir == 3)
+            //{
+            //    Move.Left(this);
+            //}
+            //if (dir == 4)
+            //{
+            //    XPosition -= 2;
+            //}
             if(dir == 5 && layBomb)
             {
                 List<int> position = new List<int> { XPosition, YPosition };

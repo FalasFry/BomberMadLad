@@ -24,7 +24,7 @@ namespace BomberMadLad
                 HighScore.AddHighScore(points);
 
                 int index = 0;
-
+                Menu.Buttons.Clear();
                 Menu.Buttons.Add("High Score");
                 Menu.Buttons.Add("Quit");
 
@@ -37,12 +37,13 @@ namespace BomberMadLad
                 while (true)
                 {
                     ConsoleKey input = Console.ReadKey(true).Key;
-                    Console.WriteLine("You won the EPIC BomberLad Royal");
+
                     if (input == ConsoleKey.DownArrow)
                     {
                         if (index < Menu.Buttons.Count - 1)
                         {
                             Menu.MenuList(index + 1);
+                            Console.WriteLine("You won the EPIC BomberLad Royal");
                             index = index + 1;
                         }
                     }
@@ -51,6 +52,7 @@ namespace BomberMadLad
                         if (index > 0)
                         {
                             Menu.MenuList(index - 1);
+                            Menu.MenuList(index - 1); Console.WriteLine("You won the EPIC BomberLad Royal");
                             index = index - 1;
                         }
                     }

@@ -264,6 +264,10 @@ namespace BomberMadLad
                 {
                     end.GameOver(false);
                 }
+                else
+                {
+                    end.GameOver(true);
+                }
             }
         }
 
