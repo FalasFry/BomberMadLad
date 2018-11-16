@@ -80,7 +80,7 @@ namespace BomberMadLad
         {
             Y = ySize;
             X = xSize;
-            Random Steffe = new Random();
+            Random drawWhiteWalls = new Random();
 
             //sålänge i <= så många rutor vi behöver i yLed (yZize + 1)
             for (int i = 0; i <= Y + 1; i++)
@@ -96,7 +96,8 @@ namespace BomberMadLad
                     }
                     else if((j + 2) % 4 == 0 || (i + 1) % 2 == 0 )
                     {
-                        if (Steffe.Next(0,4) == 1)
+                        // De vita väggarna har en 25% chans att ritas ut.
+                        if (drawWhiteWalls.Next(0,4) == 1)
                         Walls.Add(new Wall(j, i, true));
                     }
 
