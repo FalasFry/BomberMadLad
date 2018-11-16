@@ -224,7 +224,7 @@ namespace BomberMadLad
                 YPosition = posList[0][1];
 
                 Draw(0, 0);
-
+                
                 Delete(oldX, oldY);
             }
             else if (shouldBomb && layBomb)
