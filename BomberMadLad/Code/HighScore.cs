@@ -10,54 +10,74 @@ namespace BomberMadLad
 {
     static class HighScore
     {
-        public static string[] OldHighScore;
-        public static List<int> Score = new List<int>();
 
+        static string path = "HighScore.txt";
+
+        static string[] OldHighScore;
+
+        static List<int> Score = new List<int>();
+        
+        // Sparar ner gamla higscore från .txt filen till en array.
         public static void ReadHighScore()
         {
-            OldHighScore = File.ReadAllLines(@"C:\Users\william.persson8\Documents\Visual Studio 2017\Projects\BomberMadLad\HighScore\WriteLines.txt");
+            OldHighScore = File.ReadAllLines(path);
         }
 
-        public static void AddHighScore()
+        // Lägger till de gamla och de nya poängen i en lista.
+        public static void AddHighScore(int thisScore)
         {
+            ReadHighScore();
+
+            Score.Add(thisScore);
+
             for (int i = 0; i < OldHighScore.Length; i++)
             {
                 Score.Add(Convert.ToInt32(OldHighScore[i]));
                 Score.Sort();
             }
-
-            if(Score.Count > 5)
-            {
-                Score.RemoveAt(0);
-            }
         }
+
+        // Skriver ut highscore som man har och visar i vilket som är mest och vilket som är älst.
         static public void ShowHighScore()
         {
-            Console.WriteLine("Contents of WriteLines2.txt = ");
-            for (int i = 0; i < Score.Count; i++)
+            Console.Clear();
+            WriteHighScore();
+
+            Console.WriteLine("HighScores is:  ");
+
+            // Om det finns två score så skriver den de bästa först.
+            // Om det bara finns ett score skriver den det som bäst.
+            Console.ForegroundColor = ConsoleColor.Green;
+            if (Score.Count > 1)
             {
-                Console.WriteLine("\t" + i + "s place got: " + Convert.ToString(Score[i]) + " Score");
+                Console.WriteLine("\t" + "1st " + "place got: " + Convert.ToString(Score[1]) + " Score");
+                Console.WriteLine("\t" + "2nd " + "place got: " + Convert.ToString(Score[0]) + " Score");
             }
+            else
+            {
+                Console.WriteLine("\t" + "1st " + "place got: " + Convert.ToString(Score[0]) + " Score");
+            }
+            Console.ForegroundColor = ConsoleColor.Gray;
 
             Console.WriteLine("Press any key to exit.");
             Console.ReadKey();
         }
 
+        // Skriver ner allt till en fil.
         static public void WriteHighScore()
         {
             List<string> lines = new List<string>();
-            for (int i = 0; i < lines.Count; i++)
+
+            for (int i = 0; i < Score.Count; i++)
             {
                 lines.Add(Convert.ToString(Score[i]));
             }
 
-            StreamWriter file = new StreamWriter(@"C:\Users\william.persson8\Documents\Visual Studio 2017\Projects\BomberMadLad\HighScore\WriteLines.txt");
-
-            foreach (string line in lines)
+            for (int i = 0; i < lines.Count; i++)
             {
-                if (lines.Count <= 5)
+                if(lines.Count <= 5)
                 {
-                    file.WriteLine(line);
+                    File.WriteAllText(path, lines[i]);
                 }
             }
 

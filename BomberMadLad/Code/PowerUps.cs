@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace BomberMadLad
 {
-
+    // Onödig kod, används ej.
     class PoweupsSpawn : GameObject
     {
         readonly Player player;
@@ -15,7 +15,6 @@ namespace BomberMadLad
 
         readonly int Xpos;
         readonly int Ypos;
-        bool wait = true;
         public int PowerNumber { get; set; }
 
 

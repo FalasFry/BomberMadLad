@@ -8,10 +8,8 @@ namespace BomberMadLad
 {
     class Player : GameObject
     {
-        bool u = false;
-
+        // Hämtar kontroller.
         Move control = new Move();
-        //senaste bomben som spawnats
 
         public Player(int x, int y)
         {
@@ -25,13 +23,6 @@ namespace BomberMadLad
             Console.ForegroundColor = ConsoleColor.DarkCyan;
             Console.SetCursorPosition(XPosition, YPosition);
             Console.Write("██");
-
-            if (!u)
-            {
-                TimerClass.GetIndex(XPosition, YPosition);
-                u = true;
-            }
-            
         }
 
         public override void Update()
@@ -79,8 +70,9 @@ namespace BomberMadLad
             // Lägg bomb
             if (input == ConsoleKey.Spacebar)
             {
-                List<int> position = new List<int> {XPosition,YPosition };
-
+                List<int> position = new List<int> { XPosition, YPosition };
+                //Program.mygame.ai.bombPoints.Add(position);
+                
                 //Program.mygame.ai.bombPoints.Add(position);
                 
                 control.LayBomb(XPosition, YPosition);

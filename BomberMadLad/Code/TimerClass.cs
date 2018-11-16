@@ -48,7 +48,20 @@ namespace BomberMadLad
                 }
             }
             return index;
+        }
+        // Hitta index för gameobjects.
 
+        public static int GetCharIndex(int x, int y)
+        {
+            int index = 0;
+            for (int i = 0; i < Program.mygame.Characters.Count; i++)
+            {
+                if (Program.mygame.Characters[i].XPosition == x && Program.mygame.Characters[i].YPosition == y)
+                {
+                    index = i;
+                }
+            }
+            return index;
         }
 
         // Hitta index för väggar.
@@ -113,6 +126,7 @@ namespace BomberMadLad
                 }
             }
         }
+
         public static int elapsedTime = 0;
     }
 }

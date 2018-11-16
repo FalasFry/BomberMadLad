@@ -25,6 +25,8 @@ namespace BomberMadLad
             Console.SetCursorPosition(oldX, oldY);
             Console.Write("  ");
         }
+
+        // Raderar bomberna så att dem inte syns eller har colision.
         public void Destroy(int index, bool walls)
         {
             if (walls)
@@ -38,8 +40,9 @@ namespace BomberMadLad
             }
             else
             {
+                // Suddar bort väggen vi har och sedan flyttar den till ett hörn så den inte har collision.
                 Delete(Program.mygame.GameObjects[index].XPosition, Program.mygame.GameObjects[index].YPosition);
-                GameObject replacement = new Exposions();
+                GameObject replacement = new Wall(0,0, false);
                 Program.mygame.GameObjects[index] = replacement;
             }
             
@@ -65,16 +68,17 @@ namespace BomberMadLad
             return true;
         }
 
-        public bool CollisionCheckGameObj(int xPos, int yPos)
+        // Kollar om spelaren kolliderar med det vi skickade in.
+        public bool CollisionCheckChar(int xPos, int yPos)
         {
-            //för varje vägg som finns
-            for (int i = 0; i < Program.mygame.GameObjects.Count; i++)
+            //för varje karraktär som finns
+            for (int i = 0; i < Program.mygame.Characters.Count; i++)
             {
                 //om y positionen är samma
-                if (Program.mygame.GameObjects[i].YPosition == yPos)
+                if (Program.mygame.Characters[i].YPosition == yPos)
                 {
-                    //och x positionen och dens grannar är samma (vet ej varför men det funkar)
-                    if (Program.mygame.GameObjects[i].XPosition == xPos - 1 || Program.mygame.GameObjects[i].XPosition == xPos || Program.mygame.GameObjects[i].XPosition == xPos + 1)
+                    // Om x positionen eller dens grannar är samma.
+                    if (Program.mygame.Characters[i].XPosition == xPos - 1 || Program.mygame.Characters[i].XPosition == xPos || Program.mygame.Characters[i].XPosition == xPos + 1)
                     {
                         //WE GOT COLLISION
                         return false;

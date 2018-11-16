@@ -8,6 +8,7 @@ namespace BomberMadLad
 {
     class Menu
     {
+        // Skapar en lista med knappar.
         public List<string> Buttons = new List<string>();
 
         public ConsoleColor Gray { get; set; }
@@ -18,20 +19,22 @@ namespace BomberMadLad
  |  _ <   / _ \  |  _   _ \  |  _ \   / _ \ |  __| | |\/| |  / _  |  / _  | | |       / _  |  / _  |
  | |_) | | (_) | | | | | | | | |_) | |  __/ | |    | |  | | | (_| | | (_| | | |____  | (_| | | (_| |
  |____/   \___/  |_| |_| |_| |____/   \___| |_|    |_|  |_|  \____|  \____| |______|  \____|  \____|");
-
+        
+        // Ser till så att knapparna fungerar och gör så något händer.
         public void MainMenu()
         {
             Black = ConsoleColor.Black;
             Gray = ConsoleColor.Gray;
 
             int index = 1;
+            // Lägger till tre knappar.
             Buttons.Add(logo);
             Buttons.Add("Start");
             Buttons.Add("Quit");
-            Buttons.Add("HighScore");
 
             MenuList(index);
 
+            // Fixar Knapptryck.
             while (true)
             {
                 ConsoleKey input = Console.ReadKey(true).Key;
@@ -120,6 +123,7 @@ namespace BomberMadLad
             Console.BackgroundColor = consoleColor;
         }
 
+        // Ritar ut menyn så fint det går.
         public void MenuList(int index)
         {
             Console.Clear();

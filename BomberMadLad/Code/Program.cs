@@ -60,6 +60,9 @@ namespace BomberMadLad
         //allt som har update
         public List<GameObject> GameObjects = new List<GameObject>();
 
+        // Lista för spelare.
+        public List<GameObject> Characters = new List<GameObject>();
+
         //väggar
         public List<GameObject> Walls = new List<GameObject>();
 
@@ -77,6 +80,7 @@ namespace BomberMadLad
         {
             Y = ySize;
             X = xSize;
+            Random Steffe = new Random();
 
             //sålänge i <= så många rutor vi behöver i yLed (yZize + 1)
             for (int i = 0; i <= Y + 1; i++)
@@ -99,7 +103,6 @@ namespace BomberMadLad
                             Walls.Add(new Wall(j, i, true));
                         }
                     }
-
                     //räkna ut koordinaterna för mönster. (OBS RÖR INGET DET FUNKAR)
                     if (i <= ySize / 2 && j <= X / 2)
                     {
@@ -107,7 +110,7 @@ namespace BomberMadLad
                     }
                 }
             }
-            GameObjects.Add(player);
+            Characters.Add(player);
         }
 
         int BrIndex = 0;
@@ -155,26 +158,26 @@ namespace BomberMadLad
         
         public void DrawBoard()
         {
-            //TimerClass.AddTimer(0, 10000, 10000, maxIndex, Br);
+            TimerClass.AddTimer(0, 10000, 10000, maxIndex, Br);
             int wallsIndex = 1;
 
             if (Program.HaveAi == true)
             {
-                GameObjects.Add(ai);
+                Characters.Add(ai);
             }
             
 
-            for (int i = 0; i < GameObjects.Count; i++)
+            for (int i = 0; i < Characters.Count; i++)
             {
-                wallsIndex = TimerClass.GetWallIndex(GameObjects[i].XPosition, GameObjects[i].YPosition);
+                wallsIndex = TimerClass.GetWallIndex(Characters[i].XPosition, Characters[i].YPosition);
                 Walls[wallsIndex].Destroy(wallsIndex, true);
-                wallsIndex = TimerClass.GetWallIndex(GameObjects[i].XPosition - 2, GameObjects[i].YPosition);
+                wallsIndex = TimerClass.GetWallIndex(Characters[i].XPosition - 2, Characters[i].YPosition);
                 Walls[wallsIndex].Destroy(wallsIndex, true);
-                wallsIndex = TimerClass.GetWallIndex(GameObjects[i].XPosition + 2, GameObjects[i].YPosition);
+                wallsIndex = TimerClass.GetWallIndex(Characters[i].XPosition + 2, Characters[i].YPosition);
                 Walls[wallsIndex].Destroy(wallsIndex, true);
-                wallsIndex = TimerClass.GetWallIndex(GameObjects[i].XPosition, GameObjects[i].YPosition - 1);
+                wallsIndex = TimerClass.GetWallIndex(Characters[i].XPosition, Characters[i].YPosition - 1);
                 Walls[wallsIndex].Destroy(wallsIndex, true);
-                wallsIndex = TimerClass.GetWallIndex(GameObjects[i].XPosition, GameObjects[i].YPosition + 1);
+                wallsIndex = TimerClass.GetWallIndex(Characters[i].XPosition, Characters[i].YPosition + 1);
                 Walls[wallsIndex].Destroy(wallsIndex, true);
 
             }
@@ -191,6 +194,10 @@ namespace BomberMadLad
             {
                 GameObjects[i].Draw(1, 1);
             }
+            for (int i = 0; i < Characters.Count; i++)
+            {
+                Characters[i].Draw(1, 1);
+            }
         }
 
         // Uppdatera alla objekt.
@@ -199,6 +206,10 @@ namespace BomberMadLad
             for (int i = 0; i < GameObjects.Count; i++)
             {
                 GameObjects[i].Update();
+            }
+            for (int i = 0; i < Characters.Count; i++)
+            {
+                Characters[i].Update();
             }
         }
     }
@@ -247,6 +258,15 @@ namespace BomberMadLad
         {
             Console.SetCursorPosition(XPosition, YPosition);
             Console.Write("  ");
+
+            if (!CollisionCheckChar(XPosition, YPosition))
+            {
+                End end = new End();
+                if (XPosition == Program.mygame.player.XPosition && YPosition == Program.mygame.player.YPosition)
+                {
+                    end.GameOver(false);
+                }
+            }
         }
 
         public override void Draw(int xBoxSize, int yBoxSize)
@@ -274,13 +294,17 @@ namespace BomberMadLad
         List<List<int>> downList = new List<List<int>>();
         List<List<int>> rightslist = new List<List<int>>();
         List<List<int>> leftList = new List<List<int>>();
+        List<GameObject> ExList = new List<GameObject>();
+
+        public Move control = new Move();
+
 
         int index;
         int f = 0;
         bool didBlow = false;
         int blinkTimes = 5;
         bool colorSwitch = true;
-        List<GameObject> ExList = new List<GameObject>();
+
 
         public BOOM(int playerPosX, int playerPosY)
         {
@@ -354,7 +378,6 @@ namespace BomberMadLad
                         }
                         right = false;
                     }
-                    
                 }
 
                 if (left)
@@ -430,9 +453,8 @@ namespace BomberMadLad
             }
         }
 
-        public void drawExplosions()
+        public void DrawExplosions()
         {
-            Debug.WriteLine(downList.Count + " downs   " + upList.Count + " up " + rightslist.Count + " right " + leftList.Count + " left ");
             List<List<int>> totalList = new List<List<int>>();
             for (int i = 0; i < downList.Count; i++)
             {
@@ -450,7 +472,6 @@ namespace BomberMadLad
             {
                 totalList.Add(leftList[i]);
             }
-            Debug.WriteLine("total  blocks " + totalList.Count);
             for (int i = 0; i < totalList.Count; i++)
             {
                 Exposions explo = new Exposions();
@@ -470,22 +491,18 @@ namespace BomberMadLad
             else if (!didBlow)
             {
                 Action1();
-                drawExplosions();
+                DrawExplosions();
                 didBlow = true;
             }
         }
 
         public override void Action3()
         {
-            Debug.WriteLine("removed explosion");
             for (int i = 0; i < ExList.Count; i++)
             {
                 ExList[i].Action1();
             }
-            if (TimerClass.GetIndex(XPosition, YPosition) != 0)
-            {
-                Program.mygame.GameObjects[0].Destroy(TimerClass.GetIndex(XPosition, YPosition), false);
-            }
+            Program.mygame.GameObjects[0].Destroy(TimerClass.GetIndex(XPosition, YPosition), false);
         }
     }
 }

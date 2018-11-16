@@ -19,6 +19,10 @@ namespace BomberMadLad
         public List<int[]> FindPath(int[] targetPosition)
         {
 
+            int startInt = 0;
+
+            Node final = null;
+
             //lista med alla nodes
 
              List<Node> allNodes = new List<Node>();
@@ -31,6 +35,8 @@ namespace BomberMadLad
 
             Node Adam = new Node(targetPosition, new int[] { XPosition, YPosition });
 
+            Adam.Hcost = (Math.Abs(Adam.goalPos[0] - Adam.nodePos[0])) / 2 + Math.Abs(Adam.goalPos[1] - Adam.nodePos[1]);
+
             //kommer hålla den före detta bästa noden
             Node bestNode = null;
 
@@ -39,105 +45,108 @@ namespace BomberMadLad
             
             //lägg till temp i listan av alla nodes
             allNodes.Add(Adam);
-
-            while (allNodes.Count > 0)
-            {
-                //välj ny bestnode
-                int LowestScore = allNodes.Min(x => x.Fcost);
-                bestNode = allNodes.First(x => x.Fcost == LowestScore);
-                
-                Chosen.Add(bestNode);
-
-                allNodes.Remove(bestNode);
-
-                if (bestNode.nodePos[0] == targetPosition[0] && bestNode.nodePos[1] == targetPosition[1])
-                {
-                    break;
-
-                }
-
-                List<Node> kids = new List<Node>();
-
-                if (CollisionCheck(bestNode.nodePos[0] - 2, bestNode.nodePos[1]))
-                {
-                    kids.Add(new Node(bestNode.goalPos, new int[] { bestNode.nodePos[0] - 2, bestNode.nodePos[1] }));
-
-                }
-                if (CollisionCheck(bestNode.nodePos[0] + 2, bestNode.nodePos[1]))
-                {
-                    kids.Add(new Node(bestNode.goalPos, new int[] { bestNode.nodePos[0] + 2, bestNode.nodePos[1] }));
-
-                }
-                if (CollisionCheck(bestNode.nodePos[0], bestNode.nodePos[1] + 1))
-                {
-                    kids.Add(new Node(bestNode.goalPos, new int[] { bestNode.nodePos[0], bestNode.nodePos[1] + 1 }));
-
-                }
-                if (CollisionCheck(bestNode.nodePos[0], bestNode.nodePos[1] - 1))
-                {
-                    kids.Add(new Node(bestNode.goalPos, new int[] { bestNode.nodePos[0], bestNode.nodePos[1] - 1 }));
-
-                }
-                
-
-                List<Node> nextGen = kids;
             
-
-                g++;
-
-                for (int i = 0; i < nextGen.Count; i++)
+            {
+                while (allNodes.Count > 0)
                 {
-                    bool beenUsed = false;
-                    for (int j = 0; j < Chosen.Count; j++)
+                    //välj ny bestnode
+                    int LowestScore = allNodes.Min(x => x.Fcost);
+                    bestNode = allNodes.First(x => x.Fcost == LowestScore);
+
+                    Chosen.Add(bestNode);
+
+                    allNodes.Remove(bestNode);
+
+                    if (bestNode.nodePos[0] == targetPosition[0] && bestNode.nodePos[1] == targetPosition[1])
                     {
-                        if (Chosen[j].nodePos[0] == nextGen[i].nodePos[0] && Chosen[j].nodePos[1] == nextGen[i].nodePos[1])
-                        {
-                            beenUsed = true;
-                        }
+                        break;
+
                     }
-                    if (!beenUsed)
+
+                    List<Node> kids = new List<Node>();
+
+                    if (CollisionCheck(bestNode.nodePos[0] - 2, bestNode.nodePos[1]))
                     {
-                        for (int j = 0; j < allNodes.Count; j++)
+                        kids.Add(new Node(bestNode.goalPos, new int[] { bestNode.nodePos[0] - 2, bestNode.nodePos[1] }));
+
+                    }
+                    if (CollisionCheck(bestNode.nodePos[0] + 2, bestNode.nodePos[1]))
+                    {
+                        kids.Add(new Node(bestNode.goalPos, new int[] { bestNode.nodePos[0] + 2, bestNode.nodePos[1] }));
+
+                    }
+                    if (CollisionCheck(bestNode.nodePos[0], bestNode.nodePos[1] + 1))
+                    {
+                        kids.Add(new Node(bestNode.goalPos, new int[] { bestNode.nodePos[0], bestNode.nodePos[1] + 1 }));
+
+                    }
+                    if (CollisionCheck(bestNode.nodePos[0], bestNode.nodePos[1] - 1))
+                    {
+                        kids.Add(new Node(bestNode.goalPos, new int[] { bestNode.nodePos[0], bestNode.nodePos[1] - 1 }));
+
+                    }
+
+
+                    List<Node> nextGen = kids;
+
+
+                    g++;
+
+                    for (int i = 0; i < nextGen.Count; i++)
+                    {
+                        bool beenUsed = false;
+                        for (int j = 0; j < Chosen.Count; j++)
                         {
-                            if (allNodes[j].nodePos[0] == nextGen[i].nodePos[0] && allNodes[j].nodePos[1] == nextGen[i].nodePos[1])
+                            if (Chosen[j].nodePos[0] == nextGen[i].nodePos[0] && Chosen[j].nodePos[1] == nextGen[i].nodePos[1])
                             {
-                                  beenUsed = true;
+                                beenUsed = true;
                             }
                         }
                         if (!beenUsed)
                         {
-                            nextGen[i].Gcost = g;
-                            nextGen[i].Hcost = (Math.Abs(nextGen[i].goalPos[0] - nextGen[i].nodePos[0]))/2 + Math.Abs(nextGen[i].goalPos[1] - nextGen[i].nodePos[1]);
-                            nextGen[i].Fcost = nextGen[i].Gcost + nextGen[i].Hcost;
-                            nextGen[i].Dad = bestNode;
+                            for (int j = 0; j < allNodes.Count; j++)
+                            {
+                                if (allNodes[j].nodePos[0] == nextGen[i].nodePos[0] && allNodes[j].nodePos[1] == nextGen[i].nodePos[1])
+                                {
+                                    beenUsed = true;
+                                }
+                            }
+                            if (!beenUsed)
+                            {
+                                nextGen[i].Gcost = g;
+                                nextGen[i].Hcost = (Math.Abs(nextGen[i].goalPos[0] - nextGen[i].nodePos[0])) / 2 + Math.Abs(nextGen[i].goalPos[1] - nextGen[i].nodePos[1]);
+                                nextGen[i].Fcost = nextGen[i].Gcost + nextGen[i].Hcost;
+                                nextGen[i].Dad = bestNode;
 
-                            allNodes.Add(nextGen[i]);
-                        }
-                        else if (g + nextGen[i].Hcost < nextGen[i].Fcost)
-                        {
-                            nextGen[i].Gcost = g;
-                            nextGen[i].Fcost = g + nextGen[i].Hcost;
-                            nextGen[i].Dad = bestNode;
+                                allNodes.Add(nextGen[i]);
+                            }
+                            else if (g + nextGen[i].Hcost < nextGen[i].Fcost)
+                            {
+                                nextGen[i].Gcost = g;
+                                nextGen[i].Fcost = g + nextGen[i].Hcost;
+                                nextGen[i].Dad = bestNode;
+                            }
                         }
                     }
                 }
+                startInt = 1;
             }
 
-            Node final = Chosen.Last();
-
+            final = Chosen.Last();
+            
             if (allNodes.Count == 0)
             {
-                Debug.WriteLine("could not find path " + Chosen.Count);
-                for (int i = 1; i < Chosen.Count; i++)
+                for (int i = startInt; i < Chosen.Count; i++)
                 {
-                    if (Chosen[i].Hcost < final.Hcost && layBomb)
+                    if (Chosen[i].Hcost < final.Hcost && layBomb || Chosen[i].Hcost > final.Hcost && !layBomb)
                     {
                         final = Chosen[i];
                     }
-                    if (Chosen[i].Hcost > final.Hcost && !layBomb)
+                    if (Adam.Hcost < final.Hcost && layBomb || Adam.Hcost > final.Hcost && !layBomb)
                     {
-                        final = Chosen[i];
+                        final = Adam;
                     }
+
                 }
                 shouldBomb = true;
             }
@@ -145,7 +154,7 @@ namespace BomberMadLad
             {
                 shouldBomb = false;
             }
-
+            
             List<int[]> TemporaryList = new List<int[]>();
 
             while (final.Dad != null)
@@ -156,10 +165,7 @@ namespace BomberMadLad
             
 
             TemporaryList.Reverse();
-            if (TemporaryList.Count != 0 && TemporaryList[0] == targetPosition)
-            {
-                //TemporaryList.RemoveAt(0);
-            }
+            
            
             
             
@@ -204,15 +210,14 @@ namespace BomberMadLad
                 
                 temp = true;
 
-                int index = TimerClass.GetIndex(XPosition, YPosition);
+                int index = TimerClass.GetCharIndex(XPosition, YPosition);
 
-                TimerClass.AddTimer(index, 500, 500, 10000, Program.mygame.GameObjects[index].Action2);
+                TimerClass.AddTimer(index, 500, 500, 10000, Program.mygame.Characters[index].Action2);
             }
         }
         
         public override void Action2()
         {
-           
             if (posList.Count != 0)
             {
                
@@ -232,9 +237,9 @@ namespace BomberMadLad
 
                 layBomb = false;
 
-                int index = TimerClass.GetIndex(XPosition, YPosition);
+                int index = TimerClass.GetCharIndex(XPosition, YPosition);
 
-                TimerClass.AddTimer(index, 0, 5000, 1, Program.mygame.GameObjects[index].Action1);
+                TimerClass.AddTimer(index, 3000, 3000, 1, Program.mygame.Characters[index].Action1);
 
 
             }
