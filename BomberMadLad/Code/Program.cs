@@ -308,7 +308,7 @@ namespace BomberMadLad
         {
             if (colorSwitch)
             {
-                Console.ForegroundColor = ConsoleColor.DarkGray;
+                Console.ForegroundColor = ConsoleColor.Red;
             }
             else
             {
