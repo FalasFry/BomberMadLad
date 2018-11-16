@@ -10,9 +10,10 @@ namespace BomberMadLad
 {
     static class HighScore
     {
-
+        // Filen som texten sparas till.
         static string path = "HighScore.txt";
 
+        // Score som finns i filen.
         static string[] OldHighScore;
 
         static List<int> Score = new List<int>();

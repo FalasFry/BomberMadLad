@@ -39,6 +39,7 @@ namespace BomberMadLad
             while (true)
             {
                 stopwatch.Start();
+
                 //ritar ut alla gameobjects i listan GameObjects
                 mygame.DrawStuff();
 
@@ -68,10 +69,11 @@ namespace BomberMadLad
         //skapa ny spelare
         public Player player = new Player(10,11);
 
+        // Skapa Nytt Ai
         public Ai ai = new Ai(Console.LargestWindowWidth - 22, 11);
 
-        public int X { get; set; }
-        public int Y { get; set; }
+        int X;
+        int Y;
 
         //skapar game med måtten vi skickade in i Program
         public Game(int xSize, int ySize)

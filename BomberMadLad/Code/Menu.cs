@@ -11,22 +11,22 @@ namespace BomberMadLad
         // Skapar en lista med knappar.
         public static  List<string> Buttons = new List<string>();
 
-        public static ConsoleColor Gray { get; set; }
-        public static ConsoleColor Black { get; set; }
+        static ConsoleColor Gray { get; set; }
+        static ConsoleColor Black { get; set; }
         static string logo = (@"  ____                        _                     __  __               _   _                    _ 
  |  _ \                      | |                   |  \/  |             | | | |                  | |
  | |_) |   ___    _ __ ___   | |__     ___   _ __  | \  / |   __ _    __| | | |        __ _    __| |
  |  _ <   / _ \  |  _   _ \  |  _ \   / _ \ |  __| | |\/| |  / _  |  / _  | | |       / _  |  / _  |
  | |_) | | (_) | | | | | | | | |_) | |  __/ | |    | |  | | | (_| | | (_| | | |____  | (_| | | (_| |
  |____/   \___/  |_| |_| |_| |____/   \___| |_|    |_|  |_|  \____|  \____| |______|  \____|  \____|");
-        
-        // Ser till så att knapparna fungerar och gör så något händer.
+
         public static  void MainMenu()
         {
             Black = ConsoleColor.Black;
             Gray = ConsoleColor.Gray;
 
             int index = 1;
+
             // Lägger till tre knappar.
             Buttons.Add(logo);
             Buttons.Add("Start");
@@ -85,7 +85,6 @@ namespace BomberMadLad
 
             while (true)
             {
-                
                 ConsoleKey input = Console.ReadKey(true).Key;
 
                 if (input == ConsoleKey.DownArrow && index < Buttons.Count - 1)
@@ -114,10 +113,12 @@ namespace BomberMadLad
             Console.Clear();
         }
 
+        // Sätter färgen på texten till det man vill.
         public static void ForColour(ConsoleColor consoleColor)
         {
             Console.ForegroundColor = consoleColor;
         }
+        // Sätter bakgrundsfärgen till det man vill.
         public static  void BackColour(ConsoleColor consoleColor)
         {
             Console.BackgroundColor = consoleColor;
@@ -126,7 +127,9 @@ namespace BomberMadLad
         // Ritar ut menyn så fint det går.
         public static  void MenuList(int index)
         {
+            // Suddar allt.
             Console.Clear();
+            // Ritar ut varje knapp men om knappen är dem du har markerat är den grå.
             for (int i = 0; i < Buttons.Count; i++)
             {
                 if (i != index)

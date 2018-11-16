@@ -9,14 +9,10 @@ namespace BomberMadLad
 {
     class End
     {
-        ConsoleColor Black;
-        ConsoleColor Gray;
         int points;
 
         public End()
         {
-            Black = ConsoleColor.Black;
-            Gray = ConsoleColor.Gray;
             points = TimerClass.elapsedTime;
         }
 
@@ -34,6 +30,10 @@ namespace BomberMadLad
 
                 Menu.MenuList(index);
 
+                // En meny med samma struktur som i main menu klassen, 
+                // kan gjort om strukturen till en egen klass för lättare skapande och mindre hårdkodat.
+
+                // Om du vinner spelet ska du få poäng.
                 while (true)
                 {
                     ConsoleKey input = Console.ReadKey(true).Key;
@@ -73,6 +73,7 @@ namespace BomberMadLad
                     }
                 }
             }
+            // Om man förlorar får man inga poäng och spelet avslutas.
             if (!win)
             {
                 Console.ForegroundColor = ConsoleColor.Cyan;
