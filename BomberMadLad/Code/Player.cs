@@ -81,7 +81,7 @@ namespace BomberMadLad
             {
                 List<int> position = new List<int> {XPosition,YPosition };
 
-                Program.mygame.ai.bombPoints.Add(position);
+                //Program.mygame.ai.bombPoints.Add(position);
                 
                 control.LayBomb(XPosition, YPosition);
             }

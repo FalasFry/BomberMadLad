@@ -64,12 +64,13 @@ namespace BomberMadLad
         public List<GameObject> Walls = new List<GameObject>();
 
         //skapa ny spelare
-        public Player player = new Player(10,11);
+        public Player player = new Player(100,31);
 
-        public Ai ai = new Ai(Console.LargestWindowWidth - 22, 11);
+        public Ai ai = new Ai(Console.LargestWindowWidth - 22, 10);
 
         public int X { get; set; }
         public int Y { get; set; }
+        Random rnd = new Random();
 
         //skapar game med måtten vi skickade in i Program
         public Game(int xSize, int ySize)
@@ -89,9 +90,14 @@ namespace BomberMadLad
                         //lägg till vägg i den positionen
                         Walls.Add(new Wall(j, i, false));
                     }
-                    else if((j + 2) % 4 == 0 || (i + 1) % 2 == 0)
+                    else if ((j + 2) % 4 == 0 || (i + 1) % 2 == 0)
                     {
-                        Walls.Add(new Wall(j, i, true));
+
+
+                        if (rnd.Next(0, 3) == 1)
+                        {
+                            Walls.Add(new Wall(j, i, true));
+                        }
                     }
 
                     //räkna ut koordinaterna för mönster. (OBS RÖR INGET DET FUNKAR)

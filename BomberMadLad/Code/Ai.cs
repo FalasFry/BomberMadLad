@@ -3,20 +3,178 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Diagnostics;
 
 namespace BomberMadLad
 {
     class Ai : GameObject
     {
-        public BOOM latestBoom;
+        //håller alla möjliga vägar.
+
+        public bool shouldBomb = true;
+
+        List<int[]> posList = new List<int[]>();
+
+
+        public List<int[]> FindPath(int[] targetPosition)
+        {
+
+            //lista med alla nodes
+
+             List<Node> allNodes = new List<Node>();
+
+            //lista med valda nodes
+
+             List<Node> Chosen = new List<Node>();
+
+            //skapa första node
+
+            Node Adam = new Node(targetPosition, new int[] { XPosition, YPosition });
+
+            //kommer hålla den före detta bästa noden
+            Node bestNode = null;
+
+            //ger varje generation ett Gcost
+            int g = 0;
+            
+            //lägg till temp i listan av alla nodes
+            allNodes.Add(Adam);
+
+            while (allNodes.Count > 0)
+            {
+                //välj ny bestnode
+                int LowestScore = allNodes.Min(x => x.Fcost);
+                bestNode = allNodes.First(x => x.Fcost == LowestScore);
+                
+                Chosen.Add(bestNode);
+
+                allNodes.Remove(bestNode);
+
+                if (bestNode.nodePos[0] == targetPosition[0] && bestNode.nodePos[1] == targetPosition[1])
+                {
+                    break;
+
+                }
+
+                List<Node> kids = new List<Node>();
+
+                if (CollisionCheck(bestNode.nodePos[0] - 2, bestNode.nodePos[1]))
+                {
+                    kids.Add(new Node(bestNode.goalPos, new int[] { bestNode.nodePos[0] - 2, bestNode.nodePos[1] }));
+
+                }
+                if (CollisionCheck(bestNode.nodePos[0] + 2, bestNode.nodePos[1]))
+                {
+                    kids.Add(new Node(bestNode.goalPos, new int[] { bestNode.nodePos[0] + 2, bestNode.nodePos[1] }));
+
+                }
+                if (CollisionCheck(bestNode.nodePos[0], bestNode.nodePos[1] + 1))
+                {
+                    kids.Add(new Node(bestNode.goalPos, new int[] { bestNode.nodePos[0], bestNode.nodePos[1] + 1 }));
+
+                }
+                if (CollisionCheck(bestNode.nodePos[0], bestNode.nodePos[1] - 1))
+                {
+                    kids.Add(new Node(bestNode.goalPos, new int[] { bestNode.nodePos[0], bestNode.nodePos[1] - 1 }));
+
+                }
+                
+
+                List<Node> nextGen = kids;
+            
+
+                g++;
+
+                for (int i = 0; i < nextGen.Count; i++)
+                {
+                    bool beenUsed = false;
+                    for (int j = 0; j < Chosen.Count; j++)
+                    {
+                        if (Chosen[j].nodePos[0] == nextGen[i].nodePos[0] && Chosen[j].nodePos[1] == nextGen[i].nodePos[1])
+                        {
+                            beenUsed = true;
+                        }
+                    }
+                    if (!beenUsed)
+                    {
+                        for (int j = 0; j < allNodes.Count; j++)
+                        {
+                            if (allNodes[j].nodePos[0] == nextGen[i].nodePos[0] && allNodes[j].nodePos[1] == nextGen[i].nodePos[1])
+                            {
+                                  beenUsed = true;
+                            }
+                        }
+                        if (!beenUsed)
+                        {
+                            nextGen[i].Gcost = g;
+                            nextGen[i].Hcost = (Math.Abs(nextGen[i].goalPos[0] - nextGen[i].nodePos[0]))/2 + Math.Abs(nextGen[i].goalPos[1] - nextGen[i].nodePos[1]);
+                            nextGen[i].Fcost = nextGen[i].Gcost + nextGen[i].Hcost;
+                            nextGen[i].Dad = bestNode;
+
+                            allNodes.Add(nextGen[i]);
+                        }
+                        else if (g + nextGen[i].Hcost < nextGen[i].Fcost)
+                        {
+                            nextGen[i].Gcost = g;
+                            nextGen[i].Fcost = g + nextGen[i].Hcost;
+                            nextGen[i].Dad = bestNode;
+                        }
+                    }
+                }
+            }
+
+            Node final = Chosen.Last();
+
+            if (allNodes.Count == 0)
+            {
+                Debug.WriteLine("could not find path " + Chosen.Count);
+                for (int i = 1; i < Chosen.Count; i++)
+                {
+                    if (Chosen[i].Hcost < final.Hcost && layBomb)
+                    {
+                        final = Chosen[i];
+                    }
+                    if (Chosen[i].Hcost > final.Hcost && !layBomb)
+                    {
+                        final = Chosen[i];
+                    }
+                }
+                shouldBomb = true;
+            }
+            else
+            {
+                shouldBomb = false;
+            }
+
+            List<int[]> TemporaryList = new List<int[]>();
+
+            while (final.Dad != null)
+            {
+                TemporaryList.Add(final.nodePos);
+                final = final.Dad;
+            }
+            
+
+            TemporaryList.Reverse();
+            if (TemporaryList.Count != 0 && TemporaryList[0] == targetPosition)
+            {
+                //TemporaryList.RemoveAt(0);
+            }
+           
+            
+            
+            return TemporaryList;
+            
+        }
+
         public bool layBomb = true;
 
-        public List<List<int>> bombPoints = new List<List<int>>();
+        bool temp = false;
+
+        public List<int[]> bombPoints = new List<int[]>();
 
         Random rng = new Random();
         Move control = new Move();
-
-        bool Bomb = true;
 
         public Ai(int xpoz, int ypoz)
         {
@@ -26,21 +184,12 @@ namespace BomberMadLad
 
         public override void Action1()
         {
-            latestBoom = new BOOM(XPosition, YPosition);
-
-            //lägg till i gameobjects
-            Program.mygame.GameObjects.Add(latestBoom);
-
-            //lägg till timer
-            int index = TimerClass.GetIndex(latestBoom.XPosition, latestBoom.YPosition);
-
-            TimerClass.AddTimer(index, 1000, 500, 10, Program.mygame.GameObjects[index].Action2);
 
             layBomb = true;
-            
+
         }
-        
-        
+
+
         public override void Draw(int xBoxSize, int yBoxSize)
         {
             Console.SetCursorPosition(XPosition, YPosition);
@@ -50,68 +199,120 @@ namespace BomberMadLad
 
         public override void Update()
         {
-
-            int oldX = XPosition;
-            int oldY = YPosition;
-            int dir;
-
-            //en loop som ser till att han inte går in i väggar, principen är att om han går in i vägg får han gå igen tills han lyckats gå åt rätt håll
-            XPosition = oldX;
-            YPosition = oldY;
-
-            dir = rng.Next(1, 6);
-
-            if (dir == 1)
+            if (!temp)
             {
-                control.Up(this);
-            }
-            if (dir == 2)
-            {
-                control.Down(this);
-            }
-            if (dir == 3)
-            {
-                control.Left(this);
-            }
-            if (dir == 4)
-            {
-                XPosition -= 2;
-            }
-            if(dir == 5 && layBomb)
-            {
-                List<int> position = new List<int> { XPosition, YPosition };
-                bombPoints.Add(position);
                 
-                TimerClass.AddTimer(0, 5000, 0, 1, Action1);
-                layBomb = false;
-                control.Right(this);
-            }
-            if (!CollisionCheck(XPosition, YPosition))
-            {
-                XPosition = oldX;
-                YPosition = oldY;
+                temp = true;
 
-                if (Bomb)
-                {
-                    TimerClass.AddTimer(0, 1, 0, 1, Action1);
-                    Bomb = false;
-                }
+                int index = TimerClass.GetIndex(XPosition, YPosition);
+
+                TimerClass.AddTimer(index, 500, 500, 10000, Program.mygame.GameObjects[index].Action2);
             }
-            else
+        }
+        
+        public override void Action2()
+        {
+           
+            if (posList.Count != 0)
             {
-                Delete(oldX, oldY);
+               
+                int oldX = XPosition;
+                int oldY = YPosition;
+
+                XPosition = posList[0][0];
+                YPosition = posList[0][1];
+
                 Draw(0, 0);
+
+                Delete(oldX, oldY);
             }
+            else if (shouldBomb && layBomb)
+            {
+                Action3();
+
+                layBomb = false;
+
+                int index = TimerClass.GetIndex(XPosition, YPosition);
+
+                TimerClass.AddTimer(index, 0, 5000, 1, Program.mygame.GameObjects[index].Action1);
+
+
+            }
+
+            posList = FindPath(new int[] { Program.mygame.player.XPosition, Program.mygame.player.YPosition });
+            
+        }
+
+        public override void Action3()
+        {
+            control.LayBomb(XPosition, YPosition);
+        }
+    }
+
+    class Node : GameObject
+    {
+        //Gcost är avståndet från startpunkten
+        public int Gcost;
+        //Hcost är avståndet från målet
+        public int Hcost;
+        //Fcost är Gcost + Hcost
+        public int Fcost;
+
+        public Node Dad;
+
+        public bool beenUsed = false;
+
+        //håller alla möjliga vägar.
+        
+
+       
+
+        public int[] goalPos = new int[2];
+
+        int[] startPos = new int[2];
+
+        public int[] nodePos = new int[2];
+        //programet väljer den rutan av åtta som har lägst Fcost, om det finns flera likadana så tar den den med minst Hcost.
+        
+
+        public Node(int[] goalPosition, int[] nodePosition)
+        {
+            goalPos = goalPosition;
+            nodePos = nodePosition;
+        }
+        
+       
+
+
+
+
+
+
+
+        public override void Action1()
+        {
+            throw new NotImplementedException();
         }
 
         public override void Action2()
         {
-            Bomb = true;
+            throw new NotImplementedException();
         }
+
         public override void Action3()
         {
-            TimerClass.AddTimer(0, 5000, 0, 1, Action2);
-            control.LayBomb(XPosition, YPosition);
+            throw new NotImplementedException();
+        }
+
+        public override void Draw(int xBoxSize, int yBoxSize)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void Update()
+        {
+            throw new NotImplementedException();
         }
     }
-}
+    }
+    
