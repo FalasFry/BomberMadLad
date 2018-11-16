@@ -15,7 +15,6 @@ namespace BomberMadLad
 
         readonly int Xpos;
         readonly int Ypos;
-        bool wait = true;
         public int PowerNumber { get; set; }
 
 

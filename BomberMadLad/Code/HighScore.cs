@@ -10,12 +10,14 @@ namespace BomberMadLad
 {
     static class HighScore
     {
-        static string path = "HighScore.txt";
-        public static string[] OldHighScore;
 
-        public static List<int> Score = new List<int>();
+        static string path = "HighScore.txt";
+
+        static string[] OldHighScore;
+
+        static List<int> Score = new List<int>();
         
-        // Sparar ner gamla higscore till en array.
+        // Sparar ner gamla higscore från .txt filen till en array.
         public static void ReadHighScore()
         {
             OldHighScore = File.ReadAllLines(path);
@@ -33,24 +35,18 @@ namespace BomberMadLad
                 Score.Add(Convert.ToInt32(OldHighScore[i]));
                 Score.Sort();
             }
-
-            if(Score.Count > 5)
-            {
-                while(Score.Count > 5)
-                {
-                    Score.Sort();
-                    Score.RemoveAt(0);
-                }
-            }
         }
 
-        // Skriver ut highscore som man har och.
+        // Skriver ut highscore som man har och visar i vilket som är mest och vilket som är älst.
         static public void ShowHighScore()
         {
             Console.Clear();
             WriteHighScore();
 
-            Console.WriteLine("Contents of HighScore = ");
+            Console.WriteLine("HighScores is:  ");
+
+            // Om det finns två score så skriver den de bästa först.
+            // Om det bara finns ett score skriver den det som bäst.
             Console.ForegroundColor = ConsoleColor.Green;
             if (Score.Count > 1)
             {
