@@ -8,6 +8,8 @@ namespace BomberMadLad
 {
     class Player : GameObject
     {
+        bool canBomb = true;
+
         public Player(int x, int y)
         {
             XPosition = x;
@@ -68,16 +70,24 @@ namespace BomberMadLad
             }
 
             // Lägg bomb
-            if (input == ConsoleKey.Spacebar)
+            if (input == ConsoleKey.Spacebar && canBomb)
             {
                 List<int> position = new List<int> { XPosition, YPosition };
 
                 Move.LayBomb(XPosition, YPosition);
+
+                canBomb = false;
+
+                //om sex sekunder kan spelaren bomba igen
+                int index = TimerClass.GetCharIndex(XPosition, YPosition);
+
+                TimerClass.AddTimer(index, 6000, 6000, 1, Program.mygame.Characters[index].Action2);
             }
         }
-        
+        //spelaren kan bomba igen
         public override void Action2()
         {
+            canBomb = true;
         }
         public override void Action3()
         {

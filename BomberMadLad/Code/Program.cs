@@ -134,91 +134,49 @@ namespace BomberMadLad
                     Wall wall = null;
                     if (j == (X+1) - brIndex)
                     {
-                        wall = (new Wall(j - brIndex, k, false));
-                        wall.Draw(0, 0);
-                        Walls.Add(wall);
-
-                        //om det är en karaktär i explosiosionen tar spelet sl
-                        if (!Collision.Char(wall.XPosition, wall.XPosition))
-                        {
-                            End end = new End();
-                            if (wall.XPosition == Program.mygame.player.XPosition && wall.YPosition == Program.mygame.player.YPosition)
-                            {
-                                end.GameOver(false);
-                            }
-                            else
-                            {
-                                end.GameOver(true);
-                            }
-                        }
+                        BRWall(j - brIndex, k);
                     }
 
                     if (j == 0 + brIndex)
                     {
-                        wall = (new Wall(j + brIndex, k, false));
-                        wall.Draw(0, 0);
-                        Walls.Add(wall);
-
-                        //om det är en karaktär i explosiosionen tar spelet sl
-                        if (!Collision.Char(wall.XPosition, wall.XPosition))
-                        {
-                            End end = new End();
-                            if (wall.XPosition == Program.mygame.player.XPosition && wall.YPosition == Program.mygame.player.YPosition)
-                            {
-                                end.GameOver(false);
-                            }
-                            else
-                            {
-                                end.GameOver(true);
-                            }
-                        }
+                        BRWall(j + brIndex, k);
                     }
 
                     if (k == (Y+1) - brIndex)
                     {
-                        wall = (new Wall(j, k, false));
-                        wall.Draw(0, 0);
-                        Walls.Add(wall);
-
-                        //om det är en karaktär i explosiosionen tar spelet sl
-                        if (!Collision.Char(wall.XPosition, wall.XPosition))
-                        {
-                            End end = new End();
-                            if (wall.XPosition == Program.mygame.player.XPosition && wall.YPosition == Program.mygame.player.YPosition)
-                            {
-                                end.GameOver(false);
-                            }
-                            else
-                            {
-                                end.GameOver(true);
-                            }
-                        }
+                        BRWall(j, k);
                     }
 
                     if (k == 0 + brIndex)
                     {
-                        wall = (new Wall(j, k, false));
-                        wall.Draw(0, 0);
-                        Walls.Add(wall);
-
-                        //om det är en karaktär i explosiosionen tar spelet sl
-                        if (!Collision.Char(wall.XPosition, wall.XPosition))
-                        {
-                            End end = new End();
-                            if (wall.XPosition == Program.mygame.player.XPosition && wall.YPosition == Program.mygame.player.YPosition)
-                            {
-                                end.GameOver(false);
-                            }
-                            else
-                            {
-                                end.GameOver(true);
-                            }
-                        }
+                        BRWall(j, k);
                     }
                 }
             }
         }
-        
+
+        public void BRWall(int x, int y)
+        {
+            Wall wall = null;
+
+            wall = (new Wall(x, y, false));
+            wall.Draw(0, 0);
+            Walls.Add(wall);
+
+            if (!Collision.Char(x, y))
+            {
+                End end = new End();
+                if (x == Program.mygame.player.XPosition && y == Program.mygame.player.YPosition)
+                {
+                    end.GameOver(false);
+                }
+                else
+                {
+                    end.GameOver(true);
+
+                }
+            }
+        }
         //rita ut alla väggar (körs bara en gång så här gör vi annat också)
         public void DrawBoard()
         {
