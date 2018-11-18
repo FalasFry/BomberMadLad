@@ -14,7 +14,7 @@ namespace BomberMadLad
         // Sätter ens poäng till det man får Man förlorar 1000 poäng varje sekund.
         public End()
         {
-            points = 300000 - TimerClass.elapsedTime;
+            points = TimerClass.elapsedTime;
         }
 
         // Gör samma sak som main menu gör men denna är mer fokuserad på att avsluta spelet.
