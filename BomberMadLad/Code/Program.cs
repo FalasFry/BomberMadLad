@@ -46,10 +46,13 @@ namespace BomberMadLad
                 //kallar på update i alla GameObjects
                 mygame.UpdateBoard();
 
+                //kolla om någon timer ska kallas på
                 TimerClass.TimeMethod();
 
+                //stoppa stopwatch
                 stopwatch.Stop();
 
+                //uppdatera elapsedtime
                 TimerClass.elapsedTime = (int)stopwatch.ElapsedMilliseconds;
             }
         }
@@ -69,9 +72,9 @@ namespace BomberMadLad
         //skapa ny spelare
         public Player player = new Player(100,31);
         
+        //ny AI
         public Ai ai = new Ai(Console.LargestWindowWidth - 22, 10);
         
-        Random rnd = new Random();
 
         int X;
         int Y;
@@ -95,29 +98,37 @@ namespace BomberMadLad
                         //lägg till vägg i den positionen
                         Walls.Add(new Wall(j, i, false));
                     }
+                    //mänster för vita väggar
                     else if ((j + 2) % 4 == 0 || (i + 1) % 2 == 0)
                     {
-                        // De vita väggarna har en 25% chans att ritas ut.
-                        if (drawWhiteWalls.Next(0,4) == 1)
-                        Walls.Add(new Wall(j, i, true));
+                        // De vita väggarna har en 33% chans att ritas ut.
+                        if (drawWhiteWalls.Next(0, 3) == 1)
+                        {
+                            Walls.Add(new Wall(j, i, true));
+                        }
                     }
-                    
-                    //räkna ut koordinaterna för mönster. (OBS RÖR INGET DET FUNKAR)
+                    //räkna ut koordinaterna för mönster.
                     if (i <= ySize / 2 && j <= X / 2)
                     {
                         Walls.Add(new Wall(j * 2, i * 2, false));
                     }
                 }
             }
+            //lägg till spelare
             Characters.Add(player);
         }
-
+        //vilken BR vi är på
         int brIndex = 0;
+        //hur långt in arenan kan gå
         int maxIndex = 20;
 
+        //ropas på varje gång arenan blir mindre
         public void Br()
         {
+            //öka brIndex
             brIndex++;
+
+            //skapa en kvadrat av väggar
             for (int k = 0; k <= Y + 1; k++)
             {
                 for (int j = 0; j <= X + 1; j++)
@@ -154,18 +165,19 @@ namespace BomberMadLad
             }
         }
         
-        
+        //rita ut alla väggar (körs bara en gång så här gör vi annat också)
         public void DrawBoard()
         {
+            //starta timer för BR
             TimerClass.AddTimer(0, 10000, 10000, maxIndex, Br);
+
             int wallsIndex = 1;
-
-            if (Program.HaveAi == true)
-            {
-                Characters.Add(ai);
-            }
             
-
+            //lägg till AI bland characters
+            Characters.Add(ai);
+            
+            
+            //se till att inga karaktärer startar inuti en vägg genom att få dem att starta inuti ett +
             for (int i = 0; i < Characters.Count; i++)
             {
                 wallsIndex = Collision.GetWallIndex(Characters[i].XPosition, Characters[i].YPosition);
@@ -180,6 +192,7 @@ namespace BomberMadLad
                 Walls[wallsIndex].Destroy(wallsIndex, true);
 
             }
+            //rita ut alla väggar
             foreach (GameObject gameObject in Walls)
             {
                 gameObject.Draw(1, 1);
@@ -215,6 +228,7 @@ namespace BomberMadLad
     
     class Wall : GameObject
     {
+        //eftersom det finns två sorters väggar har vi en bool för om dem går att spränga eller inte
         public Wall(int xPosition, int yPosition, bool Destroyable)
         {
             CanBlow = Destroyable;
@@ -224,6 +238,7 @@ namespace BomberMadLad
 
         public override void Draw(int xBoxSize, int yBoxSize)
         {
+            //ändra färg beroende på vilken sorts vägg
             if (!CanBlow) Console.ForegroundColor = ConsoleColor.DarkGray;
             else Console.ForegroundColor = ConsoleColor.White;
             Console.SetCursorPosition(XPosition, YPosition);
@@ -236,17 +251,14 @@ namespace BomberMadLad
 
         public override void Action1()
         {
-            throw new NotImplementedException();
         }
 
         public override void Action2()
         {
-            throw new NotImplementedException();
         }
 
         public override void Action3()
         {
-            throw new NotImplementedException();
         }
     }
     
@@ -255,9 +267,11 @@ namespace BomberMadLad
         
         public override void Action1()
         {
+            //ta bort explosioner
             Console.SetCursorPosition(XPosition, YPosition);
             Console.Write("  ");
 
+            //om det är en karaktär i explosiosionen tar spelet sl
             if (!Collision.Char(XPosition, YPosition))
             {
                 End end = new End();
@@ -293,18 +307,29 @@ namespace BomberMadLad
 
     class BOOM : GameObject
     {
+        //listor för alla ríktningar
         List<List<int>> upList = new List<List<int>>();
         List<List<int>> downList = new List<List<int>>();
         List<List<int>> rightslist = new List<List<int>>();
         List<List<int>> leftList = new List<List<int>>();
+
+        //håller alla explosioner som skapats
         List<GameObject> ExList = new List<GameObject>();
+
+        //index
         int index;
+
+        //hur många gånger bomben har blinkat
         int timesHaveBlinked = 0;
+
+        //kollar om bomben sprängts
         bool didBlow = false;
-        int timesToBlink = 5;
+
+        //hur många gånger bomben ska blinka
+        int timesToBlink = 10;
         bool colorSwitch = true;
 
-
+        //sätt index, Xposition och Yposition
         public BOOM(int playerPosX, int playerPosY)
         {
             index = Program.mygame.GameObjects.Count;
@@ -314,6 +339,7 @@ namespace BomberMadLad
 
         public override void Draw(int xBoxSize, int yBoxSize)
         {
+            //byt färg mellan röd och gul
             if (colorSwitch)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
@@ -332,6 +358,7 @@ namespace BomberMadLad
 
         }
 
+        //spräng
         public override void Action1()
         {
             int index = Collision.GetIndex(XPosition, YPosition);
@@ -339,34 +366,45 @@ namespace BomberMadLad
             CrossBomb(XPosition, YPosition);
 
         }
+
         public void CrossBomb(int oldX, int oldY)
         {
+            //håller position för explosion, börjar med bombens position
+            List<int> position = new List<int> {XPosition, YPosition };
 
-            List<int> ExIntList = new List<int>();
-            List<int> remaining = new List<int> { 1, 2, 3, 4 };
-            List<int> position = new List<int>();
-
-
+            //mult kollar hur långt bort från bomben explosionen ska hamna
             int Mult = 0;
 
+            //vi jobbar med x/2
             oldX = oldX / 2;
 
+            //bools för alla sidor för att hålla reda på vilka som fortfarande används
             bool right = true;
             bool left = true;
             bool up = true;
             bool down = true;
 
+            //lägg till explosion ovanpå bomben
+            upList.Add(position);
+
 
             while (true)
             {
+                //mult blir en större varje gång
+
                 Mult++;
+
+                //börjar med höger
                 if (right)
                 {
+                    //om vi inte träffar något så lägger vi bara till i listan
                     if (Collision.Wall((oldX + Mult) * 2, oldY))
                     {
                         position = new List<int> { (oldX + Mult) * 2, oldY };
                         rightslist.Add(position);
                     }
+                    //om vi träffar en vägg och väggen kan sprängas så sätter vi ut en explosion där och tar bort bomben
+                    //sen sätter vi right till false så att bomben slutar spränga i den riktningen
                     else
                     {
                         if (Program.mygame.Walls[Collision.GetWallIndex((oldX + Mult) * 2, oldY)].CanBlow)
@@ -378,7 +416,7 @@ namespace BomberMadLad
                         right = false;
                     }
                 }
-
+                //samma sak fast vänster
                 if (left)
                 {
                     if (Collision.Wall((oldX - Mult) * 2, oldY))
@@ -398,7 +436,7 @@ namespace BomberMadLad
                     }
                     
                 }
-
+                //samma sak fast upp
                 if (up)
                 {
                     if (Collision.Wall(oldX * 2, oldY + Mult))
@@ -418,7 +456,7 @@ namespace BomberMadLad
                     }
                     
                 }
-
+                //samma sak fast ner
                 if (down)
                 {
                     if (Collision.Wall(oldX * 2, oldY - Mult))
@@ -439,12 +477,13 @@ namespace BomberMadLad
                     }
                     
                 }
-
+                //om alla riktningar är klara slutar vi skapa explosioner
                 if (!down && !up && !left && !right)
                 {
                     break;
                 }
 
+                //sätt ut timer för att ta bort explosionerna
                 index = Collision.GetIndex(XPosition, YPosition);
 
                 TimerClass.AddTimer(index, 500, 500, 1, Program.mygame.GameObjects[index].Action3);
@@ -452,6 +491,7 @@ namespace BomberMadLad
             }
         }
 
+        //går igenom alla listor och ritar ut dem
         public void DrawExplosions()
         {
             List<List<int>> totalList = new List<List<int>>();
@@ -480,6 +520,7 @@ namespace BomberMadLad
                 ExList.Add(explo);
             }
         }
+        //blinkar tills den blinkat tillräckligt och då ritar den ut explosionerna
         public override void Action2()
         {
             if (timesHaveBlinked < timesToBlink - 1)
@@ -495,6 +536,7 @@ namespace BomberMadLad
             }
         }
 
+        //ta bort alla explosioner och sedan bomben själv
         public override void Action3()
         {
             for (int i = 0; i < ExList.Count; i++)
