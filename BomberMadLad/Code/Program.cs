@@ -68,10 +68,10 @@ namespace BomberMadLad
         public List<GameObject> Walls = new List<GameObject>();
 
         //skapa ny spelare
-        public Player player = new Player(100,31);
+        public Player player = new Player(22,22);
         
         //ny AI
-        public Ai ai = new Ai(Console.LargestWindowWidth - 22, 10);
+        public Ai ai = new Ai(Console.LargestWindowWidth - 22, 22);
         
 
         int X;

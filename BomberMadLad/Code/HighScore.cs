@@ -27,15 +27,15 @@ namespace BomberMadLad
         // Lägger till de gamla och de nya poängen i en lista.
         public static void AddHighScore(int thisScore)
         {
-            //ReadHighScore();
+            ReadHighScore();
 
-            //Score.Add(thisScore);
+            Score.Add(thisScore);
 
-            //for (int i = 0; i < OldHighScore.Length; i++)
-            //{
-            //    Score.Add(Convert.ToInt32(OldHighScore[i]));
-            //    Score.Sort();
-            //}
+            for (int i = 0; i < OldHighScore.Length; i++)
+            {
+                Score.Add(Convert.ToInt32(OldHighScore[i]));
+                Score.Sort();
+            }
         }
 
         // Skriver ut highscore som man har och visar i vilket som är mest och vilket som är älst.
