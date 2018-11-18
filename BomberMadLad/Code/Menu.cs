@@ -75,42 +75,6 @@ namespace BomberMadLad
             BackColour(Black);
             ForColour(Gray);
             Console.Clear();
-            index = 1;
-
-            Buttons.Clear();
-            Buttons.Add("Do you want ai?");
-            Buttons.Add("Yes");
-            Buttons.Add("No");
-            MenuList(index);
-
-            while (true)
-            {
-                ConsoleKey input = Console.ReadKey(true).Key;
-
-                if (input == ConsoleKey.DownArrow && index < Buttons.Count - 1)
-                {
-                    MenuList(index + 1);
-                    index = index + 1;
-
-                }
-                if (input == ConsoleKey.UpArrow && index > 1)
-                {
-                    MenuList(index - 1);
-                    index = index - 1;
-                }
-
-                if (index == 1 && input == ConsoleKey.Enter)
-                {
-                    Program.HaveAi = true;
-                    break;
-                }
-                if (index == 2 && input == ConsoleKey.Enter)
-                {
-                    Program.HaveAi = false;
-                    break;
-                }
-            }
-            Console.Clear();
         }
 
         // Sätter färgen på texten till det man vill.

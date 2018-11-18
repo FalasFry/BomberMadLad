@@ -31,7 +31,7 @@ namespace BomberMadLad
         // Skapar en ny bomb och lägger ut den.
         public static void LayBomb(int XPosition, int YPosition)
         {
-            BOOM latestBoom = new BOOM(XPosition, YPosition);
+            Bomb latestBoom = new Bomb(XPosition, YPosition);
 
             // Lägg till i gameobjects
             Program.mygame.GameObjects.Add(latestBoom);
