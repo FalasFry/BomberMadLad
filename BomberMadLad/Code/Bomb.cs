@@ -88,7 +88,6 @@ namespace BomberMadLad
             //lägg till explosion ovanpå bomben
             upList.Add(position);
 
-
             while (true)
             {
                 //mult blir en större varje gång

@@ -8,7 +8,6 @@ namespace BomberMadLad
 {
     static class Collision
     {
-
         //kolla kollision på inskickade koordinater
         public static bool Wall(int xPos, int yPos)
         {
@@ -28,7 +27,6 @@ namespace BomberMadLad
             }
             return true;
         }
-
 
         // Kollar om spelaren kolliderar med det vi skickade in.
         public static bool Char(int xPos, int yPos)

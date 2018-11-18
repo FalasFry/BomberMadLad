@@ -10,7 +10,7 @@ namespace BomberMadLad
     class Ai : GameObject
     {
         //en bool som säger åt AI om den borde lägga ut en bomb
-        public bool shouldBomb = false;
+        bool shouldBomb = false;
 
         //lista med positioner AI ska gå
         List<int[]> posList = new List<int[]>();

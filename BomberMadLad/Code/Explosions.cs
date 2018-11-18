@@ -8,11 +8,10 @@ namespace BomberMadLad
 {
     class Explosions : GameObject
     {
-
-
         public override void Update()
         {
         }
+
         public override void Draw(int xBoxSize, int yBoxSize)
         {
             Console.ForegroundColor = ConsoleColor.Red;
@@ -44,7 +43,6 @@ namespace BomberMadLad
         public override void Action2()
         {
         }
-
         public override void Action3()
         {
         }

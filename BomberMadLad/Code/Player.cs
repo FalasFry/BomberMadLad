@@ -58,6 +58,7 @@ namespace BomberMadLad
                 Move.Left(this);
                 Delete(oldX, oldY);
             }
+
             //om collisionCheck träffar något så står vi stilla och deletar inte något
             if (!Collision.Wall(XPosition, YPosition))
             {
