@@ -13,45 +13,52 @@ namespace BomberMadLad
 {
     class Program
     {
-        //skapa game utefter storleken på skärmen
+        // Skapa game utefter storleken på skärmen
         public static Game mygame = new Game(Console.LargestWindowWidth - 13, Console.LargestWindowHeight - 12);
 
-        //metod som startas när spelet gör det
+        // Metod som startas när spelet gör det
         static void Main(string[] args)
         {
-            //sätter musen till osynlig
-            //frågar om AI
+            // Sätter musen till osynlig
             Console.CursorVisible = false;
-
+            
+            // Skapar Meny.
             Menu.MainMenu();
 
-            //ändra storlek på konsolfönstret till största möjliga
+            // Ändra storlek på konsolfönstret till största möjliga
             Console.SetWindowSize(Console.LargestWindowWidth - 10, Console.LargestWindowHeight - 9);
 
-            //kalla på drawboard metoden för att rita ut alla saker i walls listan. den körs bara en gång eftersom väggarna inte behöver uppdateras
+            // Kalla på drawboard metoden för att rita ut alla saker i walls listan. den körs bara en gång eftersom väggarna inte behöver uppdateras
             mygame.DrawBoard();
 
             Stopwatch stopwatch = new Stopwatch();
 
-            //denna metoden körs hela tiden
+            // Denna metoden körs hela tiden
             while (true)
             {
                 stopwatch.Start();
 
-                //ritar ut alla gameobjects i listan GameObjects
+                // Ritar ut alla gameobjects i listan GameObjects
                 mygame.DrawStuff();
 
-                //kallar på update i alla GameObjects
+                // Kallar på update i alla GameObjects
                 mygame.UpdateBoard();
 
-                //kolla om någon timer ska kallas på
+                // Kolla om någon timer ska kallas på
                 TimerClass.TimeMethod();
 
-                //stoppa stopwatch
+                // Stoppa stopwatch
                 stopwatch.Stop();
 
-                //uppdatera elapsedtime
+                // Uppdatera elapsedtime
                 TimerClass.elapsedTime = (int)stopwatch.ElapsedMilliseconds;
+
+                // Om det tar 5 minuter fölorar du.
+                if(stopwatch.ElapsedMilliseconds == 300000)
+                {
+                    End end = new End();
+                    end.GameOver(false);
+                }
             }
         }
     }
@@ -73,7 +80,6 @@ namespace BomberMadLad
         //ny AI
         public Ai ai = new Ai(Console.LargestWindowWidth - 22, 22);
         
-
         int X;
         int Y;
 
@@ -138,8 +144,8 @@ namespace BomberMadLad
                         wall.Draw(0, 0);
                         Walls.Add(wall);
 
-                        //om det är en karaktär i explosiosionen tar spelet sl
-                        if (!Collision.Char(wall.XPosition, wall.XPosition))
+                        // Om det är en karaktär i väggen som kommer in tar spelet slut.
+                        if (!Collision.Char(wall.XPosition, wall.YPosition))
                         {
                             End end = new End();
                             if (wall.XPosition == Program.mygame.player.XPosition && wall.YPosition == Program.mygame.player.YPosition)
@@ -159,8 +165,8 @@ namespace BomberMadLad
                         wall.Draw(0, 0);
                         Walls.Add(wall);
 
-                        //om det är en karaktär i explosiosionen tar spelet sl
-                        if (!Collision.Char(wall.XPosition, wall.XPosition))
+                        // Om det är en karaktär i väggen som kommer in tar spelet slut.
+                        if (!Collision.Char(wall.XPosition, wall.YPosition))
                         {
                             End end = new End();
                             if (wall.XPosition == Program.mygame.player.XPosition && wall.YPosition == Program.mygame.player.YPosition)
@@ -180,8 +186,8 @@ namespace BomberMadLad
                         wall.Draw(0, 0);
                         Walls.Add(wall);
 
-                        //om det är en karaktär i explosiosionen tar spelet sl
-                        if (!Collision.Char(wall.XPosition, wall.XPosition))
+                        // Om det är en karaktär i väggen som kommer in tar spelet slut.
+                        if (!Collision.Char(wall.XPosition, wall.YPosition))
                         {
                             End end = new End();
                             if (wall.XPosition == Program.mygame.player.XPosition && wall.YPosition == Program.mygame.player.YPosition)
@@ -201,8 +207,8 @@ namespace BomberMadLad
                         wall.Draw(0, 0);
                         Walls.Add(wall);
 
-                        //om det är en karaktär i explosiosionen tar spelet sl
-                        if (!Collision.Char(wall.XPosition, wall.XPosition))
+                        // Om det är en karaktär i väggen som kommer in tar spelet slut.
+                        if (!Collision.Char(wall.XPosition, wall.YPosition))
                         {
                             End end = new End();
                             if (wall.XPosition == Program.mygame.player.XPosition && wall.YPosition == Program.mygame.player.YPosition)
@@ -219,7 +225,7 @@ namespace BomberMadLad
             }
         }
         
-        //rita ut alla väggar (körs bara en gång så här gör vi annat också)
+        // Rita ut alla väggar (körs bara en gång så här gör vi annat också)
         public void DrawBoard()
         {
             //starta timer för BR
